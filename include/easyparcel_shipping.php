@@ -711,7 +711,6 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			}
 
 			### Filter based on setting - E ###
-
 			return $shipping_rate_list;
 		}
 
@@ -1190,12 +1189,10 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			return $rate;
 		}
 
-		public /**
+		/**
 		 *  do sanitise
 		 */
-		function easyparcel_sanitize_everything(
-			$func, $arr
-		) {
+		public function easyparcel_sanitize_everything( $func, $arr ) {
 			$newArr = array();
 			foreach ( $arr as $key => $value ) {
 				$newArr[ $key ] = ( is_array( $value ) ? easyparcel_sanitize_everything( $func, $value ) : ( is_array( $func ) ? call_user_func_array( $func, $value ) : $func( $value ) ) );
