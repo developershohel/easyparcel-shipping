@@ -11,7 +11,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 EasyParcel Shipping is the quintessential WooCommerce shipping plugin that simplifies the entire order fulfillment process while offering your customers the freedom to choose their preferred courier during the checkout. With EasyParcel Shipping, you can effortlessly streamline your shipping operations, reduce overhead costs, and boost customer satisfaction, all within your WordPress store.
 
 == Description ==
-https://www.youtube.com/c/EasyParcelBayanLepas
+[Watch Demo on YouTube](https://www.youtube.com/c/EasyParcelBayanLepas)
 EasyParcel Shipping is packed with an array of powerful features to optimize your e-commerce shipping process:
 
 1. **Seamless WooCommerce Integration**: Say goodbye to the hassles of exporting and importing shipping data. EasyParcel Shipping seamlessly integrates with your WooCommerce store, making order fulfillment a breeze.
