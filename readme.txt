@@ -1,10 +1,10 @@
 == EasyParcel Shipping - Yhe Ultimate WooCommerce Shipping Solution ==
 Contributors: easyparcel
 Tags: EasyParcel, EasyParcel Shipping, shipping, woocommerce shipping, WordPress shipping
-Requires at least: 6.3.0
+Requires at least: 6.3
 Tested up to: 6.4.2
 Stable tag: 1.0.3
-Requires PHP: 7.4 or higher
+Requires PHP: 7.4
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -62,6 +62,7 @@ Follow us on [Facebook](https://www.facebook.com/easyParcel.my) and [Twitter](ht
 == License ==
 
 This plugin is released under the GNU General Public License, version 3 or later.
+You can read our [Privacy Policy](https://easyparcel.com/my/privacy/) roles for the proper use of our plugin
 
 == Acknowledgments ==
 
