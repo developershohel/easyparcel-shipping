@@ -135,7 +135,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 				switch ( $method->get_method_id() ) {
 					case 'easyparcel':
-						$new_label = '<img src="' . esc_url( $method->meta_data['ep_courier_logo'] ) . '" width="60" height="40" style="display:inline-block;border-radius:4px;border:1px solid #ccc;" /> ' . esc_attr( $label );
+						$new_label = '<img src="' . esc_url( $method->meta_data['ep_courier_logo'] ) . '" width="60" height="40" style="display:inline-block;border-radius:4px;border:1px solid #ccc;" /> ' . $label;
 						// pickup point list
 						$new_label .= $this->easyparcel_pickup_point_shipping( $method, 0 );
 						break;
