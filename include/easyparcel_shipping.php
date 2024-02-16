@@ -173,7 +173,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 
 		public function show_setup_zone_notice() {
 			add_action( 'admin_notices', function () {
-				echo '<div id="message" class="notice notice-success is-dismissible">' . esc_html( 'Please proceed to setup your preferred shipping courier and zone' ) . '<p><a href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) . '">' . esc_html( 'HERE' ) . '</a></p></div>';
+				echo '<div id="message" class="notice notice-success is-dismissible">' . esc_html( 'Please proceed to setup your preferred shipping courier and zone' ) . '<p><a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) ) . '">' . esc_html( 'HERE' ) . '</a></p></div>';
 			} );
 		}
 
@@ -214,21 +214,21 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			$address2          = get_option( 'woocommerce_store_address_2' );
 			$this->form_fields = array(
 				'enabled' => array(
-					'title'       => __( 'Enable', 'easyparcel' ),
+					'title'       => __( 'Enable', 'easyparcel-shipping' ),
 					'type'        => 'checkbox',
-					'description' => __( 'Enable to activate EasyParcel shipping method.', 'easyparcel' ),
-					'label'       => __( 'Enable to activate easyparcel shipping method', 'easyparcel' ),
+					'description' => __( 'Enable to activate EasyParcel shipping method.', 'easyparcel-shipping' ),
+					'label'       => __( 'Enable to activate easyparcel shipping method', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
 					'default'     => 'no',
 				),
 
 				'sender_country_option' => array(
-					'title' => __( 'Which country do you wish to send from?', 'easyparcel' ),
+					'title' => __( 'Which country do you wish to send from?', 'easyparcel-shipping' ),
 					'type'  => 'title',
 					'desc'  => '',
 				),
 				'sender_country'        => array(
-					'title'    => __( '<font color="red">*</font>Country', 'easyparcel' ),
+					'title'    => __( '<font color="red">*</font>Country', 'easyparcel-shipping' ),
 					'type'     => 'select',
 					'default'  => 'NONE',
 					'options'  => array(
@@ -240,87 +240,87 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				),
 
 				'sender_detail'    => array(
-					'title' => __( 'Sender Details', 'easyparcel' ),
+					'title' => __( 'Sender Details', 'easyparcel-shipping' ),
 					'type'  => 'title',
 					'desc'  => '',
 				),
 				'easyparcel_email' => array(
-					'title'       => __( '<font color="red">*</font>EasyParcel Login Email', 'easyparcel' ),
+					'title'       => __( '<font color="red">*</font>EasyParcel Login Email', 'easyparcel-shipping' ),
 					'type'        => 'text',
-					'description' => __( 'Enter your registered EasyParcel login email here. If you do not have an EasyParcel account, sign up for free at <a href="https://easyparcel.com" target="_blank">easyparcel.com</a>', 'easyparcel' ),
+					'description' => __( 'Enter your registered EasyParcel login email here. If you do not have an EasyParcel account, sign up for free at <a href="https://easyparcel.com" target="_blank">easyparcel.com</a>', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
 					'default'     => '',
 					'required'    => true,
 				),
 
 				'integration_id'              => array(
-					'title'       => __( '<font color="red">*</font>Integration ID', 'easyparcel' ),
+					'title'       => __( '<font color="red">*</font>Integration ID', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'description' => __( 'Here’s how to get your integration ID: <br/>
                                         1. Login to your EasyParcel Account<br/>
                                         2. Click on "Dashboard" - "Integrations" - "Add New Store"<br/>
                                         3. Choose "WooCommerce" <br/>
                                         4. Fill in required details <br/>
-                                        5. Copy the Integration ID and paste it here.', 'easyparcel' ),
+                                        5. Copy the Integration ID and paste it here.', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
 					'required'    => true,
 				),
 				'sender_name'                 => array(
-					'title'    => __( '<font color="red">*</font>Name', 'easyparcel' ),
+					'title'    => __( '<font color="red">*</font>Name', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => '',
 					'required' => true,
 				),
 				'sender_contact_number'       => array(
-					'title'       => __( '<font color="red">*</font>Contact Number', 'easyparcel' ),
+					'title'       => __( '<font color="red">*</font>Contact Number', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'default'     => '',
 					'placeholder' => 'key in with countrycode (MY)60 / (SG)65',
 					'required'    => true,
 				),
 				'sender_alt_contact_number'   => array(
-					'title'       => __( 'Alt. Contact Number', 'easyparcel' ),
+					'title'       => __( 'Alt. Contact Number', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'default'     => '',
 					'placeholder' => 'key in with countrycode (MY)60 / (SG)65',
 				),
 				'sender_company_name'         => array(
-					'title'   => __( 'Company Name', 'easyparcel' ),
+					'title'   => __( 'Company Name', 'easyparcel-shipping' ),
 					'type'    => 'text',
 					'default' => '',
 					// 'placeholder' => 'company name',
 				),
 				'sender_address_1'            => array(
-					'title'    => __( '<font color="red">*</font>Address Line 1', 'easyparcel' ),
+					'title'    => __( '<font color="red">*</font>Address Line 1', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $address,
 					// 'placeholder' => 'Address line 1',
 					'required' => true,
 				),
 				'sender_address_2'            => array(
-					'title'    => __( 'Address Line 2', 'easyparcel' ),
+					'title'    => __( 'Address Line 2', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $address2,
 					// 'placeholder' => 'Address line 2',
 					'required' => true,
 				),
 				'sender_city'                 => array(
-					'title'    => __( '<font color="red">*</font>City', 'easyparcel' ),
+					'title'    => __( '<font color="red">*</font>City', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $city,
 					// 'placeholder' => 'city',
 					'required' => true,
 				),
 				'sender_postcode'             => array(
-					'title'    => __( '<font color="red">*</font>Postcode', 'easyparcel' ),
+					'title'    => __( '<font color="red">*</font>Postcode', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $postcode,
 					'required' => true,
 				),
 				'sender_state'                => array(
-					'title'       => __( '<font color="red">*</font>State', 'easyparcel' ),
+					'title'       => __( '<font color="red">*</font>State', 'easyparcel-shipping' ),
 					'type'        => 'select',
-					'description' => __( 'state', 'easyparcel' ),
+					'description' => __( 'state', 'easyparcel-shipping' ),
 					'default'     => '',
 					'desc_tip'    => true,
 					// 'placeholder' => 'state',
@@ -347,38 +347,38 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 
 				// additional option
 				'addon_service_setting'       => array(
-					'title' => __( 'Add On Service Settings', 'easyparcel' ),
+					'title' => __( 'Add On Service Settings', 'easyparcel-shipping' ),
 					'type'  => 'title',
 					'desc'  => '',
 				),
 				'addon_email_option'          => array(
-					'title'       => __( 'Tracking Email', 'easyparcel' ),
+					'title'       => __( 'Tracking Email', 'easyparcel-shipping' ),
 					'type'        => 'checkbox',
-					'description' => __( 'EasyParcel will automatically send tracking details to receiver via email when your fulfillment is made for RM0.05.', 'easyparcel' ),
-					'label'       => __( 'Enable Tracking Email.', 'easyparcel' ),
+					'description' => __( 'EasyParcel will automatically send tracking details to receiver via email when your fulfillment is made for RM0.05.', 'easyparcel-shipping' ),
+					'label'       => __( 'Enable Tracking Email.', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
 					'default'     => 'no',
 				),
 				'addon_sms_option'            => array(
-					'title'       => __( 'Tracking SMS', 'easyparcel' ),
+					'title'       => __( 'Tracking SMS', 'easyparcel-shipping' ),
 					'type'        => 'checkbox',
-					'description' => __( 'EasyParcel will automatically send tracking details to receiver via SMS when your  fulfillment is made for RM0.20.', 'easyparcel' ),
-					'label'       => __( 'Enable Tracking SMS', 'easyparcel' ),
+					'description' => __( 'EasyParcel will automatically send tracking details to receiver via SMS when your  fulfillment is made for RM0.20.', 'easyparcel-shipping' ),
+					'label'       => __( 'Enable Tracking SMS', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
 					'default'     => 'no',
 				),
 
 				// order status update setting
 				'order_status_update_setting' => array(
-					'title' => __( 'Order Status Update Settings', 'easyparcel' ),
+					'title' => __( 'Order Status Update Settings', 'easyparcel-shipping' ),
 					'type'  => 'title',
 					'desc'  => '',
 				),
 				'order_status_update_option'  => array(
-					'title'       => __( 'Order Status Auto Update', 'easyparcel' ),
+					'title'       => __( 'Order Status Auto Update', 'easyparcel-shipping' ),
 					'type'        => 'checkbox',
-					'description' => __( 'Order status will be updated as "completed" automatically once fulfillment done.', 'easyparcel' ),
-					'label'       => __( 'Enable order status auto update.', 'easyparcel' ),
+					'description' => __( 'Order status will be updated as "completed" automatically once fulfillment done.', 'easyparcel-shipping' ),
+					'label'       => __( 'Enable order status auto update.', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
 					'default'     => 'no',
 				),
@@ -389,7 +389,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 
 
 		function admin_shipping_init() {
-			wp_register_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/admin_shipping.js', array( 'jquery' ), '', true );
+			wp_register_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/admin_shipping.js', array( 'jquery' ), EASYPARCEL_VERSION, true );
 			wp_localize_script( 'ajax-script', 'obj', array(
 				'ajax_url'        => admin_url( 'admin-ajax.php' ),
 				'nextNonce'       => wp_create_nonce( 'ajax-nonce' ),
@@ -567,7 +567,11 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					WC()->session->set( 'EasyParcel_Pickup_Available', $pickup_available_method );
 				}
 			} catch ( Exception $e ) {
-				$message = sprintf( __( 'Easyparcel Shipping Method is not set properly! Error: %s', 'easyparcel' ), $e->getMessage() );
+				$message = sprintf(
+				/* translators: %s is a placeholder for the error message */
+					__( 'Easyparcel Shipping Method is not set properly! Error: %s', 'easyparcel-shipping' ),
+					$e->getMessage()
+				);
 
 				$messageType = "error";
 				wc_add_notice( $message, $messageType );
@@ -1218,38 +1222,62 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 
 		/**
 		 * Update method description dynamically.
+		 * @return string
+		 * translators: %s is a placeholder for the error message
 		 */
 		public function update_method_description() {
 			global $wpdb;
 			$method_table = $wpdb->prefix . 'woocommerce_shipping_zone_methods';
 			$instance_id  = $this->instance_id;
 			if ( ! empty( $instance_id ) ) {
-				$zone_id     = $wpdb->get_var( "SELECT zone_id FROM $method_table WHERE instance_id=$instance_id" );
+				$zone_id     = $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM $method_table WHERE instance_id=$instance_id" ) );
 				$value       = get_option( 'woocommerce_easyparcel_settings' );
 				$table       = $wpdb->prefix . 'easyparcel_zones_courier';
 				$new_courier = ! empty( $zone_id ) ? admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=' . absint( $zone_id ) . '&perform=add_courier' ) : admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' );
-				if ( isset( $value['enabled'] ) && $value['enabled'] == 'no' ) {
-					return $this->method_description = esc_html( 'Integrate your courier setting to' ) . '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel' ) . '" style="margin: 0 10px;">' . esc_html( 'Click Here' ) . '</a>and add a courier';
-				}
-				if ( ! empty( $zone_id ) ) {
-					$get_courier = $wpdb->get_var( "SELECT courier_display_name FROM $table WHERE zone_id=$zone_id AND instance_id=$instance_id" ) ?? $wpdb->get_var( "SELECT courier_name FROM $table WHERE zone_id=$zone_id AND instance_id=$instance_id" );
-					if ( ! empty( $get_courier ) ) {
-						$courier_id   = $wpdb->get_var( "SELECT id FROM $table WHERE zone_id=$zone_id AND instance_id=$instance_id" );
-						$edit_courier = admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&courier_id=$courier_id" );
-						$desc         = __( '<p class="courier-name">' . esc_html( 'Courier Name:' ) . '<strong>' . esc_html( $get_courier ) . '</strong></p> ' );
-						$desc         .= __( '<p class="add-courier">' . esc_html( 'Edit your courier to' ) . '<a class="edit-courier-url" href="' . esc_url( $edit_courier ) . '" style="margin: 0 10px;">' . esc_html( 'Click Here' ) . '</a></p>' );
-					} else {
-						$desc = __( '<p class="add-courier">' . esc_html( 'Add your courier to' ) . '<a class="new-courier-url" href="' . esc_url( $new_courier ) . '" style="margin: 0 10px;">' . esc_html( 'Click Here' ) . '</a></p>' );
-					}
 
+				if ( isset( $value['enabled'] ) && $value['enabled'] == 'no' ) {
+					$message = sprintf(
+					// translators: %s is a placeholder for the link to enable courier settings
+						esc_html__( 'Integrate your courier setting. %s Add a courier', 'easyparcel-shipping' ),
+						'<a href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel' ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
+					);
 				} else {
-					$desc = __( '<p class="add-courier">' . esc_html( 'Add your courier to' ) . '<a class="new-courier-url" href="' . esc_url( $new_courier ) . '" style="margin: 0 10px;">' . esc_html( 'Click Here' ) . '</a></p>' );
+					if ( ! empty( $zone_id ) ) {
+						$get_courier = $wpdb->get_var( $wpdb->prepare( "SELECT courier_display_name FROM $table WHERE zone_id=$zone_id AND instance_id=$instance_id" ) ) ?? $wpdb->get_var( $wpdb->prepare( "SELECT courier_name FROM $table WHERE zone_id=$zone_id AND instance_id=$instance_id" ) );
+
+						if ( ! empty( $get_courier ) ) {
+							$courier_id   = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $table WHERE zone_id=$zone_id AND instance_id=$instance_id" ) );
+							$edit_courier = admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&courier_id=$courier_id" );
+							$message      = sprintf(
+							// translators: %1$s is a placeholder for the courier name, %2$s is a placeholder for the link to edit the courier
+								esc_html__( 'Courier Name: %1$s. Edit your courier to %2$s', 'easyparcel-shipping' ),
+								'<strong>' . esc_html( $get_courier ) . '</strong>',
+								'<a class="edit-courier-url" href="' . esc_url( $edit_courier ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
+							);
+						} else {
+							$message = sprintf(
+							// translators: %s is a placeholder for the link to add a new courier
+								esc_html__( 'Add your courier to %s', 'easyparcel-shipping' ),
+								'<a class="new-courier-url" href="' . esc_url( $new_courier ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
+							);
+						}
+					} else {
+						$message = sprintf(
+						// translators: %s is a placeholder for the link to add a new courier
+							esc_html__( 'Add your courier to %s', 'easyparcel-shipping' ),
+							'<a class="new-courier-url" href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
+						);
+					}
 				}
 			} else {
-				$desc = __( '<p class="add-courier">' . esc_html( 'Add your courier to' ) . '<a class="new-courier-url" href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) . '" style="margin: 0 10px;">' . esc_html( 'Click Here' ) . '</a></p>' );
+				$message = sprintf(
+				// translators: %s is a placeholder for the link to add a new courier
+					esc_html__( 'Add your courier to %s', 'easyparcel-shipping' ),
+					'<a class="new-courier-url" href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
+				);
 			}
 
-			return $this->method_description = __( $desc );
+			return $this->method_description = $message;
 		}
 	}
 }

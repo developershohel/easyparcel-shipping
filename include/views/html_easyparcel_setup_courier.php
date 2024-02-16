@@ -46,7 +46,7 @@ $zone_id = isset( $_GET['zone_id'] ) ? sanitize_key( $_GET['zone_id'] ) : 0;
 					foreach ( $courier_list as $k => $v ) {
 						$dropoff_value = ! empty( $v['dropoff_point'] ) ? 'yes' : 'no';
 						$services_type = $v['service_type'] ?? '';
-						echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
+						echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_attr( $v['service_name'] ) . '" data-courier_id="' . esc_attr( $v['courier_id'] ) . '" data-courier_name="' . esc_attr( $v['courier_name'] ) . '" data-courier_logo="' . esc_attr( $v['courier_logo'] ) . '" data-courier_info="' . esc_attr( $v['delivery'] ) . '" data-service_id="' . esc_attr( $v['service_id'] ) . '" data-sample_cost="' . esc_attr( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
 					}
 					?>
                 </select>
@@ -137,7 +137,9 @@ $zone_id = isset( $_GET['zone_id'] ) ? sanitize_key( $_GET['zone_id'] ) : 0;
                         name="shipping_rate_option"
                         data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel_zone_method' ); ?>"
                         class="wc-shipping-zone-region-select chosen_select">
-                    <option value="1" selected>Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                    <option value="1" selected>Add On By Amount (<?php echo esc_html( get_woocommerce_currency() ); ?>
+                        )
+                    </option>
                     <option value="2">Add On By Percentage (%)</option>
                 </select>
             </td>
@@ -203,12 +205,12 @@ $zone_id = isset( $_GET['zone_id'] ) ? sanitize_key( $_GET['zone_id'] ) : 0;
     <button type="submit" name="submit" id="submit"
             class="button button-primary button-large wc-shipping-zone-method-save"
             value="<?php esc_attr_e( 'Save changes', 'easyparcel_zone_method' ); ?>"><?php esc_html_e( 'Save changes', 'easyparcel_zone_method' ); ?></button>
-    <a href="<?php echo admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ?>"
+    <a href="<?php echo esc_url( admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ) ?>"
        class="button button-primary button-large wc-shipping-zone-method-back"><?php esc_html_e( 'Back', 'easyparcel_zone_method' ); ?></a>
 </p>
-<input type="hidden" id="zone_id" name="zone_id" value="<?php echo $zone_id ?>">
+<input type="hidden" id="zone_id" name="zone_id" value="<?php echo esc_attr( $zone_id ) ?>">
 <input type="hidden" id="redirect_url" name="redirect_url"
-       value="<?php echo admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ?>">
+       value="<?php echo esc_url( admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ) ?>">
 <style>
     table#courier-setting-table th {
         width: 30%;

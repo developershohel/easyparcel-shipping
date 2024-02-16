@@ -11,12 +11,29 @@ add_action( 'pre_get_posts', 'easyparcel_shop_order_column_destination_sortable_
 add_action( 'manage_shop_order_posts_custom_column', 'easyparcel_render_destination_columns' );
 add_action( 'wp_ajax_wc_shipment_tracking_save_form_bulk', 'easyparcel_save_bulk_order_ajax' );
 
+/**
+ * Easyparcel bulk actions order fulfillment
+ *
+ * @param $actions
+ *
+ * @return mixed
+ */
 function easyparcel_bulk_actions_order_fulfillment( $actions ) {
 	$actions['order_fulfillment'] = __( 'Order Fulfillment', 'woocommerce' );
 
 	return $actions;
 }
 
+/**
+ * Easyparcel handle bulk actions order fulfillment
+ *
+ * @param $redirect_to
+ * @param $action
+ * @param $post_ids
+ *
+ * @return mixed|string
+ *
+ */
 function easyparcel_handle_bulk_actions_order_fulfillment( $redirect_to, $action, $post_ids ) {
 	if ( $action !== 'order_fulfillment' ) {
 		return $redirect_to;
@@ -35,19 +52,30 @@ function easyparcel_handle_bulk_actions_order_fulfillment( $redirect_to, $action
 	), $redirect_to );
 }
 
+/**
+ * Easyparcel bulk actions order fulfillment admin notice
+ * @return void
+ */
+
 function easyparcel_bulk_actions_order_fulfillment_admin_notice() {
 	if ( empty( $_REQUEST['order_fulfillment'] ) ) {
 		return;
 	}
-	$count = intval( $_REQUEST['processed_count'] );
-	printf( '<div id="message" class="updated fade"><p>' .
-	        _n( 'Processed %s Order for fulfillment.',
-		        'Processed %s Orders for fulfillment.',
-		        $count,
-		        'order_fulfillment'
-	        ) . '</p></div>', $count );
+	$count   = intval( $_REQUEST['processed_count'] );
+	$message = $count === 1 ? 'Processed 1 Order for fulfillment.' : "Processed $count Orders for fulfillment.";
+	printf(
+		'<div id="message" class="updated fade"><p>%s</p></div>',
+		esc_html( $message )
+	);
 }
 
+
+/**
+ * Easyparcel bulk fulfillment popup
+ *
+ * @return void
+ *
+ */
 
 function easyparcel_bulk_fulfillment_popup() {
 	if ( isset( $_POST ) ) {
@@ -89,7 +117,7 @@ function easyparcel_bulk_fulfillment_popup() {
             <div class="fulfillment_popup_row">
                 <div class="popup_header">
                     <h3 class="popup_title"><?php esc_html_e( 'Shipment Fulfillment' ); ?> -
-                        #<?php esc_html_e( $order_number ); ?></h3>
+                        #<?php esc_html( $order_number ); ?></h3>
                     <span class="dashicons dashicons-no-alt popup_close_icon"></span>
                 </div>
                 <div class="popup_body">
@@ -127,7 +155,7 @@ function easyparcel_bulk_fulfillment_popup() {
                         <p>
                             <input type="hidden" name="action" value="add_shipment_fulfillment">
                             <input type="hidden" name="order_id" id="order_id"
-                                   value="<?php esc_html_e( $order_id ); ?>">
+                                   value="<?php esc_attr( $order_id ); ?>">
                             <input type="button" name="Submit" value="<?php esc_html_e( 'Fulfill Order' ); ?>"
                                    class="button-primary btn_green button-save-form">
                         </p>
@@ -145,6 +173,12 @@ function easyparcel_bulk_fulfillment_popup() {
 	exit;
 }
 
+/**
+ * Easyparcel save bulk order ajax
+ *
+ * @return void
+ *
+ */
 function easyparcel_save_bulk_order_ajax() {
 	if ( isset( $_POST ) ) {
 		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
@@ -183,6 +217,14 @@ function easyparcel_save_bulk_order_ajax() {
 	die();
 }
 
+/**
+ * Easyparcel get api detail bulk
+ *
+ * @param $post
+ *
+ * @return object
+ *
+ */
 function easyparcel_get_api_detail_bulk( $post ) {
 
 	if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
@@ -210,12 +252,28 @@ function easyparcel_get_api_detail_bulk( $post ) {
 	return $obj;
 }
 
+/**
+ * Easyparcel shop order columns
+ *
+ * @param $columns
+ *
+ * @return mixed
+ *
+ */
 function easyparcel_shop_order_columns( $columns ) {
 	$columns['easyparcel_order_list_shipment_tracking'] = __( 'Shipment Tracking', 'easyparcel-shipping-integration' );
 
 	return $columns;
 }
 
+/**
+ * Easyparcel render shop order columns
+ *
+ * @param $column
+ *
+ * @return void
+ *
+ */
 function easyparcel_render_shop_order_columns( $column ) {
 	global $post;
 	if ( 'easyparcel_order_list_shipment_tracking' === $column ) {
@@ -223,12 +281,28 @@ function easyparcel_render_shop_order_columns( $column ) {
 	}
 }
 
+/**
+ * Easyparcel destination columns
+ *
+ * @param $columns
+ *
+ * @return mixed
+ *
+ */
 function easyparcel_destination_columns( $columns ) {
 	$columns['easyparcel_order_list_destination'] = __( 'Destination', 'easyparcel-shipping-integration' );
 
 	return $columns;
 }
 
+/**
+ * Easyparcel render destination columns
+ *
+ * @param $column
+ *
+ * @return void
+ *
+ */
 function easyparcel_render_destination_columns( $column ) {
 	global $post, $the_order;
 	if ( ! is_a( $the_order, 'WC_Order' ) ) {
@@ -245,9 +319,17 @@ function easyparcel_render_destination_columns( $column ) {
 	}
 }
 
+/**
+ * Easyparcel get shipment tracking column
+ *
+ * @param $order_id
+ *
+ * @return mixed|null
+ *
+ */
 function easyparcel_get_shipment_tracking_column( $order_id ) {
-	wp_enqueue_style( 'easyparcel_order_list_styles', plugin_dir_url( __FILE__ ) . '/css/admin.css', array() );
-	wp_enqueue_script( 'easyparcel-admin-order-js', plugin_dir_url( __FILE__ ) . '/js/admin_order.js', array( 'jquery' ) );
+	wp_enqueue_style( 'easyparcel_order_list_styles', plugin_dir_url( __FILE__ ) . '/css/admin.css', array(), EASYPARCEL_VERSION );
+	wp_enqueue_script( 'easyparcel-admin-order-js', plugin_dir_url( __FILE__ ) . '/js/admin_order.js', array( 'jquery' ), EASYPARCEL_VERSION, true );
 	wp_localize_script(
 		'easyparcel-admin-order-js',
 		'easyparcel_orders_params',
@@ -285,14 +367,28 @@ function easyparcel_get_shipment_tracking_column( $order_id ) {
 	return apply_filters( 'easyparcel_get_shipment_tracking_column', ob_get_clean(), $order_id );
 }
 
-
+/**
+ * Easyparcel destination columns sortable
+ *
+ * @param $columns
+ *
+ * @return array
+ *
+ */
 function easyparcel_destination_columns_sortable( $columns ) {
 	$meta_key = '_shipping_country';
 
 	return wp_parse_args( array( 'easyparcel_order_list_destination' => $meta_key ), $columns );
 }
 
-// Make sorting work properly (by numerical values)
+/**
+ * Easyparcel shop order column destination sortable order by
+ *
+ * @param $query
+ *
+ * @return void
+ *
+ */
 function easyparcel_shop_order_column_destination_sortable_orderby( $query ) {
 	global $pagenow;
 	if ( 'edit.php' === $pagenow && isset( $_GET['post_type'] ) && 'shop_order' === sanitize_text_field( $_GET['post_type'] ) ) {

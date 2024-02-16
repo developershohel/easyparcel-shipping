@@ -48,14 +48,14 @@ class Easyparcel_Shipping_Zones {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'woocommerce_shipping_zones';
 
-		return $wpdb->get_results( "SELECT * FROM  $table_name" );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $table_name" ) );
 	}
 
 	public static function get_zone_courier( $zone_id = 0 ) {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'easyparcel_zones_courier';
 
-		return $wpdb->get_results( "SELECT * FROM  $table_name WHERE zone_id = $zone_id ORDER BY courier_order ASC" );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $table_name WHERE zone_id = $zone_id ORDER BY courier_order ASC" ) );
 	}
 
 	/**
@@ -186,7 +186,7 @@ class Easyparcel_Shipping_Zones {
 		global $wpdb;
 		$table_name  = $wpdb->prefix . 'woocommerce_shipping_zones';
 		$table_name2 = $wpdb->prefix . 'easyparcel_zones_courier';
-		$raw_zones   = $wpdb->get_results( "SELECT * FROM  $table_name join $table_name2 ON $table_name.zone_id = $table_name2.zone_id" );
+		$raw_zones   = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $table_name join $table_name2 ON $table_name.zone_id = $table_name2.zone_id" ) );
 		$destination['country'];
 		$destination['state'];
 

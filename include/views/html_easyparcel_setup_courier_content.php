@@ -37,9 +37,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 						}
 					} else {
 						if ( $v['service_id'] == 'all' ) {
-							echo '<option class="selected" value="' . esc_attr( $k ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '" selected>' . esc_html( $v['service_name'] ) . '</option>';
+							echo '<option class="selected" value="' . esc_attr( $k ) . '"  data-service_name="' . esc_attr( $v['service_name'] ) . '" data-courier_id="' . esc_attr( $v['courier_id'] ) . '" data-courier_name="' . esc_attr( $v['courier_name'] ) . '" data-courier_logo="' . esc_attr( $v['courier_logo'] ) . '" data-courier_info="' . esc_attr( $v['delivery'] ) . '" data-service_id="' . esc_attr( $v['service_id'] ) . '" data-sample_cost="' . esc_attr( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '" selected>' . esc_html( $v['service_name'] ) . '</option>';
 						} else {
-							echo '<option value="' . esc_attr( $k ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
+							echo '<option value="' . esc_attr( $k ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
 						}
 					}
 				}
@@ -95,11 +95,11 @@ if ( ! defined( 'ABSPATH' ) ) {
         <td class="forminp">
             <input type="text" data-attribute="courier_display_name" name="courier_display_name"
                    id="courier_display_name" value="<?php if ( isset( $couriers[0]['courier_display_name'] ) ) {
-				echo $couriers[0]['courier_display_name'];
+				echo esc_attr( $couriers[0]['courier_display_name'] );
 			} ?>" placeholder="">
         </td>
     </tr>
-    <tr id="courier_delivery_panel" <?php if ( ! isset( $couriers[0]['courier_info'] ) && empty( $couriers[0]['courier_info'] ) ) {
+    <tr id="courier_delivery_panel" <?php if ( isset( $couriers[0]['courier_info'] ) && empty( $couriers[0]['courier_info'] ) ) {
 		echo 'style="display:none"';
 	} ?>>
         <th scope="row" class="titledesc">
@@ -110,7 +110,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <td class="forminp">
             <input type="text" data-attribute="courier_info_panel" name="courier_delivery_days"
                    id="courier_delivery_days" value="<?php if ( isset( $couriers[0]['courier_info'] ) ) {
-				echo $couriers[0]['courier_info'];
+				echo esc_attr( $couriers[0]['courier_info'] );
 			} ?>">
         </td>
     </tr>
@@ -162,20 +162,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$charges_value = explode( ':', $couriers[0]['charges_value'] );
 					if ( $charges_value[0] == 1 ) {
 						?>
-                        <option value="1" selected>Add On By Amount (<?php echo get_woocommerce_currency(); ?>)
+                        <option value="1" selected>Add On By Amount
+                            (<?php echo esc_html( get_woocommerce_currency() ); ?>)
                         </option>
                         <option value="2">Add On By Percentage (%)</option>
 					<?php } else if ( $charges_value[0] == 2 ) { ?>
-                        <option value="1">Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                        <option value="1">Add On By Amount (<?php echo esc_html( get_woocommerce_currency() ); ?>)
+                        </option>
                         <option value="2" selected>Add On By Percentage (%)</option>
 					<?php } else {
 						?>
-                        <option value="1">Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                        <option value="1">Add On By Amount (<?php echo esc_html( get_woocommerce_currency() ); ?>)
+                        </option>
                         <option value="2">Add On By Percentage (%)</option>
 					<?php }
 				} else {
 					?>
-                    <option value="1" selected>Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                    <option value="1" selected>Add On By Amount (<?php echo esc_html( get_woocommerce_currency() ); ?>
+                        )
+                    </option>
                     <option value="2">Add On By Percentage (%)</option>
 					<?php
 				}
@@ -195,7 +200,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php
 			if ( $couriers[0]['charges_value'] !== false ) {
 				$charges_value = explode( ':', $couriers[0]['charges_value'] );
-				echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="' . $charges_value[1] . '">';
+				echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="' . esc_attr( $charges_value[1] ) . '">';
 			} else {
 				echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="">';
 			}
@@ -254,7 +259,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <td class="forminp">
             <label><input type="text" data-attribute="free_shipping_value" name="free_shipping_value"
                           id="free_shipping_value" value="<?php if ( isset( $couriers[0]['free_shipping_value'] ) )
-					echo $couriers[0]['free_shipping_value'] ?>"></label>
+					echo esc_attr( $couriers[0]['free_shipping_value'] ) ?>"></label>
         </td>
     </tr>
 <?php

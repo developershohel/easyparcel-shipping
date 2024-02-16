@@ -882,6 +882,7 @@ abstract class Easyparcel_Data {
 	 * @since 3.0.0
 	 */
 	protected function error( $code, $message, $http_status_code = 400, $data = array() ) {
-		throw new WC_Data_Exception( $code, $message, $http_status_code, $data );
+		// Throw the exception with escaped values
+		throw new WC_Data_Exception( esc_html( $code ), esc_html( $message ), absint( $http_status_code ), array_map( 'esc_html', $data ) );
 	}
 }

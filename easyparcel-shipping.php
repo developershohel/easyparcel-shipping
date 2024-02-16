@@ -8,12 +8,12 @@
  * Requires PHP: 7.4
  * Author: EasyParcel
  * Author URI: https://www.easyparcel.com/
- * Text Domain: easyparcel
+ * Text Domain: easyparcel-shipping
  * WC requires at least: 8.5.0
  * WC tested up to: 8.5.1
  *
- * License: GNU General Public License v3.0
- * License URI: http://www.gnu.org/licenses/gpl-3.0.html
+ * License: GNU General Public License v3.0 or later
+ * License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
  *
  * EasyParcel Shipping is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -206,7 +206,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					$WC_Easyparcel_Shipping_Method->process_booking_order( $data );
 
 				} catch ( Exception $e ) {
-					$message = sprintf( __( 'Easyparcel status changed! Error: %s', 'easyparcel' ), $e->getMessage() );
+					// Translators: %s is a placeholder for the error message
+					$message = sprintf( __( 'Easyparcel status changed! Error: %s', 'easyparcel-shipping' ), $e->getMessage() );
 					wc_add_notice( $message, "error" );
 				}
 
@@ -216,7 +217,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 * For add in setting tab for easy access to plugin
 			 */
 			public static function add_settings_tab( $settings_tabs ) {
-				$settings_tabs['shipping&section=easyparcel'] = __( 'EasyParcel', 'easyparcel' );
+				$settings_tabs['shipping&section=easyparcel'] = __( 'EasyParcel', 'easyparcel-shipping' );
 
 				return $settings_tabs;
 			}
@@ -278,7 +279,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			public function plugin_action_links( $links ) {
 				return array_merge(
 					$links,
-					array( '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel' ) . '"> ' . __( 'Settings', 'easyparcel' ) . '</a>' )
+					array( '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel' ) . '"> ' . __( 'Settings', 'easyparcel-shipping' ) . '</a>' )
 				);
 			}
 		}
@@ -531,7 +532,7 @@ function easyparcel_courier_setting_save_changes() {
 				}
 			}
 			$courier_id = wc_clean( wp_unslash( $_POST['courier_id'] ) );
-			$result     = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = $courier_id" );
+			$result     = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = $courier_id" ) );
 			if ( empty( $result ) ) {
 				wp_send_json_error( 'courier not found' );
 				wp_die();
@@ -578,7 +579,7 @@ function easyparcel_courier_setting_save_changes() {
 			}
 			$zone_id = wc_clean( wp_unslash( $_POST['zone_id'] ) );
 			// check if courier display name exist
-			$col                   = $wpdb->get_results( "SELECT max(courier_order)+1 as courier_order FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id = $zone_id" );
+			$col                   = $wpdb->get_results( $wpdb->prepare( "SELECT max(courier_order)+1 as courier_order FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id = $zone_id" ) );
 			$col[0]->courier_order = ( empty( $col[0]->courier_order ) ) ? 0 : $col[0]->courier_order;
 			$table                 = $wpdb->prefix . 'easyparcel_zones_courier';
 			$res                   = $wpdb->query(
@@ -698,9 +699,9 @@ function easyparcel_add_auto_shipping_method( $zone_id ) {
 	$shipping_table = $wpdb->prefix . 'woocommerce_shipping_zone_methods';
 	$section        = isset( $_GET['section'] ) ? esc_attr( $_GET['section'] ) : '';
 	if ( $section == 'easyparcel_shipping' ) {
-		$shipping_method = $wpdb->get_results( "SELECT * FROM $shipping_table WHERE zone_id=$zone_id", ARRAY_A );
+		$shipping_method = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $shipping_table WHERE zone_id=$zone_id" ), ARRAY_A );
 		if ( ! empty( $shipping_method_order ) && ! in_array( 'easyparcel', array_column( $shipping_method, 'method_id' ) ) ) {
-			$max_method_order = $wpdb->get_var( "SELECT MAX(method_order) FROM $shipping_table WHERE zone_id=$zone_id" ) + 1;
+			$max_method_order = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(method_order) FROM $shipping_table WHERE zone_id=$zone_id" ) ) + 1;
 			$wpdb->insert( $shipping_table, array(
 				'zone_id'      => $zone_id,
 				'method_id'    => 'easyparcel',

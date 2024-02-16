@@ -48,7 +48,7 @@ function easyparcel_delete_courier_for_shipping_method( $instance_id, $method_id
 	global $wpdb;
 	$courier_table = $wpdb->prefix . 'easyparcel_zones_courier';
 	if ( $instance_id ) {
-		$get_courier = $wpdb->get_var( "SELECT id FROM $courier_table WHERE zone_id=$zone_id AND instance_id=$instance_id" );
+		$get_courier = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $courier_table WHERE zone_id=$zone_id AND instance_id=$instance_id" ) );
 		if ( $get_courier ) {
 			$wpdb->delete( $courier_table, [ 'id' => $get_courier ] );
 		}
@@ -59,7 +59,7 @@ function easyparcel_delete_all_courier_by_zone_id( $zone_id ) {
 	global $wpdb;
 	$courier_table = $wpdb->prefix . 'easyparcel_zones_courier';
 	if ( $zone_id ) {
-		$get_couriers = $wpdb->get_results( "SELECT id FROM $courier_table WHERE zone_id=$zone_id" );
+		$get_couriers = $wpdb->get_results( $wpdb->prepare( "SELECT id FROM $courier_table WHERE zone_id=$zone_id" ) );
 		if ( $get_couriers ) {
 			foreach ( $get_couriers as $courier ) {
 				$wpdb->delete( $courier_table, [ 'id' => $courier->id ] );

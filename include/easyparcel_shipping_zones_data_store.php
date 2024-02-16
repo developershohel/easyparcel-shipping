@@ -228,7 +228,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 		);
 
 		if ( ! $zone_data ) {
-			throw new Exception( __( 'Invalid data store.', 'woocommerce' ) );
+			throw new Exception( esc_html( 'Invalid data store.' ) );
 		}
 
 		$zone->set_zone_name( $zone_data->zone_name );

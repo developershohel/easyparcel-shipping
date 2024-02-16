@@ -2,6 +2,16 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+// Check if WP_Filesystem is available
+if ( ! function_exists( 'WP_Filesystem' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+}
+
+// Initialize the WP_Filesystem
+if ( ! WP_Filesystem() ) {
+	// Failed to initialize WP_Filesystem, handle the error accordingly
+	return;
+}
 if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 	class WC_Easyparcel_Backup_HTML {
 		public $backup_list;
@@ -22,35 +32,64 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 		}
 
 		public function execBackupProcess() {
-			global $wpdb;
-			$backup_file    = isset( $_POST['backup_file'] ) ? sanitize_term_field( $_POST['backup_file'] ) : '';
+			global $wpdb, $wp_filesystem;
+
+			// Check if WP_Filesystem is available
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+
+			// Initialize the WP_Filesystem
+			if ( ! WP_Filesystem() ) {
+				// Failed to initialize WP_Filesystem, handle the error accordingly
+				return;
+			}
+
+			$backup_file    = isset( $_POST['backup_file'] ) ? sanitize_file_name( $_POST['backup_file'] ) : '';
 			$backup_content = "<?php \n";
 
-			echo esc_html( 'backup process initialize' ) . "<br>\n";
+			// Output message indicating backup process initialization
+			echo esc_html( 'Backup process initialized' ) . "<br>\n";
 
+			// Add backup_option content to backup_content
 			$backup_content .= "\$backup_option = json_decode('" . wp_json_encode( get_option( 'woocommerce_easyparcel_settings' ) ) . "');\n";
 
+			// Get easyparcel_zones from the database
 			$easyparcel_zones = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}woocommerce_shipping_zones" );
-			$backup_content   .= "\$backup_db_easyparcel_zones = json_decode('" . wp_json_encode( $easyparcel_zones ) . "');\n";
-			echo esc_html( 'backup in progress' ) . "<br>\n";
+			// Add backup_db_easyparcel_zones content to backup_content
+			$backup_content .= "\$backup_db_easyparcel_zones = json_decode('" . wp_json_encode( $easyparcel_zones ) . "');\n";
 
+			// Output message indicating backup is in progress
+			echo esc_html( 'Backup in progress' ) . "<br>\n";
+
+			// Get easyparcel_zones_courier from the database
 			$easyparcel_zones_courier = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier" );
-			$backup_content           .= "\$backup_db_easyparcel_zones_courier = json_decode('" . wp_json_encode( $easyparcel_zones_courier ) . "');\n";
+			// Add backup_db_easyparcel_zones_courier content to backup_content
+			$backup_content .= "\$backup_db_easyparcel_zones_courier = json_decode('" . wp_json_encode( $easyparcel_zones_courier ) . "');\n";
 
+			// Get easyparcel_zone_locations from the database
 			$easyparcel_zone_locations = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}woocommerce_shipping_zone_locations" );
-			$backup_content            .= "\$backup_db_easyparcel_zone_locations = json_decode('" . wp_json_encode( $easyparcel_zone_locations ) . "');\n";
+			// Add backup_db_easyparcel_zone_locations content to backup_content
+			$backup_content .= "\$backup_db_easyparcel_zone_locations = json_decode('" . wp_json_encode( $easyparcel_zone_locations ) . "');\n";
 
+			// Add closing PHP tag to backup_content
 			$backup_content .= "?>\n";
-			file_put_contents( $this->backup_path . $backup_file . $this->backup_extention, $backup_content );
-			echo esc_html( 'complete backup' ) . "<br>\n";
-			echo esc_html( 'new backup file' ) . "\"$backup_file\"" . esc_html( 'created' ) . "<br><br>\n";
+
+			$file_path = $this->backup_path . $backup_file . $this->backup_extention;
+			$wp_filesystem->put_contents( $file_path, $backup_content, FS_CHMOD_FILE );
+
+			// Output message indicating completion of backup
+			echo esc_html( 'Complete backup' ) . "<br>\n";
+			// Output message indicating the creation of a new backup file
+			echo esc_html( 'New backup file' ) . '"' . esc_html( $backup_file ) . '"' . esc_html( 'created' ) . "<br><br>\n";
+
 		}
 
 		public function execRestoreProcess() {
 			echo esc_html( 'restore process initialize' ) . "<br>\n";
 			$restore_path = isset( $_POST['restore_path'] ) ? sanitize_text_field( $_POST['restore_path'] ) : '';
 			$RestoreFile  = $this->backup_path . $restore_path . $this->backup_extention;
-			echo esc_html( 'restore from : ' ) . $restore_path . "<br>\n";
+			echo esc_html( 'restore from : ' ) . esc_html( $restore_path ) . "<br>\n";
 			include_once( $RestoreFile );
 
 			echo esc_html( 'restore easyparcel shipping setting' ) . "<br>\n";
@@ -80,9 +119,12 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 		public function clearBackup() {
 			$this->loadBackupFile();
 			foreach ( $this->backup_list as $file ) {
-				$delete = apply_filters( 'wp_delete_file', $this->backup_path . $file );
+				$file_path = $this->backup_path . $file;
+
+				// Use wp_delete_file() to delete the file
+				$delete = apply_filters( 'wp_delete_file', $file_path );
 				if ( ! empty( $delete ) ) {
-					@unlink( $delete );
+					wp_delete_file( $delete );
 				}
 			}
 		}
@@ -93,9 +135,10 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 
 		protected function truncateTable( $table ) {
 			global $wpdb;
-			// echo "<br>TRUNCATE TABLE {$wpdb->prefix}$table<br>";
-			$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}$table" );
+			// Execute the prepared query
+			$wpdb->query( $wpdb->prepare( "TRUNCATE TABLE {$wpdb->prefix}%s", $table ) );
 		}
+
 
 		protected function insertTable( $table, $datas ) {
 			global $wpdb;
@@ -104,18 +147,18 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 			$query = "INSERT INTO {$wpdb->prefix}$table (" . implode( ',', $field ) . ") VALUES ";
 			$list  = [];
 			foreach ( $datas as $row ) {
-				array_push( $list, '("' . implode( '","', array_values( (array) $row ) ) . '")' );
+				$list[] = '("' . implode( '","', array_values( (array) $row ) ) . '")';
 			}
 			$query .= implode( ",", $list );
 			// echo "<br>\n$query\n<br>";
-			$wpdb->query( $query );
+			$wpdb->query( $wpdb->prepare( $query ) );
 		}
 	}
 }
 
 ?>
 
-<h2 class="wc-shipping-zones-heading"> <?php _e( 'EasyParcel Backup & Restore', 'easyparcel_backup' ); ?></h2>
+<h2 class="wc-shipping-zones-heading"> <?php esc_html_e( 'EasyParcel Backup & Restore', 'easyparcel_backup' ); ?></h2>
 <form method="post">
 	<?php
 	$Backup = new WC_Easyparcel_Backup_HTML();
@@ -136,7 +179,7 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 	?>
     <button type="submit" name="backup" class="button button-primary button-large wc-shipping-zone-method-save">Backup
     </button>
-    <input type="text" name="backup_file" value="<?php echo Date( 'Y_m_d_H_i_s' ); ?>">
+    <input type="text" name="backup_file" value="<?php echo esc_attr( gmdate( 'Y_m_d_H_i_s' ) ); ?>">
     <br><br>
 
 	<?php if ( $Backup->hasBackupFile() ) { ?>
@@ -146,7 +189,7 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
         </button>
         <select name="restore_path" class="wc-shipping-zone-region-select chosen_select">
 			<?php foreach ( $Backup->backup_list as $file ) { ?>
-                <option><?php echo $Backup->trim( $file ); ?></option>
+                <option><?php echo esc_html( $Backup->trim( $file ) ); ?></option>
 			<?php } ?>
         </select>
 

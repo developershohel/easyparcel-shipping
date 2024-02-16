@@ -28,14 +28,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 				foreach ( $courier_list as $k => $v ) {
 					$dropoff_value = ! empty( $v['dropoff_point'] ) ? 'yes' : 'no';
 					$services_type = $v['service_type'] ?? '';
-					echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
+					echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_attr( $v['service_name'] ) . '" data-courier_id="' . esc_attr( $v['courier_id'] ) . '" data-courier_name="' . esc_attr( $v['courier_name'] ) . '" data-courier_logo="' . esc_url( $v['courier_logo'] ) . '" data-courier_info="' . esc_attr( $v['delivery'] ) . '" data-service_id="' . esc_attr( $v['service_id'] ) . '" data-sample_cost="' . esc_attr( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
 				}
 				?>
             </select>
 			<?php
 			foreach ( $courier_list as $k => $v ) {
 				if ( ! empty( $v['dropoff_point'] ) ) {
-					echo '<div id="' . esc_html( $v['service_id'] ) . '" style="display:none">';
+					echo '<div id="' . esc_attr( $v['service_id'] ) . '" style="display:none">';
 					foreach ( $v['dropoff_point'] as $dpk => $dpv ) {
 						echo '<option value="' . esc_attr( $dpv['point_id'] ) . '" data-dropoff_name="' . esc_attr( $dpv['point_name'] ) . '">' . esc_html( $dpv['point_name'] ) . '</option>';
 					}
@@ -119,7 +119,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                     name="shipping_rate_option"
                     data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel_zone_method' ); ?>"
                     class="wc-shipping-zone-region-select chosen_select">
-                <option value="1" selected>Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                <option value="1" selected>Add On By Amount (<?php echo esc_attr( get_woocommerce_currency() ); ?>)
+                </option>
                 <option value="2">Add On By Percentage (%)</option>
             </select>
         </td>

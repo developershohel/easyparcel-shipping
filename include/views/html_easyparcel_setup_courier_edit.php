@@ -9,9 +9,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 global $wpdb;
-$courier_id  = isset( $_GET['courier_id'] ) ? absint( $_GET['courier_id'] ) : 0;
-$zone_id     = $wpdb->get_var( "SELECT zone_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id=$courier_id" );
-$instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id=$courier_id AND zone_id=$zone_id" );
+$courier_id = isset( $_GET['courier_id'] ) ? absint( $_GET['courier_id'] ) : 0;
+
+// Prepare SQL query using $wpdb->prepare()
+$zone_id = $wpdb->get_var(
+	$wpdb->prepare(
+		"SELECT zone_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = %d",
+		$courier_id
+	)
+);
+
+$instance_id = $wpdb->get_var(
+	$wpdb->prepare(
+		"SELECT instance_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = %d AND zone_id = %d",
+		$courier_id,
+		$zone_id
+	)
+);
 ?>
 
 <h2>
@@ -41,15 +55,15 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
 						if ( isset( $couriers[0]['courier_id'] ) && $v['courier_id'] ) {
 							$service_id = $couriers[0]['courier_id'];
 							if ( $service_id == $v['courier_id'] ) {
-								echo '<option class="selected" value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '" selected>' . esc_html( $v['service_name'] ) . '</option>';
+								echo '<option class="selected" value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_attr( $v['service_name'] ) . '" data-courier_id="' . esc_attr( $v['courier_id'] ) . '" data-courier_name="' . esc_attr( $v['courier_name'] ) . '" data-courier_logo="' . esc_attr( $v['courier_logo'] ) . '" data-courier_info="' . esc_attr( $v['delivery'] ) . '" data-service_id="' . esc_attr( $v['service_id'] ) . '" data-sample_cost="' . esc_attr( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '" selected>' . esc_html( $v['service_name'] ) . '</option>';
 							} else {
-								echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
+								echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_attr( $v['service_name'] ) . '" data-courier_id="' . esc_attr( $v['courier_id'] ) . '" data-courier_name="' . esc_attr( $v['courier_name'] ) . '" data-courier_logo="' . esc_url( $v['courier_logo'] ) . '" data-courier_info="' . esc_attr( $v['delivery'] ) . '" data-service_id="' . esc_attr( $v['service_id'] ) . '" data-sample_cost="' . esc_attr( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
 							}
 						} else {
 							if ( $v['service_id'] == 'all' ) {
-								echo '<option class="selected" value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '" selected>' . esc_html( $v['service_name'] ) . '</option>';
+								echo '<option class="selected" value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '" selected>' . esc_html( $v['service_name'] ) . '</option>';
 							} else {
-								echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . $dropoff_value . '" data-services_type="' . $services_type . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
+								echo '<option value="' . esc_attr( $v['service_id'] ) . '"  data-service_name="' . esc_html( $v['service_name'] ) . '" data-courier_id="' . esc_html( $v['courier_id'] ) . '" data-courier_name="' . esc_html( $v['courier_name'] ) . '" data-courier_logo="' . esc_html( $v['courier_logo'] ) . '" data-courier_info="' . esc_html( $v['delivery'] ) . '" data-service_id="' . esc_html( $v['service_id'] ) . '" data-sample_cost="' . esc_html( $v['shipment_price'] ) . '" data-dropoff="' . esc_attr( $dropoff_value ) . '" data-services_type="' . esc_attr( $services_type ) . '" data-price = "' . esc_attr( $v['price'] ) . '" data-addon_price="' . esc_attr( $v['addon_price'] ) . '" data-shipment_price="' . esc_attr( $v['shipment_price'] ) . '">' . esc_html( $v['service_name'] ) . '</option>';
 							}
 						}
 					}
@@ -72,7 +86,7 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
 				?>
                 <img class="img-wrap" id="courier_service_img" width="auto !important" height="30px !important"
                      src="<?php if ( isset( $couriers[0]['courier_logo'] ) )
-					     echo $couriers[0]['courier_logo'] ?>" style="display:inline-block;">
+					     echo esc_url( $couriers[0]['courier_logo'] ) ?>" style="display:inline-block;">
             </td>
         </tr>
         <tr id="courier_dropoff_panel" <?php if ( ! isset( $couriers[0]['courier_dropoff_name'] ) ) {
@@ -122,7 +136,7 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
             <td class="forminp">
                 <input type="text" data-attribute="courier_display_name" name="courier_display_name"
                        id="courier_display_name" value="<?php if ( isset( $couriers[0]['courier_display_name'] ) ) {
-					echo $couriers[0]['courier_display_name'];
+					echo esc_attr( $couriers[0]['courier_display_name'] );
 				} ?>" placeholder="">
             </td>
         </tr>
@@ -189,20 +203,25 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
 						$charges_value = explode( ':', $couriers[0]['charges_value'] );
 						if ( $charges_value[0] == 1 ) {
 							?>
-                            <option value="1" selected>Add On By Amount (<?php echo get_woocommerce_currency(); ?>)
+                            <option value="1" selected>Add On By Amount
+                                (<?php echo esc_html( get_woocommerce_currency() ); ?>)
                             </option>
                             <option value="2">Add On By Percentage (%)</option>
 						<?php } else if ( $charges_value[0] == 2 ) { ?>
-                            <option value="1">Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                            <option value="1">Add On By Amount (<?php echo esc_html( get_woocommerce_currency() ); ?>)
+                            </option>
                             <option value="2" selected>Add On By Percentage (%)</option>
 						<?php } else {
 							?>
-                            <option value="1">Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                            <option value="1">Add On By Amount (<?php echo esc_html( get_woocommerce_currency() ); ?>)
+                            </option>
                             <option value="2">Add On By Percentage (%)</option>
 						<?php }
 					} else {
 						?>
-                        <option value="1" selected>Add On By Amount (<?php echo get_woocommerce_currency(); ?>)</option>
+                        <option value="1" selected>Add On By Amount
+                            (<?php echo esc_html( get_woocommerce_currency() ); ?>)
+                        </option>
                         <option value="2">Add On By Percentage (%)</option>
 						<?php
 					}
@@ -220,9 +239,9 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
             </th>
             <td class="charges-value">
 				<?php
-				if ( $couriers[0]['charges_value'] != false ) {
+				if ( $couriers[0]['charges_value'] !== false ) {
 					$charges_value = explode( ':', $couriers[0]['charges_value'] );
-					echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="' . $charges_value[1] . '">';
+					echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="' . esc_attr( $charges_value[1] ) . '">';
 				} else {
 					echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="">';
 				}
@@ -233,13 +252,13 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
             <th scope="row" class="titledesc">Free Shipping Options</th>
             <th scope="row" class="titledesc">
                 <label><input class="form-check-input" type="checkbox"
-                              id="free_shipping" <?php if ( $couriers[0]['free_shipping'] == true )
+                              id="free_shipping" <?php if ( $couriers[0]['free_shipping'] === true )
 						echo esc_html( 'checked="checked"' ) ?>> <?php esc_html_e( 'Enable free shipping rule to apply', 'easyparcel_zone_method' ); ?>
                 </label>
             </th>
         </tr>
         <tr class="free_shipping_tab"
-            id="free_shipping_tab" <?php if ( $couriers[0]['free_shipping'] == false ) {
+            id="free_shipping_tab" <?php if ( $couriers[0]['free_shipping'] === false ) {
 			echo 'style="display:none"';
 		} ?>>
             <th scope="row" class="titledesc">
@@ -268,7 +287,7 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
             </td>
         </tr>
         <tr class="free_shipping_tab_value_panel"
-            id="free_shipping_tab_value_panel" <?php if ( $couriers[0]['free_shipping'] == false ) {
+            id="free_shipping_tab_value_panel" <?php if ( $couriers[0]['free_shipping'] === false ) {
 			echo 'style="display:none"';
 		} ?>>
             <th scope="row" class="free_shipping_by_desc">
@@ -280,8 +299,8 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
             </th>
             <td class="forminp">
                 <label><input type="text" data-attribute="free_shipping_value" name="free_shipping_value"
-                              id="free_shipping_value" value="<?php if ( $couriers[0]['free_shipping_value'] != false )
-						echo $couriers[0]['free_shipping_value'] ?>"></label>
+                              id="free_shipping_value" value="<?php if ( $couriers[0]['free_shipping_value'] !== false )
+						echo esc_attr( $couriers[0]['free_shipping_value'] ) ?>"></label>
             </td>
         </tr>
 	<?php
@@ -292,15 +311,15 @@ $instance_id = $wpdb->get_var( "SELECT instance_id FROM {$wpdb->prefix}easyparce
     <button type="submit" name="submit" id="submit"
             class="button button-primary button-large wc-shipping-zone-method-save"
             value="<?php esc_attr_e( 'Save changes', 'easyparcel_zone_method' ); ?>"><?php esc_html_e( 'Save changes', 'easyparcel_zone_method' ); ?></button>
-    <a href="<?php echo admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ?>"
+    <a href="<?php echo esc_url( admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ) ?>"
        class="button button-primary button-large wc-shipping-zone-method-back"><?php esc_html_e( 'Back', 'easyparcel_zone_method' ); ?></a>
 </p>
 <p class="form-error"></p>
-<input type="hidden" id="zone_id" name="zone_id" value="<?php echo $zone_id ?>">
-<input type="hidden" id="instance_id" name="instance_id" value="<?php echo $instance_id ?>">
-<input type="hidden" id="courier_id" name="courier_id" value="<?php echo $courier_id ?>">
+<input type="hidden" id="zone_id" name="zone_id" value="<?php echo esc_attr( $zone_id ) ?>">
+<input type="hidden" id="instance_id" name="instance_id" value="<?php echo esc_attr( $instance_id ) ?>">
+<input type="hidden" id="courier_id" name="courier_id" value="<?php echo esc_attr( $courier_id ) ?>">
 <input type="hidden" id="redirect_url" name="redirect_url"
-       value="<?php echo admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ?>">
+       value="<?php echo esc_url( admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ) ?>">
 <style>
     table#courier-setting-table th {
         width: 30%;

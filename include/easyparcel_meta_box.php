@@ -87,7 +87,7 @@ function easyparcel_order_page_custom_meta_box() {
 			<a href="' . esc_attr( $awb_link ) . '" target="_blank">' . esc_html( '[Download AWB]' ) . '</a></p>';
 	}
 	echo '</div>';
-	wp_enqueue_script( 'easyparcel-shipping-integration-order-fulfillment-js', plugin_dir_url( __FILE__ ) . 'js/easyparcel_meta_box.js', array( 'jquery' ) );
+	wp_enqueue_script( 'easyparcel-shipping-integration-order-fulfillment-js', plugin_dir_url( __FILE__ ) . 'js/easyparcel_meta_box.js', array( 'jquery' ), EASYPARCEL_VERSION, true );
 }
 
 function save_meta_box_ajax() {
