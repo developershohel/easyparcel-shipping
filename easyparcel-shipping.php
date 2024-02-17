@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $jal_db_version;
 $jal_db_version = '1.0';
-define( 'EASYPARCEL_VERSION', '1.3.0' );
+define( 'EASYPARCEL_VERSION', '1.0.3' );
 define( 'EASYPARCEL__FILE__', __FILE__ );
 define( 'EASYPARCEL_PLUGIN_BASE', plugin_basename( EASYPARCEL__FILE__ ) );
 define( 'EASYPARCEL_PATH', plugin_dir_path( EASYPARCEL__FILE__ ) );
