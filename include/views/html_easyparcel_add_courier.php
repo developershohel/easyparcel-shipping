@@ -180,5 +180,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     </tr>
 <?php
 endif; ?>
+<tr style="display: none">
+    <td>
+        <input type="hidden" id="courier_data" name="courier_data">
+		<?php
+		echo wp_nonce_field( 'easyparcel_courier_list', 'easyparcel_courier_list' );
+		echo wp_nonce_field( 'easyparcel_check_setting', 'easyparcel_check_setting' );
+		?>
+    </td>
+</tr>
 </tbody>
-<input type="hidden" id="courier_data" name="courier_data">

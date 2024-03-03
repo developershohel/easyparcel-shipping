@@ -382,6 +382,10 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					'desc_tip'    => true,
 					'default'     => 'no',
 				),
+				'easyparcel_courier_list'     => array(
+					'type'    => 'hidden',
+					'default' => wp_create_nonce( 'easyparcel_courier_list' )
+				)
 			);
 			$this->admin_shipping_init();
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_shipping_init' ), 30 );

@@ -43,7 +43,7 @@ function create_easyparcel_zones_courier_table() {
 		)
 	);
 	if ( empty( $column_exists ) ) {
-		$wpdb->query( "ALTER TABLE $table_name ADD COLUMN instance_id INT NULL AFTER zone_id, ADD COLUMN courier_dropoff_name varchar(100) NULL AFTER courier_dropoff_point, ADD COLUMN price FLOAT NULL DEFAULT 0.00 AFTER courier_dropoff_point, ADD COLUMN addon_price FLOAT NULL DEFAULT 0.00 AFTER price, ADD COLUMN shipment_price FLOAT NULL DEFAULT 0.00 AFTER addon_price" );
+		$wpdb->query( $wpdb->prepare( "ALTER TABLE $table_name ADD COLUMN instance_id INT NULL AFTER zone_id, ADD COLUMN courier_dropoff_name varchar(100) NULL AFTER courier_dropoff_point, ADD COLUMN price FLOAT NULL DEFAULT 0.00 AFTER courier_dropoff_point, ADD COLUMN addon_price FLOAT NULL DEFAULT 0.00 AFTER price, ADD COLUMN shipment_price FLOAT NULL DEFAULT 0.00 AFTER addon_price" ) );
 	}
 
 	add_option( 'jal_db_version', $jal_db_version );
