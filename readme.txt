@@ -3,7 +3,7 @@ Contributors: developershohel
 Tags: EasyParcel, EasyParcel Shipping, shipping, woocommerce shipping, WordPress shipping
 Requires at least: 6.3
 Tested up to: 6.4.3
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
@@ -62,6 +62,12 @@ A: You can install the EasyParcel Shipping plugin by following these simple step
 A: Yes, EasyParcel Shipping supports international shipping. You can choose from a range of international courier services to ship your products globally.
 
 == Changelog ==
+**Version 1.0.6 (March 9, 2024)**
+- Fix sanitize issues
+- Fix escaping issues
+- Added support for PHP 7.4.
+- Improved performance for bulk shipping processing.
+
 **Version 1.0.5 (March 5, 2024)**
 - Fix print issues and database issues
 - Fixed compatibility issues with WooCommerce version 8.6.1.
