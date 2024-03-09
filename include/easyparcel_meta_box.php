@@ -3,14 +3,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'add_meta_boxes', 'add_easyparcel_meta_box' );
+add_action( 'add_meta_boxes', 'easyparcel_add_meta_box' );
 // add_action( 'woocommerce_my_account_my_orders_actions','add_column_my_account_orders_ast_track_column', 10, 2 );
 // add_action( 'woocommerce_process_shop_order_meta', 'save_meta_box', 0, 2 );
-add_action( 'wp_ajax_wc_shipment_tracking_save_form', 'save_meta_box_ajax' );
+add_action( 'wp_ajax_wc_shipment_tracking_save_form', 'easyparcel_save_meta_box_ajax' );
 
 
-function add_easyparcel_meta_box() {
-	add_meta_box( 'easyparcel-shipping-integration-order-fulfillment', __( 'EasyParcel Fulfillment', 'easyparcel-shipping-integration' ), 'easyparcel_order_page_custom_meta_box', 'shop_order', 'side', 'high' );
+function easyparcel_add_meta_box() {
+	add_meta_box( 'easyparcel-shipping-integration-order-fulfillment', __( 'EasyParcel Fulfillment', 'easyparcel-shipping' ), 'easyparcel_order_page_custom_meta_box', 'shop_order', 'side', 'high' );
 }
 
 function easyparcel_order_page_custom_meta_box() {
@@ -35,8 +35,8 @@ function easyparcel_order_page_custom_meta_box() {
 	#### DYNAMIC VALUE - E ####
 
 	echo '<div id="easyparcel-fulfillment-form">';
-	echo '<p class="form-field shipping_provider_field"><label for="shipping_provider">' . esc_html__( 'Courier Services:', 'easyparcel-shipping-integration' ) . '</label><br/><select id="shipping_provider" name="shipping_provider" class="chosen_select shipping_provider_dropdown" style="width:100%;">';
-	echo '<option value="">' . esc_html__( 'Select Preferred Courier Service', 'easyparcel-shipping-integration' ) . '</option>';
+	echo '<p class="form-field shipping_provider_field"><label for="shipping_provider">' . esc_html__( 'Courier Services:', 'easyparcel-shipping' ) . '</label><br/><select id="shipping_provider" name="shipping_provider" class="chosen_select shipping_provider_dropdown" style="width:100%;">';
+	echo '<option value="">' . esc_html__( 'Select Preferred Courier Service', 'easyparcel-shipping' ) . '</option>';
 	foreach ( $shipment_providers_by_country as $providers ) {
 		$providers->ts_slug;
 		$selected = ( $providers->provider_name == $default_provider ) ? 'selected' : '';
@@ -69,17 +69,17 @@ function easyparcel_order_page_custom_meta_box() {
 		'value' => wp_create_nonce( 'create-easyparcel-fulfillment' ),
 	) );
 	if ( $easyparcel_paid_status ) {
-		echo '<button class="button button-info btn_ast2 button-save-form">' . esc_html__( 'Edit FulFillment', 'easyparcel-shipping-integration' ) . '</button>';
+		echo '<button class="button button-info btn_ast2 button-save-form">' . esc_html__( 'Edit FulFillment', 'easyparcel-shipping' ) . '</button>';
 	} else {
 		woocommerce_wp_text_input( array(
 			'id'          => 'pick_up_date',
-			'label'       => __( 'Drop Off / Pick Up Date', 'easyparcel-shipping-integration' ),
-			'placeholder' => date_i18n( __( 'Y-m-d', 'easyparcel-shipping-integration' ), time() ),
+			'label'       => __( 'Drop Off / Pick Up Date', 'easyparcel-shipping' ),
+			'placeholder' => date_i18n( __( 'Y-m-d', 'easyparcel-shipping' ), time() ),
 			'description' => '',
 			'class'       => 'date-picker-field',
-			'value'       => date_i18n( __( 'Y-m-d', 'easyparcel-shipping-integration' ), current_time( 'timestamp' ) ),
+			'value'       => date_i18n( __( 'Y-m-d', 'easyparcel-shipping' ), current_time( 'timestamp' ) ),
 		) );
-		echo '<button class="button button-primary btn_ast2 button-save-form">' . esc_html__( 'Fulfill Order', 'easyparcel-shipping-integration' ) . '</button>';
+		echo '<button class="button button-primary btn_ast2 button-save-form">' . esc_html__( 'Fulfill Order', 'easyparcel-shipping' ) . '</button>';
 	}
 	if ( $easyparcel_paid_status ) {
 		echo '<p class="fulfillment_details">' . esc_attr( $selected_courier ) . '<br>
@@ -90,10 +90,7 @@ function easyparcel_order_page_custom_meta_box() {
 	wp_enqueue_script( 'easyparcel-shipping-integration-order-fulfillment-js', plugin_dir_url( __FILE__ ) . 'js/easyparcel_meta_box.js', array( 'jquery' ), EASYPARCEL_VERSION, true );
 }
 
-function save_meta_box_ajax() {
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
+function easyparcel_save_meta_box_ajax() {
 	check_ajax_referer( 'create-easyparcel-fulfillment', 'security', true );
 	$shipping_provider = isset( $_POST['shipping_provider'] ) ? wc_clean( $_POST['shipping_provider'] ) : '';
 	$courier_name      = isset( $_POST['courier_name'] ) ? wc_clean( $_POST['courier_name'] ) : '';
@@ -174,7 +171,7 @@ function get_api_detail( $post ) {
 		$dropoff[ $rate['id'] ]           = $rate['dropoff_point'];
 		$obj->dropoff_point_list[]        = $dropoff;
 
-		$obj->selected_dropoff_point = isset( $rate['selected_dropoff_point'] ) ? $rate['selected_dropoff_point'] : '';
+		$obj->selected_dropoff_point = isset( $rate['selected_dropoff_point'] ) ? esc_attr( $rate['selected_dropoff_point'] ) : '';
 	}
 
 	return $obj;

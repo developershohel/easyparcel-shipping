@@ -78,9 +78,6 @@ function easyparcel_bulk_actions_order_fulfillment_admin_notice() {
  */
 
 function easyparcel_bulk_fulfillment_popup() {
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
 		exit( 'You are not allowed' );
 	}
@@ -116,17 +113,17 @@ function easyparcel_bulk_fulfillment_popup() {
         <div id="easyparcel_fulfillment_popout" class="fulfillment_popup_wrapper add_fulfillment_popup">
             <div class="fulfillment_popup_row">
                 <div class="popup_header">
-                    <h3 class="popup_title"><?php esc_html_e( 'Shipment Fulfillment' ); ?> -
+                    <h3 class="popup_title"><?php esc_html( 'Shipment Fulfillment' ); ?> -
                         #<?php esc_html( $order_number ); ?></h3>
                     <span class="dashicons dashicons-no-alt popup_close_icon"></span>
                 </div>
                 <div class="popup_body">
                     <form id="add_fulfillment_form" method="POST" class="add_fulfillment_form">
                         <p class="form-field form-50">
-                            <label for="shipping_provider"><?php esc_html_e( 'Courier Services:' ); ?></label>
+                            <label for="shipping_provider"><?php esc_html( 'Courier Services:' ); ?></label>
                             <select class="chosen_select shipping_provider_dropdown" id="shipping_provider"
                                     name="shipping_provider">
-                                <option value=""><?php esc_html_e( 'Select Preferred Courier Service' ); ?></option>
+                                <option value=""><?php esc_html( 'Select Preferred Courier Service' ); ?></option>
 								<?php
 								foreach ( $shipment_providers_by_country as $providers ) {
 									$providers->ts_slug;
@@ -180,9 +177,6 @@ function easyparcel_bulk_fulfillment_popup() {
  *
  */
 function easyparcel_save_bulk_order_ajax() {
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
 	check_ajax_referer( 'easyparcel_bulk_fulfillment_popup', 'security', true );
 	$shipping_provider = isset( $_POST['shipping_provider'] ) ? wc_clean( $_POST['shipping_provider'] ) : '';
 	$courier_name      = isset( $_POST['courier_name'] ) ? wc_clean( $_POST['courier_name'] ) : '';

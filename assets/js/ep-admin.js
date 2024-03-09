@@ -178,10 +178,14 @@ function add_shipping_courier(element) {
     let courierModel = jQuery('#wc-backbone-modal-dialog')
     let courierModelInterval = setInterval(function () {
         if (courierModel.length > 0) {
+            jQuery('.easyparcel-nonce').closest('fieldset').css({display: 'none'})
             courierModel.css({display: 'block'})
             clearInterval(courierModelInterval)
             let courierModelForm = courierModel.find('form')
             const instance_id = courierModelForm.find('[name=instance_id]').val()
+            const easyparcel_check_setting_nonce = courierModel.find('[name="woocommerce_easyparcel_easyparcel_check_setting"]').val()
+            const easyparcel_courier_list_nonce = courierModel.find('[name="woocommerce_easyparcel_easyparcel_courier_list"]').val()
+            const easyparcel_ajax_save_courier_services_nonce = courierModel.find('[name="woocommerce_easyparcel_easyparcel_ajax_save_courier_services"]').val()
             const cloneForm = courierModelForm.clone()
             courierModelForm.css({display: 'none'})
             courierModelForm.empty()
@@ -200,11 +204,12 @@ function add_shipping_courier(element) {
 
             jQuery.ajax({
                 url: ajax_object.ajax_url, method: 'post', data: {
-                    action: 'easyparcel_check_setting', zone_id: zoneId
+                    action: 'easyparcel_check_setting', zone_id: zoneId, nonce: easyparcel_check_setting_nonce
                 }, beforeSend: function () {
                     jQuery('#spinner').css('display', 'block');
                     saveCourierButton.attr('disabled', 'disabled');
                 }, success: function (data) {
+                    console.log(data)
                     const jsonData = JSON.parse(data)
                     if (jsonData.status === false) {
                         courierModelForm.parent().html(cloneForm)
@@ -220,12 +225,14 @@ function add_shipping_courier(element) {
                             data: {
                                 action: 'easyparcel_courier_list',
                                 zone_id: zoneId,
-                                instance_id: instance_id
+                                instance_id: instance_id,
+                                nonce: easyparcel_courier_list_nonce
                             }, beforeSend: function () {
                                 jQuery('#spinner').css('display', 'block');
                                 saveCourierButton.attr('disabled', 'disabled');
                             }, success: function (data) {
-                                courierModelForm.html(`<table class="form-table">${data}</table><input type="hidden" name="instance_id" value="${instance_id}">`);
+                                console.log(data)
+                                courierModelForm.html(`<table class="form-table">${data}</table><input type="hidden" name="instance_id" value="${instance_id}"> <input type="hidden" id="easyparcel_ajax_save_courier_services" name="easyparcel_ajax_save_courier_services" value="${easyparcel_ajax_save_courier_services_nonce}">`);
                             }, complete: function () {
                                 console.log('completed');
                                 jQuery('#spinner').css('display', 'none');
@@ -455,6 +462,8 @@ function save_courier() {
     })
     saveCourierButton.on('click', function (e) {
         //e.preventDefault()
+        const easyparcel_ajax_save_courier_services_nonce = modalDialog.find('#easyparcel_ajax_save_courier_services').val()
+        console.log(easyparcel_ajax_save_courier_services_nonce)
         const zoneId = zone_id()
         if (zoneId === "") {
             return false;
@@ -495,11 +504,13 @@ function save_courier() {
             data: {
                 action: 'easyparcel_ajax_save_courier_services',
                 courier_data: ajaxCourierData,
-                courier_setting: 'popup'
+                courier_setting: 'popup',
+                nonce: easyparcel_ajax_save_courier_services_nonce
             }, beforeSend: function () {
                 saveCourierButton.attr('disabled', 'disabled')
                 article.css({cursor: 'progress', opacity: .7})
             }, success: function (data) {
+                console.log(data)
                 const jsonData = JSON.parse(data)
                 if (jsonData.status === true) {
                     saveCourierButton.css({backgroundColor: '#2271b1', borderColor: '#2271b1'})
@@ -513,12 +524,9 @@ function save_courier() {
                     const courier_parent = jQuery('.wc-shipping-zone-methods.widefat').find(`[data-instance_id=${instance_id}]`)
                     const courier_title = courier_parent.find('.courier-name')
                     const addCourier = courier_parent.find('.add-courier')
-                    if (courier_title.length === 0) {
-                        addCourier.before(`<p class="courier-name" data-instance_id=${instance_id}>Courier Name: <strong>${jsonData.courier_name}</strong></p>`)
-                    } else {
-                        courier_title.find('strong').html(jsonData.courier_name)
+                    if (courier_parent.length > 0) {
+                        courier_parent.html(`<p class="courier-name" data-instance_id=${instance_id}>Courier Name: <strong>${jsonData.courier_name}</strong></p><p>Add/Edit Courier to <a class="courier-url" href="${ajax_object.admin_url}admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&courier_id=${jsonData.courier_id}">Click Here</a></p>`)
                     }
-                    courier_parent.find('.new-courier-url').attr('href', `${ajax_object.admin_url}admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&courier_id=${jsonData.courier_id}`)
                 } else {
                     saveCourierButton.css({backgroundColor: 'red', borderColor: 'red'})
                     saveCourierButton.before(`<span style="color: green; float: left">${jsonData.message}</span>`)
@@ -556,6 +564,8 @@ function save_courier() {
         const zoneId = jQuery('#zone_id').val()
         const instance_id = jQuery('#instance_id').val()
         const courier_id = jQuery('#courier_id').val()
+        const easyparcel_ajax_save_courier_services_nonce = jQuery('#easyparcel_ajax_save_courier_services').val()
+        console.log(easyparcel_ajax_save_courier_services_nonce)
         if (zoneId === "") {
             return false;
         }
@@ -596,11 +606,13 @@ function save_courier() {
                 action: 'easyparcel_ajax_save_courier_services',
                 courier_data: ajaxCourierData,
                 courier_setting: 'edit_courier',
-                id: courier_id
+                id: courier_id,
+                nonce: easyparcel_ajax_save_courier_services_nonce
             }, beforeSend: () => {
                 jQuery(this).attr('disabled', 'disabled')
                 courierTable.css({cursor: 'progress', opacity: .7})
             }, success: (data) => {
+                console.log(data)
                 const jsonData = JSON.parse(data)
                 if (jsonData.status === true) {
                     console.log('completed')
@@ -627,6 +639,8 @@ function save_courier() {
         const courierTable = jQuery('#courier-setting-table')
         const formError = jQuery('.form-error')
         const zoneId = jQuery('#zone_id').val()
+        const easyparcel_ajax_save_courier_services_nonce = jQuery('#easyparcel_ajax_save_courier_services').val()
+        console.log(easyparcel_ajax_save_courier_services_nonce)
         if (zoneId === "") {
             return false;
         }
@@ -666,11 +680,13 @@ function save_courier() {
             data: {
                 action: 'easyparcel_ajax_save_courier_services',
                 courier_data: ajaxCourierData,
-                courier_setting: 'setup_courier'
+                courier_setting: 'setup_courier',
+                nonce: easyparcel_ajax_save_courier_services_nonce
             }, beforeSend: () => {
                 jQuery(this).attr('disabled', 'disabled')
                 courierTable.css({cursor: 'progress', opacity: .7})
             }, success: (data) => {
+                console.log(data)
                 const jsonData = JSON.parse(data)
                 if (jsonData.status === true) {
                     console.log('completed')

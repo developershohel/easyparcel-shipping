@@ -44,9 +44,9 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 				// Failed to initialize WP_Filesystem, handle the error accordingly
 				return;
 			}
-
-			$backup_file    = isset( $_POST['backup_file'] ) && wp_verify_nonce( $_POST['backup_file'], 'backup_file_action' ) ? sanitize_file_name( $_POST['backup_file'] ) : '';
-			$backup_content = "<?php \n";
+			$backup_file_nonce = isset( $_POST['backup_file'] ) ? sanitize_text_field( wp_slash( $_POST['backup_file'] ) ) : '';
+			$backup_file       = isset( $_POST['backup_file'] ) ? sanitize_file_name( $_POST['backup_file'] ) : '';
+			$backup_content    = "<?php \n";
 
 			// Output message indicating backup process initialization
 			echo esc_html( 'Backup process initialized' ) . "<br>\n";
@@ -87,7 +87,7 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 
 		public function execRestoreProcess() {
 			echo esc_html( 'restore process initialize' ) . "<br>\n";
-			$restore_path = isset( $_POST['restore_path'] ) && wp_verify_nonce( $_POST['restore_path'], 'restore_path_action' ) ? sanitize_text_field( $_POST['restore_path'] ) : '';
+			$restore_path = isset( $_POST['restore_path'] ) ? sanitize_text_field( $_POST['restore_path'] ) : '';
 			$RestoreFile  = $this->backup_path . $restore_path . $this->backup_extention;
 			echo esc_html( 'restore from : ' ) . esc_html( $restore_path ) . "<br>\n";
 			include_once( $RestoreFile );
@@ -136,22 +136,19 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 		protected function truncateTable( $table ) {
 			global $wpdb;
 			// Execute the prepared query
-			$wpdb->query( $wpdb->prepare( "TRUNCATE TABLE {$wpdb->prefix}%s", $table ) );
+			$wpdb->query( $wpdb->prepare( "TRUNCATE TABLE {$wpdb->prefix}{$table}" ) );
 		}
-
 
 		protected function insertTable( $table, $datas ) {
 			global $wpdb;
-			$field = array_keys( (array) $datas[0] );
-
-			$query = "INSERT INTO {$wpdb->prefix}$table (" . implode( ',', $field ) . ") VALUES ";
-			$list  = [];
+			$fields      = array_keys( (array) $datas[0] );
+			$db_fields   = implode( ',', $fields );
+			$values_list = [];
 			foreach ( $datas as $row ) {
-				$list[] = '("' . implode( '","', array_values( (array) $row ) ) . '")';
+				$values_list[] = '(' . implode( ',', array_map( 'esc_sql', array_values( (array) $row ) ) ) . ')';
 			}
-			$query .= implode( ",", $list );
-			// echo "<br>\n$query\n<br>";
-			$wpdb->query( $wpdb->prepare( $query ) );
+			$values_string = implode( ',', $values_list );
+			$wpdb->query( "INSERT INTO {$wpdb->prefix}{$table} ($db_fields) VALUES $values_string" );
 		}
 	}
 }
@@ -159,33 +156,30 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
 ?>
 
 <h2 class="wc-shipping-zones-heading"> <?php esc_html_e( 'EasyParcel Backup & Restore', 'easyparcel_backup' ); ?></h2>
-<form method="post">
+<form method="post" id="backup-form">
 	<?php
 	$Backup = new WC_Easyparcel_Backup_HTML();
 	if ( ! empty( $_POST ) ) {
-		if ( isset( $_POST['backup'] ) && wp_verify_nonce( $_POST['backup_nonce'], 'backup_action' ) ) {
+		if ( isset( $_POST['backup'] ) ) {
 			$Backup->execBackupProcess();
 		}
 
-		if ( isset( $_POST['restore'] ) && wp_verify_nonce( $_POST['restore_nonce'], 'restore_action' ) ) {
+		if ( isset( $_POST['restore'] ) ) {
 			$Backup->execRestoreProcess();
 		}
 
-		if ( isset( $_POST['clear_backup'] ) && wp_verify_nonce( $_POST['clear_backup_nonce'], 'clear_backup_action' ) ) {
+		if ( isset( $_POST['clear_backup'] ) ) {
 			$Backup->clearBackup();
 		}
 	}
 	$Backup->loadBackupFile();
-	wp_nonce_field( 'restore_path_action', 'restore_path' );
-	wp_nonce_field( 'backup_file_action', 'backup_file' );
-	wp_nonce_field( 'backup_action', 'backup_nonce' ); ?>
+	?>
     <button type="submit" name="backup" class="button button-primary button-large wc-shipping-zone-method-save">Backup
     </button>
     <input type="text" name="backup_file" value="<?php echo esc_attr( gmdate( 'Y_m_d_H_i_s' ) ); ?>">
     <br><br>
 
 	<?php if ( $Backup->hasBackupFile() ) { ?>
-		<?php wp_nonce_field( 'restore_action', 'restore_nonce' ); ?>
         <button type="submit" name="restore" class="button button-primary button-large wc-shipping-zone-method-save">
             Restore
         </button>
@@ -196,9 +190,9 @@ if ( ! class_exists( 'WC_Easyparcel_Backup_HTML' ) ) {
         </select>
 
         <br><br>
-		<?php wp_nonce_field( 'clear_backup_action', 'clear_backup_nonce' ); ?>
         <button type="submit" name="clear_backup"
                 class="button button-primary button-large wc-shipping-zone-method-save">Clear All Backup File
         </button>
 	<?php } ?>
+	<?php wp_create_nonce( 'easyparcel_backup_nonce' ); ?>
 </form>

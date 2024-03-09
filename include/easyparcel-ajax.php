@@ -1,17 +1,23 @@
 <?php
 function easyparcel_courier_list() {
 	global $wpdb;
-	if ( ! isset( $_POST['zone_id'] ) || ! isset( $_POST['instance_id'] ) ) {
+	$nonce       = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	$zone_id     = isset( $_POST['zone_id'] ) ? absint( $_POST['zone_id'] ) : 0;
+	$instance_id = isset( $_POST['instance_id'] ) ? absint( $_POST['instance_id'] ) : 0;
+	if ( empty( $nonce ) || empty( $zone_id ) || empty( $instance_id ) ) {
 		echo 'No Zone ID or Instance ID Found';
 		wp_die();
 	}
-	$zone_id     = absint( $_POST['zone_id'] );
-	$instance_id = absint( $_POST['instance_id'] );
+	if ( ! wp_verify_nonce( $nonce, 'easyparcel_courier_list' ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing or invalid nonce' ] );
+		wp_die();
+	}
+
 	if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 		include_once 'wc_easyparcel_shipping_zone.php';
 	}
 	$courier_table = $wpdb->prefix . 'easyparcel_zones_courier';
-	$courier       = $wpdb->get_var( $wpdb->prepare( "SELECT instance_id FROM $courier_table WHERE zone_id = %d AND instance_id = %d", $zone_id, $instance_id ) );
+	$courier       = $wpdb->get_var( $wpdb->prepare( "SELECT instance_id FROM {$courier_table} WHERE zone_id =%s AND instance_id =%s", $zone_id, $instance_id ) );
 	$shipping_zone = new WC_Easyparcel_Shipping_Zone();
 	if ( empty( $courier ) ) {
 		$shipping_zone->add_new_courier( $zone_id );
@@ -25,6 +31,15 @@ add_action( 'wp_ajax_easyparcel_courier_list', 'easyparcel_courier_list' );
 add_action( 'wp_ajax_nopriv_easyparcel_courier_list', 'easyparcel_courier_list' );
 
 function easyparcel_check_setting() {
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	if ( empty( $nonce ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing' ] );
+		wp_die();
+	}
+	if ( ! wp_verify_nonce( $nonce, 'easyparcel_courier_list' ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is invalid' ] );
+		wp_die();
+	}
 	$value = get_option( 'woocommerce_easyparcel_settings' );
 	if ( isset( $value['enabled'] ) && $value['enabled'] == 'yes' ) {
 		echo wp_json_encode( [ 'status' => true ] );
@@ -39,6 +54,15 @@ add_action( 'wp_ajax_nopriv_easyparcel_check_setting', 'easyparcel_check_setting
 
 function easyparcel_ajax_save_courier_services() {
 	global $wpdb;
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	if ( empty( $nonce ) ) {
+		echo wp_json_encode( array( 'status' => false, 'message' => "Nonce is empty" ) );
+		wp_die();
+	}
+	if ( ! wp_verify_nonce( $nonce, 'easyparcel_courier_list' ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing or invalid nonce' ] );
+		wp_die();
+	}
 	if ( ! isset( $_POST['courier_data'] ) ) {
 		echo wp_json_encode( array( 'status' => false, 'message' => "We don't find any data" ) );
 		wp_die();
@@ -55,19 +79,19 @@ function easyparcel_ajax_save_courier_services() {
 	$instance_id         = absint( $courier_args['instance_id'] );
 	$method              = sanitize_text_field( $_POST['courier_setting'] );
 	$table               = $wpdb->prefix . 'easyparcel_zones_courier';
-	$courier_order_value = $wpdb->get_var( $wpdb->prepare( "SELECT courier_order FROM $table WHERE zone_id=$zone_id" ) );
+	$courier_order_value = $wpdb->get_var( $wpdb->prepare( "SELECT courier_order FROM {$table} WHERE zone_id=%s", $zone_id ) );
 	$shipping_table      = $wpdb->prefix . 'woocommerce_shipping_zone_methods';
-	$shipping_method     = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $shipping_table WHERE zone_id=$zone_id" ), ARRAY_A );
+	$shipping_method     = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$shipping_table} WHERE zone_id=%s", $zone_id ), ARRAY_A );
 	try {
 		if ( $method == 'popup' ) {
 			if ( empty( $instance_id ) ) {
 				echo wp_json_encode( array( 'status' => false, 'message' => "We don't find the instance ID" ) );
 				wp_die();
 			}
-			$get_courier_id = $wpdb->get_var( "SELECT id FROM $table WHERE instance_id=$instance_id AND zone_id=$zone_id" );
+			$get_courier_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE instance_id=%s AND zone_id=%s", $instance_id, $zone_id ) );
 			if ( empty( $get_courier_id ) ) {
 				if ( $courier_order_value !== false ) {
-					$courier_args['courier_order'] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(courier_order) FROM $table WHERE zone_id=$zone_id" ) ) + 1;
+					$courier_args['courier_order'] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(courier_order) FROM {$table} WHERE zone_id=%s", $zone_id ) ) + 1;
 				}
 				$insert_courier = $wpdb->insert( $table, $courier_args );
 				if ( $insert_courier !== false ) {
@@ -90,7 +114,7 @@ function easyparcel_ajax_save_courier_services() {
 						'status'       => true,
 						'message'      => "Courier Successfully Save",
 						'courier_name' => $courier_args['courier_display_name'] ?? $courier_args['courier_name'],
-						'courier_id'   => $wpdb->insert_id
+						'courier_id'   => $get_courier_id
 					) );
 				} else {
 					echo wp_json_encode( array( 'status' => false, 'message' => "Courier Didn't update" ) );
@@ -103,9 +127,9 @@ function easyparcel_ajax_save_courier_services() {
 				echo wp_json_encode( array( 'status' => false, 'message' => "Courier Don't find the courier ID" ) );
 				wp_die();
 			}
-			$instance_id = $wpdb->get_var( $wpdb->prepare( "SELECT instance_id FROM $table WHERE id=$id" ) );
+			$instance_id = $wpdb->get_var( $wpdb->prepare( "SELECT instance_id FROM {$table} WHERE id=%s", $id ) );
 			if ( empty( $instance_id ) ) {
-				$max_method_order = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(method_order) FROM $shipping_table WHERE zone_id=$zone_id" ) );
+				$max_method_order = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(method_order) FROM {$shipping_table} WHERE zone_id=%s", $zone_id ) );
 				$method_order     = $max_method_order + 1;
 				$instance_method  = $wpdb->insert( $shipping_table, array(
 					'zone_id'      => $zone_id,
@@ -146,10 +170,10 @@ function easyparcel_ajax_save_courier_services() {
 			}
 		} else if ( $method == 'setup_courier' ) {
 			if ( $courier_order_value !== false ) {
-				$courier_args['courier_order'] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(courier_order) FROM $table WHERE zone_id=$zone_id" ) ) + 1;
+				$courier_args['courier_order'] = (int) $wpdb->get_var( $wpdb->prepare( "SELECT MAX(courier_order) FROM {$table} WHERE zone_id=%s", $zone_id ) ) + 1;
 			}
 			if ( ! empty( $shipping_method ) ) {
-				$max_method_order = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(method_order) FROM $shipping_table WHERE zone_id=$zone_id" ) );
+				$max_method_order = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(method_order) FROM {$shipping_table} WHERE zone_id=%s", $zone_id ) );
 				$method_order     = $max_method_order + 1;
 				$instance_method  = $wpdb->insert( $shipping_table, array(
 					'zone_id'      => $zone_id,

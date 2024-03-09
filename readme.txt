@@ -1,14 +1,14 @@
-== EasyParcel Shipping ==
-Contributors: EasyParcel
+=== EasyParcel Shipping ===
+Contributors: developershohel
 Tags: EasyParcel, EasyParcel Shipping, shipping, woocommerce shipping, WordPress shipping
 Requires at least: 6.3
-Tested up to: 6.4.2
-Stable tag: 1.0.3
+Tested up to: 6.4.3
+Stable tag: 1.0.5
 Requires PHP: 7.4
-License: GNU General Public License v3.0 or later
+License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
 
-EasyParcel Shipping is the quintessential WooCommerce shipping plugin that simplifies the entire order fulfillment process while offering your customers the freedom to choose their preferred courier during the checkout. With EasyParcel Shipping, you can effortlessly streamline your shipping operations, reduce overhead costs, and boost customer satisfaction, all within your WordPress store.
+Streamline WooCommerce shipping with EasyParcel. Effortlessly integrate courier services, real-time rates, label generation, and more!
 
 == Description ==
 [Watch Demo on YouTube](https://www.youtube.com/c/EasyParcelBayanLepas)
@@ -44,20 +44,53 @@ Join thousands of e-commerce businesses that rely on EasyParcel Shipping for eff
 
 == Get Started ==
 Download EasyParcel Shipping now and experience the future of WooCommerce shipping. Visit our [website](https://easyparcel.com) for additional resources, documentation, and support.
-
+Follow the Tutorial : [EasyParcel Integration With WooCommerce Platform](https://blog.easyparcel.com/my/tutorial-easyparcel-integration-with-woocommerce-platform-plugin-version/)
 For any questions, feedback, or assistance, please contact our dedicated support team at [support@easyparcel.com](mailto:support@easyparcel.com).
 
 Make shipping a breeze with EasyParcel Shipping - Your Ultimate WooCommerce Shipping Solution!
 
+== Frequently Asked Questions ==
+**Q: How do I install the EasyParcel Shipping plugin?**
+A: You can install the EasyParcel Shipping plugin by following these simple steps:
+1. Log in to your WordPress admin dashboard.
+2. Go to Plugins > Add New.
+3. Search for "EasyParcel Shipping" in the search bar.
+4. Click on the "Install Now" button next to the EasyParcel Shipping plugin.
+5. Once installed, click on the "Activate" button to activate the plugin.
+
+**Q: Can I use EasyParcel Shipping for international shipping?**
+A: Yes, EasyParcel Shipping supports international shipping. You can choose from a range of international courier services to ship your products globally.
+
+== Changelog ==
+**Version 1.0.5 (March 5, 2024)**
+- Fix print issues and database issues
+- Fixed compatibility issues with WooCommerce version 8.6.1.
+- Added support for PHP 7.4.
+- Improved performance for bulk shipping processing.
+
+**Version 1.0.4 (March 4, 2024)**
+- Fixed compatibility issues with WooCommerce version 8.6.1.
+- Added support for PHP 7.4.
+- Improved performance for bulk shipping processing.
+
+**Version 1.0.3 (March 4, 2024)**
+- Fixed compatibility issues with WooCommerce version 8.6.0.
+- Added support for PHP 7.4.
+- Improved performance for bulk shipping processing.
+
+
+== Upgrade Notice ==
+**Important Notice for Version 1.0.4 Users**
+Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 1.0.3 to prevent compatibility issues.
+
+== Screenshots ==
+1. Add new plugin(easyparcel-shipping-1.jpg)
+2. Activate the plugin(easyparcel-shipping-2.jpg)
 == Documentation and Support ==
 
 For more information, detailed setup instructions, and FAQs, please visit our [Documentation](https://blog.easyparcel.com/my/tutorial-easyparcel-integration-with-woocommerce-platform-plugin-version/).
 
 For support inquiries, contact our team at [support@easyparcel.com](mailto:support@easyparcel.com).
-
-== Stay Connected ==
-
-Follow us on [Facebook](https://www.facebook.com/easyParcel.my) and [Twitter](https://twitter.com/easyParcel) [Youtube](https://www.youtube.com/c/EasyParcelBayanLepas) to stay updated with the latest developments and tips for optimizing your WooCommerce shipping with EasyParcel Shipping.
 
 == License ==
 
@@ -69,4 +102,3 @@ You can read our [Privacy Policy](https://easyparcel.com/my/privacy/) roles for 
 EasyParcel Shipping extends its appreciation to the vibrant WordPress and WooCommerce communities for their continued support.
 
 Thank you for choosing EasyParcel Shipping - Your WooCommerce Shipping Solution. We look forward to enhancing your shipping experience!
-

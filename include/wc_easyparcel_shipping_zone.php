@@ -1,4 +1,5 @@
 <?php
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
@@ -39,7 +40,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 		public function admin_options() {
 			//check if default shipping zone exist easyparcel shipping method
 			global $current_section, $hide_save_button, $wpdb;
-			$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}woocommerce_shipping_zone_methods WHERE method_id = 'easyparcel'" ) );
+			$result = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}woocommerce_shipping_zone_methods WHERE method_id = 'easyparcel'" );
 			if ( empty( $result ) ) {
 				$hide_save_button = true;
 				echo '<h4><font color="red">Important**</font><br>' . esc_html( 'You will need to setup EasyParcel Shipping first' ) . '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&section' ) ) . '" style="margin: 0 10px;">' . esc_html( 'HERE' ) . '</a>' . esc_html( 'before proceeding to EasyParcel Courier Setting.' );
@@ -85,7 +86,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 				'jquery-ui-sortable',
 				'wc-enhanced-select',
 				'wc-backbone-modal'
-			), EASYPARCEL_VERSION, true );
+			), '1.0' );
 			wp_localize_script(
 				'easyparcel_admin_shipping_zone',
 				'shippingZonesLocalizeScript',
@@ -98,17 +99,53 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 					),
 					'wc_shipping_zones_nonce' => wp_create_nonce( 'wc_shipping_zones_nonce' ),
 					'strings'                 => array(
-						'unload_confirmation_msg'     => __( 'Your changed data will be lost if you leave this page without saving.', 'easyparcel-shipping' ),
-						'delete_confirmation_msg'     => __( 'Are you sure you want to delete this zone? This action cannot be undone.', 'easyparcel-shipping' ),
-						'save_failed'                 => __( 'Your changes were not saved. Please retry.', 'easyparcel-shipping' ),
-						'no_shipping_methods_offered' => __( 'No shipping methods offered to this zone.', 'easyparcel-shipping' ),
-						'no_courier_applied'          => __( 'No courier applied to this zone.', 'easyparcel-shipping' ),
+						'unload_confirmation_msg'     => __( 'Your changed data will be lost if you leave this page without saving.', 'easyparcel_zone' ),
+						'delete_confirmation_msg'     => __( 'Are you sure you want to delete this zone? This action cannot be undone.', 'easyparcel_zone' ),
+						'save_failed'                 => __( 'Your changes were not saved. Please retry.', 'easyparcel_zone' ),
+						'no_shipping_methods_offered' => __( 'No shipping methods offered to this zone.', 'easyparcel_zone' ),
+						'no_courier_applied'          => __( 'No courier applied to this zone.', 'easyparcel_zone' ),
 					),
 				)
 			);
 			wp_enqueue_script( 'easyparcel_admin_shipping_zone' );
 
 			include_once dirname( __FILE__ ) . '/views/html_easyparcel_shipping_zones.php';
+		}
+
+		protected function get_region_options( $allowed_countries, $shipping_continents ) {
+			$options = array();
+			foreach ( $shipping_continents as $continent_code => $continent ) {
+				$continent_data = array(
+					'value'    => 'continent:' . esc_attr( $continent_code ),
+					'label'    => esc_html( $continent['name'] ),
+					'children' => array(),
+				);
+
+				$countries = array_intersect( array_keys( $allowed_countries ), $continent['countries'] );
+
+				foreach ( $countries as $country_code ) {
+					$country_data = array(
+						'value'    => 'country:' . esc_attr( $country_code ),
+						'label'    => esc_html( $allowed_countries[ $country_code ] ),
+						'children' => array(),
+					);
+
+					$states = WC()->countries->get_states( $country_code );
+
+					if ( $states ) {
+						foreach ( $states as $state_code => $state_name ) {
+							$country_data['children'][] = array(
+								'value' => 'state:' . esc_attr( $country_code . ':' . $state_code ),
+								'label' => esc_html( $state_name . ', ' . $allowed_countries[ $country_code ] ),
+							);
+						}
+					}
+					$continent_data['children'][] = $country_data;
+				}
+				$options[] = $continent_data;
+			}
+
+			return $options;
 		}
 
 		/**
@@ -178,19 +215,18 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 					'wc_shipping_zones_nonce' => wp_create_nonce( 'wc_shipping_zones_nonce' ),
 					'add_courier_option'      => $add_btn_disabled,
 					'strings'                 => array(
-						'unload_confirmation_msg' => __( 'Your changed data will be lost if you leave this page without saving.', 'easyparcel_zone_method' ),
-						'save_changes_prompt'     => __( 'Do you wish to save your changes first? Your changed data will be discarded if you choose to cancel.', 'easyparcel_zone_method' ),
-						'save_failed'             => __( 'Your changes were not saved. Please retry.', 'easyparcel_zone_method' ),
-						'add_method_failed'       => __( 'Shipping method could not be added. Please retry.', 'easyparcel_zone_method' ),
-						'no_location_detected'    => __( 'Kindly save your location before proceed to add in courier service', 'easyparcel_zone_method' ),
-						'yes'                     => __( 'Yes', 'easyparcel_zone_method' ),
-						'no'                      => __( 'No', 'easyparcel_zone_method' ),
-						'default_zone_name'       => __( 'Zone', 'easyparcel_zone_method' ),
+						'unload_confirmation_msg' => __( 'Your changed data will be lost if you leave this page without saving.', 'easyparcel-shipping' ),
+						'save_changes_prompt'     => __( 'Do you wish to save your changes first? Your changed data will be discarded if you choose to cancel.', 'easyparcel-shipping' ),
+						'save_failed'             => __( 'Your changes were not saved. Please retry.', 'easyparcel-shipping' ),
+						'add_method_failed'       => __( 'Shipping method could not be added. Please retry.', 'easyparcel-shipping' ),
+						'no_location_detected'    => __( 'Kindly save your location before proceed to add in courier service', 'easyparcel-shipping' ),
+						'yes'                     => __( 'Yes', 'easyparcel-shipping' ),
+						'no'                      => __( 'No', 'easyparcel-shipping' ),
+						'default_zone_name'       => __( 'Zone', 'easyparcel-shipping' ),
 					),
 				)
 			);
 			wp_enqueue_script( 'easyparcel_admin_shipping_zone_methods' );
-
 			include_once dirname( __FILE__ ) . '/views/html_easyparcel_shipping_zone_methods.php';
 		}
 
@@ -201,9 +237,9 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 		 */
 		public function edit_courier_panel( $courier_id ) {
 			global $wpdb;
-			$courier  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = $courier_id" ) );
-			$couriers = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = $courier_id" ), ARRAY_A );
-			$zone_id  = $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id={$_GET['courier_id']}" ) );
+			$courier  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id =%s", $courier_id ) );
+			$couriers = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id =%s", $courier_id ), ARRAY_A );
+			$zone_id  = $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id=%s", $courier_id ) );
 			if ( ! $courier ) {
 				wp_die( esc_html__( 'Courier does not exist!', 'woocommerce' ) );
 			} else {
@@ -401,7 +437,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 			$freeshippingby = self::freeShippingByOption();
 			$addonCharges   = self::addonChargesOption();
 			$table          = $wpdb->prefix . 'easyparcel_zones_courier';
-			$couriers       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE zone_id=$zone_id" ), ARRAY_A );
+			$couriers       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table} WHERE zone_id=%s", $zone_id ), ARRAY_A );
 			include_once dirname( __FILE__ ) . '/views/html_easyparcel_setup_courier.php';
 		}
 
@@ -505,7 +541,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 			$freeshippingby = self::freeShippingByOption();
 			$addonCharges   = self::addonChargesOption();
 			$table          = $wpdb->prefix . 'easyparcel_zones_courier';
-			$couriers       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE zone_id=$zone_id AND instance_id=$instance_id" ), ARRAY_A );
+			$couriers       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table} WHERE zone_id=%s AND instance_id=%s", $zone_id, $instance_id ), ARRAY_A );
 			include_once dirname( __FILE__ ) . '/views/html_easyparcel_setup_courier_content.php';
 		}
 
@@ -609,7 +645,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 			$freeshippingby = self::freeShippingByOption();
 			$addonCharges   = self::addonChargesOption();
 			$table          = $wpdb->prefix . 'easyparcel_zones_courier';
-			$couriers       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $table WHERE zone_id=$zone_id" ), ARRAY_A );
+			$couriers       = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table} WHERE zone_id=%s", $zone_id ), ARRAY_A );
 			include_once dirname( __FILE__ ) . '/views/html_easyparcel_add_courier.php';
 		}
 

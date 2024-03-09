@@ -11,39 +11,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <h2>
-    <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) ); ?>"><?php esc_html_e( 'EasyParcel Courier Setting', 'easyparcel_zone_method' ); ?></a>
+    <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) ); ?>"><?php esc_html_e( 'EasyParcel Courier Setting', 'easyparcel-shipping' ); ?></a>
     &gt;
-    <span class="wc-shipping-zone-name"><?php echo esc_html( $zone->get_zone_name() ? $zone->get_zone_name() : __( 'Zone', 'easyparcel_zone_method' ) ); ?></span>
+    <span class="wc-shipping-zone-name"><?php echo esc_html( $zone->get_zone_name() ? $zone->get_zone_name() : __( 'Zone', 'easyparcel-shipping' ) ); ?></span>
 </h2>
 
 <?php do_action( 'woocommerce_shipping_zone_before_methods_table', $zone ); ?>
 
-<table class="form-table wc-shipping-zone-settings">
+<table class="form-table wc-shipping-zone-settings" id="easyparcel-shipping-method">
     <tbody>
 	<?php if ( 0 !== $zone->get_id() ) : ?>
     <tr valign="top" class="">
         <th scope="row" class="titledesc">
             <label for="zone_name">
-				<?php esc_html_e( 'Zone Name', 'easyparcel_zone_method' ); ?>
-				<?php echo esc_html( wc_help_tip( 'Set your zone name' ) ); // @codingStandardsIgnoreLine ?>
+				<?php esc_html_e( 'Zone Name', 'easyparcel-shipping' ); ?>
+				<?php echo wc_help_tip( __( 'Set your zone name', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine ?>
             </label>
         </th>
         <td class="forminp">
             <input type="text" data-attribute="zone_name" name="zone_name" id="zone_name"
                    value="<?php echo esc_attr( $zone->get_zone_name( 'edit' ) ); ?>"
-                   placeholder="<?php esc_attr_e( 'For eg: Peninsular Malaysia etc', 'easyparcel_zone_method' ); ?>">
+                   placeholder="<?php esc_attr_e( 'For eg: Peninsular Malaysia etc', 'easyparcel-shipping' ); ?>">
         </td>
     </tr>
     <tr valign="top" class="">
         <th scope="row" class="titledesc">
             <label for="zone_locations">
-				<?php esc_html_e( 'Destination', 'easyparcel_zone_method' ); ?>
-				<?php echo wc_help_tip( __( 'Select the destination for this zone. For eg: Penang, Selangor etc', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine ?>
+				<?php esc_html_e( 'Destination', 'easyparcel-shipping' ); ?>
+				<?php echo wc_help_tip( __( 'Select the destination for this zone. For eg: Penang, Selangor etc', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine ?>
             </label>
         </th>
         <td class="forminp">
             <select multiple="multiple" data-attribute="zone_locations" id="zone_locations" name="zone_locations"
-                    data-placeholder="<?php esc_attr_e( 'Select regions within this zone', 'easyparcel_zone_method' ); ?>"
+                    data-placeholder="<?php esc_attr_e( 'Select regions within this zone', 'easyparcel-shipping' ); ?>"
                     class="wc-shipping-zone-region-select chosen_select">
 				<?php
 				foreach ( $shipping_continents as $continent_code => $continent ) {
@@ -71,8 +71,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     <tr valign="top" class="">
         <th scope="row" class="titledesc">
             <label>
-				<?php esc_html_e( 'Courier Services', 'easyparcel_zone_method' ); ?>
-				<?php echo wc_help_tip( __( 'Select the courier options for this destination. The courier options will apply to orders with a shipping address in this destination.', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine ?>
+				<?php esc_html_e( 'Courier Services', 'easyparcel-shipping' ); ?>
+				<?php echo wc_help_tip( __( 'Select the courier options for this destination. The courier options will apply to orders with a shipping address in this destination.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine ?>
             </label>
         </th>
         <td class="">
@@ -80,9 +80,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <thead>
                 <tr>
                     <th class="wc-shipping-zone-method-sort"></th>
-                    <th class="wc-shipping-zone-method-title"><?php esc_html_e( 'Courier', 'easyparcel_zone_method' ); ?></th>
-                    <th class="wc-shipping-zone-method-enabled"><?php esc_html_e( 'Enabled', 'easyparcel_zone_method' ); ?></th>
-                    <th class="wc-shipping-zone-method-description"><?php esc_html_e( 'Rate', 'easyparcel_zone_method' ); ?></th>
+                    <th class="wc-shipping-zone-method-title"><?php esc_html_e( 'Courier', 'easyparcel-shipping' ); ?></th>
+                    <th class="wc-shipping-zone-method-enabled"><?php esc_html_e( 'Enabled', 'easyparcel-shipping' ); ?></th>
+                    <th class="wc-shipping-zone-method-description"><?php esc_html_e( 'Rate', 'easyparcel-shipping' ); ?></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -90,7 +90,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <td colspan="4">
                         <button type="submit" id='add_courier_option'
                                 class="button wc-shipping-zone-add-method" <?php echo esc_attr( $add_btn_disabled ); ?>
-                                value="<?php esc_attr_e( 'Add courier service', 'easyparcel_zone_method' ); ?>"><?php esc_html_e( 'Add courier service', 'easyparcel_zone_method' ); ?></button>
+                                value="<?php esc_attr_e( 'Add courier service', 'easyparcel-shipping' ); ?>"><?php esc_html_e( 'Add courier service', 'easyparcel-shipping' ); ?></button>
                     </td>
                 </tr>
                 </tfoot>
@@ -106,14 +106,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p class="submit">
     <button type="submit" name="submit" id="submit"
             class="button button-primary button-large wc-shipping-zone-method-save"
-            value="<?php esc_attr_e( 'Save changes', 'easyparcel_zone_method' ); ?>"
-            disabled><?php esc_html_e( 'Save changes', 'easyparcel_zone_method' ); ?></button>
+            value="<?php esc_attr_e( 'Save changes', 'easyparcel-shipping' ); ?>"
+            disabled><?php esc_html_e( 'Save changes', 'easyparcel-shipping' ); ?></button>
 </p>
 
 <script type="text/html" id="tmpl-wc-shipping-zone-method-row-blank">
     <tr>
         <td class="wc-shipping-zone-method-blank-state" colspan="4">
-            <p><?php esc_html_e( 'You can add multiple courier options here. Only customers in this destination can see them.', 'easyparcel_zone_method' ); ?></p>
+            <p><?php esc_html_e( 'You can add multiple courier options here. Only customers in this destination can see them.', 'easyparcel-shipping' ); ?></p>
         </td>
     </tr>
 </script>
@@ -127,9 +127,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 data.courier_display_name }}} </a>
             <div class="row-actions">
                 <a class="wc-shipping-zone-method-settings"
-                   href="admin.php?page=wc-settings&amp;tab=shipping&amp;section=easyparcel_shipping&amp;courier_id={{ data.instance_id }}"><?php esc_html_e( 'Edit', 'easyparcel_zone_method' ); ?></a>
+                   href="admin.php?page=wc-settings&amp;tab=shipping&amp;section=easyparcel_shipping&amp;courier_id={{ data.instance_id }}"><?php esc_html_e( 'Edit', 'easyparcel-shipping' ); ?></a>
                 | <a href="#"
-                     class="wc-shipping-zone-method-delete"><?php esc_html_e( 'Delete', 'easyparcel_zone_method' ); ?></a>
+                     class="wc-shipping-zone-method-delete"><?php esc_html_e( 'Delete', 'easyparcel-shipping' ); ?></a>
             </div>
         </td>
         <td width="1%" class="wc-shipping-zone-method-enabled"><a href="#">{{{ data.enabled_icon }}}</a></td>
@@ -149,13 +149,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php
 						printf(
 						/* translators: %s: shipping method title */
-							esc_html__( '%s Settings', 'easyparcel_zone_method' ),
+							esc_html__( '%s Settings', 'easyparcel-shipping' ),
 							'{{{ data.method.method_title }}}'
 						);
 						?>
                     </h1>
                     <button class="modal-close modal-close-link dashicons dashicons-no-alt">
-                        <span class="screen-reader-text"><?php esc_html_e( 'Close modal panel', 'easyparcel_zone_method' ); ?></span>
+                        <span class="screen-reader-text"><?php esc_html_e( 'Close modal panel', 'easyparcel-shipping' ); ?></span>
                     </button>
                 </header>
                 <article class="wc-modal-shipping-method-settings">
@@ -167,7 +167,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <footer>
                     <div class="inner">
                         <button id="btn-ok"
-                                class="button button-primary button-large"><?php esc_html_e( 'Save changes', 'easyparcel_zone_method' ); ?></button>
+                                class="button button-primary button-large"><?php esc_html_e( 'Save changes', 'easyparcel-shipping' ); ?></button>
                     </div>
                 </footer>
             </section>
@@ -181,15 +181,15 @@ if ( ! defined( 'ABSPATH' ) ) {
         <div class="wc-backbone-modal-content">
             <section class="wc-backbone-modal-main" role="main">
                 <header class="wc-backbone-modal-header">
-                    <h1><?php esc_html_e( 'Add courier service', 'easyparcel_zone_method' ); ?></h1>
+                    <h1><?php esc_html_e( 'Add courier service', 'easyparcel-shipping' ); ?></h1>
                     <button class="modal-close modal-close-link dashicons dashicons-no-alt">
-                        <span class="screen-reader-text"><?php esc_html_e( 'Close modal panel', 'easyparcel_zone_method' ); ?></span>
+                        <span class="screen-reader-text"><?php esc_html_e( 'Close modal panel', 'easyparcel-shipping' ); ?></span>
                     </button>
                 </header>
                 <article>
                     <form action="" method="post">
                         <div class="wc-shipping-zone-method-selector">
-                            <p><?php esc_html_e( 'Choose the courier service you wish to add. Only courier services which support zones are listed.', 'easyparcel_zone_method' ); ?></p>
+                            <p><?php esc_html_e( 'Choose the courier service you wish to add. Only courier services which support zones are listed.', 'easyparcel-shipping' ); ?></p>
 
                             <select name="add_method_id">
 								<?php
@@ -207,7 +207,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <footer>
                     <div class="inner">
                         <button id="btn-ok"
-                                class="button button-primary button-large"><?php esc_html_e( 'Add courier service', 'easyparcel_zone_method' ); ?></button>
+                                class="button button-primary button-large"><?php esc_html_e( 'Add courier service', 'easyparcel-shipping' ); ?></button>
                     </div>
                 </footer>
             </section>

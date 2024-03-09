@@ -68,6 +68,4 @@ abstract class Easyparcel_Legacy_Shipping_Zone extends Easyparcel_Data {
 			return false;
 		}
 	}
-
-
 }

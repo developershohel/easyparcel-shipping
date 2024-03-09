@@ -55,7 +55,6 @@ if ( ! class_exists( 'WC_Easyparcel_Backup' ) ) {
 		}
 
 		public function load_zone_list() {
-
 			include_once dirname( __FILE__ ) . '/views/html_easyparcel_backup.php';
 		}
 

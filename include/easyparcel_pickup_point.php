@@ -85,9 +85,6 @@ function easyparcel_pickup_point_script_js() {
 }
 
 function easyparcel_set_ep_pickup_point() {
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
 	if ( isset( $_POST['value'] ) ) {
 		extract( easyparcel_pickup_point_settings() );
 		if ( empty( $_POST['value'] ) ) {
@@ -109,9 +106,6 @@ function easyparcel_has_pickup_point_field() {
 }
 
 function easyparcel_save_pickup_point_as_order_meta( $order ) {
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
 	extract( easyparcel_pickup_point_settings() );
 	if ( easyparcel_has_pickup_point_field() && isset( $_POST[ $field_id ] ) && ! empty( $_POST[ $field_id ] ) ) {
 		$array = explode( "::", $_POST[ $field_id ] );

@@ -14,14 +14,14 @@ $courier_id = isset( $_GET['courier_id'] ) ? absint( $_GET['courier_id'] ) : 0;
 // Prepare SQL query using $wpdb->prepare()
 $zone_id = $wpdb->get_var(
 	$wpdb->prepare(
-		"SELECT zone_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = %d",
+		"SELECT zone_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id =%s",
 		$courier_id
 	)
 );
 
 $instance_id = $wpdb->get_var(
 	$wpdb->prepare(
-		"SELECT instance_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = %d AND zone_id = %d",
+		"SELECT instance_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id =%s AND zone_id =%s",
 		$courier_id,
 		$zone_id
 	)
@@ -29,7 +29,7 @@ $instance_id = $wpdb->get_var(
 ?>
 
 <h2>
-    <span class="wc-shipping-zone-name"><?php esc_html_e( 'Courier Setting > ', 'easyparcel_zone_method' ); ?><?php echo esc_html( $courier->courier_display_name ? $courier->courier_display_name : __( 'Courier', 'easyparcel_zone_method' ) ); ?></span>
+    <span class="wc-shipping-zone-name"><?php esc_html_e( 'Courier Setting > ', 'easyparcel-shipping' ); ?><?php echo esc_html( $courier->courier_display_name ? $courier->courier_display_name : __( 'Courier', 'easyparcel-shipping' ) ); ?></span>
 </h2>
 
 <table class="form-table wc-shipping-zone-settings" id="courier-setting-table">
@@ -39,14 +39,14 @@ $instance_id = $wpdb->get_var(
         <tr class="form-group">
             <th scope="row" class="titledesc">
                 <label for="courier_services">
-					<?php esc_html_e( 'Courier Service', 'easyparcel_zone_method' ); ?>
-					<?php echo wc_help_tip( __( 'Choose your preferred couriers to be displayed on the checkout page.', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine
+					<?php esc_html_e( 'Courier Service', 'easyparcel-shipping' ); ?>
+					<?php echo wc_help_tip( __( 'Choose your preferred couriers to be displayed on the checkout page.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
 					?>
                 </label>
             </th>
             <td class="forminp">
                 <select data-attribute="courier_services" id="courier_services" name="courier_services"
-                        data-placeholder="<?php esc_attr_e( 'Select courier service', 'easyparcel_zone_method' ); ?>"
+                        data-placeholder="<?php esc_attr_e( 'Select courier service', 'easyparcel-shipping' ); ?>"
                         class="wc-shipping-zone-region-select chosen_select">
 					<?php
 					foreach ( $courier_list as $k => $v ) {
@@ -94,14 +94,14 @@ $instance_id = $wpdb->get_var(
 		} ?>>
             <th scope="row" class="titledesc">
                 <label for="dropoff_point">
-					<?php esc_html_e( 'Courier Dropoff Point', 'easyparcel_zone_method' ); ?>
-					<?php echo wc_help_tip( __( 'Choose the dropoff point you wish to dropoff your parcel. [optional]', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine
+					<?php esc_html_e( 'Courier Dropoff Point', 'easyparcel-shipping' ); ?>
+					<?php echo wc_help_tip( __( 'Choose the dropoff point you wish to dropoff your parcel. [optional]', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
 					?>
                 </label>
             </th>
             <td class="forminp">
                 <select data-attribute="dropoff_point" id="dropoff_point" name="dropoff_point"
-                        data-placeholder="<?php esc_attr_e( 'Select your dropoff point', 'easyparcel_zone_method' ); ?>"
+                        data-placeholder="<?php esc_attr_e( 'Select your dropoff point', 'easyparcel-shipping' ); ?>"
                         class="wc-shipping-zone-region-select chosen_select">
 					<?php
 					if ( isset( $couriers[0]['courier_dropoff_point'] ) ) {
@@ -128,8 +128,8 @@ $instance_id = $wpdb->get_var(
 		} ?>>
             <th scope="row" class="titledesc">
                 <label for="courier_display_name">
-					<?php esc_html_e( 'Courier Display Name', 'easyparcel_zone_method' ); ?>
-					<?php echo wc_help_tip( __( 'Customise the courier display name shown to buyer in cart/payment page', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine
+					<?php esc_html_e( 'Courier Display Name', 'easyparcel-shipping' ); ?>
+					<?php echo wc_help_tip( __( 'Customise the courier display name shown to buyer in cart/payment page', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
 					?>
                 </label>
             </th>
@@ -145,7 +145,7 @@ $instance_id = $wpdb->get_var(
 		} ?>>
             <th scope="row" class="titledesc">
                 <label for="courier_delivery_days">
-					<?php esc_html_e( 'Courier Delivery Days', 'easyparcel_zone_method' ); ?>
+					<?php esc_html_e( 'Courier Delivery Days', 'easyparcel-shipping' ); ?>
                 </label>
             </th>
             <td class="forminp">
@@ -158,14 +158,14 @@ $instance_id = $wpdb->get_var(
         <tr>
             <th scope="row" class="titledesc">
                 <label for="charges">
-					<?php esc_html_e( 'Shipping Rate Setting', 'easyparcel_zone_method' ); ?>
-					<?php echo wc_help_tip( __( 'Choose your preferred shipping rate setting to be shown to your buyers on the checkout page.', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine
+					<?php esc_html_e( 'Shipping Rate Setting', 'easyparcel-shipping' ); ?>
+					<?php echo wc_help_tip( __( 'Choose your preferred shipping rate setting to be shown to your buyers on the checkout page.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
 					?>
                 </label>
             </th>
             <td class="forminp">
                 <select data-attribute="charges_option" id="charges" name="charges_option"
-                        data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel_zone_method' ); ?>"
+                        data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel-shipping' ); ?>"
                         class="wc-shipping-zone-region-select chosen_select">
 					<?php
 					foreach ( $charges as $k => $v ) {
@@ -188,15 +188,15 @@ $instance_id = $wpdb->get_var(
 		} ?>>
             <th scope="row" class="titledesc">
                 <label for="shipping_rate_option">
-					<?php esc_html_e( 'Add On Options', 'easyparcel_zone_method' ); ?>
-					<?php echo wc_help_tip( __( 'Choose your preferred type for add on option.<br>For add on by amount, key in any amount.<br>For add on by percentage, key in a number between 1 and 100.', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine
+					<?php esc_html_e( 'Add On Options', 'easyparcel-shipping' ); ?>
+					<?php echo wc_help_tip( __( 'Choose your preferred type for add on option.<br>For add on by amount, key in any amount.<br>For add on by percentage, key in a number between 1 and 100.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
 					?>
                 </label>
             </th>
             <td class="forminp">
                 <select data-attribute="shipping_rate_option" id="shipping_rate_option"
                         name="shipping_rate_option"
-                        data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel_zone_method' ); ?>"
+                        data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel-shipping' ); ?>"
                         class="wc-shipping-zone-region-select chosen_select">
 					<?php
 					if ( $couriers[0]['charges_value'] !== false ) {
@@ -234,7 +234,7 @@ $instance_id = $wpdb->get_var(
 		} ?>>
             <th scope="row" class="charges-value">
                 <label for="charges_value">
-					<?php esc_html_e( 'Shipping Rate', 'easyparcel_zone_method' ); ?>
+					<?php esc_html_e( 'Shipping Rate', 'easyparcel-shipping' ); ?>
                 </label>
             </th>
             <td class="charges-value">
@@ -253,7 +253,7 @@ $instance_id = $wpdb->get_var(
             <th scope="row" class="titledesc">
                 <label><input class="form-check-input" type="checkbox"
                               id="free_shipping" <?php if ( $couriers[0]['free_shipping'] === true )
-						echo esc_html( 'checked="checked"' ) ?>> <?php esc_html_e( 'Enable free shipping rule to apply', 'easyparcel_zone_method' ); ?>
+						echo esc_html( 'checked="checked"' ) ?>> <?php esc_html_e( 'Enable free shipping rule to apply', 'easyparcel-shipping' ); ?>
                 </label>
             </th>
         </tr>
@@ -263,12 +263,12 @@ $instance_id = $wpdb->get_var(
 		} ?>>
             <th scope="row" class="titledesc">
                 <label for="free_shipping_by">
-					<?php esc_html_e( 'Free shipping method', 'easyparcel_zone_method' ); ?>
+					<?php esc_html_e( 'Free shipping method', 'easyparcel-shipping' ); ?>
                 </label>
             </th>
             <td class="forminp">
                 <select data-attribute="free_shipping_by" id="free_shipping_by" name="free_shipping_by"
-                        data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel_zone_method' ); ?>"
+                        data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel-shipping' ); ?>"
                         class="wc-shipping-zone-region-select chosen_select">
 					<?php
 					foreach ( $freeshippingby as $k => $v ) {
@@ -293,7 +293,7 @@ $instance_id = $wpdb->get_var(
             <th scope="row" class="free_shipping_by_desc">
                 <label for="free_shipping_by">
                     <span id="free_shipping_text">Minimum Order Amount</span>
-					<?php echo wc_help_tip( __( 'Provide free shipping if the order amount is same as or higher than the amount set.', 'easyparcel_zone_method' ) ); // @codingStandardsIgnoreLine
+					<?php echo wc_help_tip( __( 'Provide free shipping if the order amount is same as or higher than the amount set.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
 					?>
                 </label>
             </th>
@@ -310,9 +310,9 @@ $instance_id = $wpdb->get_var(
 <p class="submit edit_courier">
     <button type="submit" name="submit" id="submit"
             class="button button-primary button-large wc-shipping-zone-method-save"
-            value="<?php esc_attr_e( 'Save changes', 'easyparcel_zone_method' ); ?>"><?php esc_html_e( 'Save changes', 'easyparcel_zone_method' ); ?></button>
+            value="<?php esc_attr_e( 'Save changes', 'easyparcel-shipping' ); ?>"><?php esc_html_e( 'Save changes', 'easyparcel-shipping' ); ?></button>
     <a href="<?php echo esc_url( admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ) ?>"
-       class="button button-primary button-large wc-shipping-zone-method-back"><?php esc_html_e( 'Back', 'easyparcel_zone_method' ); ?></a>
+       class="button button-primary button-large wc-shipping-zone-method-back"><?php esc_html_e( 'Back', 'easyparcel-shipping' ); ?></a>
 </p>
 <p class="form-error"></p>
 <input type="hidden" id="zone_id" name="zone_id" value="<?php echo esc_attr( $zone_id ) ?>">
@@ -320,6 +320,8 @@ $instance_id = $wpdb->get_var(
 <input type="hidden" id="courier_id" name="courier_id" value="<?php echo esc_attr( $courier_id ) ?>">
 <input type="hidden" id="redirect_url" name="redirect_url"
        value="<?php echo esc_url( admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ) ?>">
+<input type="hidden" id="easyparcel_ajax_save_courier_services" name="easyparcel_ajax_save_courier_services"
+       value="<?php echo esc_attr( wp_create_nonce( 'easyparcel_ajax_save_courier_services' ) ); ?>">
 <style>
     table#courier-setting-table th {
         width: 30%;

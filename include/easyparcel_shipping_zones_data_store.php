@@ -122,9 +122,9 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 		global $wpdb;
 
 		if ( $enabled_only ) {
-			$raw_methods_sql = "SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id = %d AND is_enabled = 1";
+			$raw_methods_sql = "SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%s AND is_enabled = 1";
 		} else {
-			$raw_methods_sql = "SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id = %d";
+			$raw_methods_sql = "SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%s";
 		}
 
 		return $wpdb->get_results( $wpdb->prepare( $raw_methods_sql, $zone_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -163,7 +163,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 	public function get_method( $zone_id ) {
 		global $wpdb;
 
-		return $wpdb->get_row( $wpdb->prepare( "SELECT zone_id, id, courier_order, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id = %d LIMIT 1;", $zone_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT zone_id, id, courier_order, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%s LIMIT 1;", $zone_id ) );
 	}
 
 	/**
@@ -222,7 +222,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 
 		$zone_data = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT zone_name, zone_order FROM {$wpdb->prefix}woocommerce_shipping_zones WHERE zone_id = %d LIMIT 1",
+				"SELECT zone_name, zone_order FROM {$wpdb->prefix}woocommerce_shipping_zones WHERE zone_id =%s LIMIT 1",
 				$zone->get_id()
 			)
 		);
@@ -251,7 +251,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 
 		$locations = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT location_code, location_type FROM {$wpdb->prefix}woocommerce_shipping_zone_locations WHERE zone_id = %d",
+				"SELECT location_code, location_type FROM {$wpdb->prefix}woocommerce_shipping_zone_locations WHERE zone_id =%s",
 				$zone->get_id()
 			)
 		);
@@ -274,7 +274,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 	public function get_method_count( $zone_id ) {
 		global $wpdb;
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}woocommerce_shipping_zone_methods WHERE zone_id = %d", $zone_id ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}woocommerce_shipping_zone_methods WHERE zone_id =%s", $zone_id ) );
 	}
 
 	/**
@@ -351,14 +351,14 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 		 *
 		 * @since 3.6.6
 		 */
-		$criteria = apply_filters( 'woocommerce_get_zone_criteria', $criteria, $package, $postcode_locations );
+		$criteria    = apply_filters( 'woocommerce_get_zone_criteria', $criteria, $package, $postcode_locations );
+		$db_criteria = implode( ' ', $criteria );
 
 		// Get matching zones.
 		return $wpdb->get_var(
 			"SELECT zones.zone_id FROM {$wpdb->prefix}woocommerce_shipping_zones as zones
 			LEFT OUTER JOIN {$wpdb->prefix}woocommerce_shipping_zone_locations as locations ON zones.zone_id = locations.zone_id AND location_type != 'postcode'
-			WHERE " . implode( ' ', $criteria ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			. ' ORDER BY zone_order ASC, zones.zone_id ASC LIMIT 1'
+			WHERE '$db_criteria' ORDER BY zone_order ASC, zones.zone_id ASC LIMIT 1"
 		);
 	}
 
@@ -385,6 +385,6 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 	public function get_zone_id_by_instance_id( $id ) {
 		global $wpdb;
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$wpdb->prefix}woocommerce_shipping_zone_methods as methods WHERE methods.instance_id = %d LIMIT 1;", $id ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$wpdb->prefix}woocommerce_shipping_zone_methods as methods WHERE methods.instance_id =%s LIMIT 1;", $id ) );
 	}
 }

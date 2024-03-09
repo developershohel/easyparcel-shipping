@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <table class="wc-shipping-zones widefat">
     <thead>
     <tr style="width:100%;">
-        <th class="wc-shipping-zone-sort"><?php echo esc_html( wc_help_tip( 'You can set multiple zone name here. The shipping destination will be applied to the order according to priority listed from top. You can drag and drop to reorganize the priority list.' ) ); ?></th>
+        <th class="wc-shipping-zone-sort"><?php echo esc_html( wc_help_tip( __( 'Drag and drop to re-order your custom zones. This is the order in which they will be matched against the customer address.', 'woocommerce' ) ) ); ?></th>
         <th class="wc-shipping-zone-name"
             style="width:25%;"><?php esc_html_e( 'Zone Name', 'easyparcel-shipping' ); ?></th>
         <th class="wc-shipping-zone-courier"

@@ -3,14 +3,14 @@
  * Plugin Name: EasyParcel Shipping
  * Plugin URI: https://easyparcel.com/
  * Description: EasyParcel Shipping plugin allows you to enable order fulfillment without leaving your store and allow your customer to pick their preferable courier during check out. To get started, activate EasyParcel Shipping plugin and proceed to Woocommerce > Settings > Shipping > EasyParcel Shipping to set up your Integration ID.
- * Version: 1.0.3
+ * Version: 1.0.5
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: EasyParcel
  * Author URI: https://www.easyparcel.com/
  * Text Domain: easyparcel-shipping
- * WC requires at least: 8.5.0
- * WC tested up to: 8.5.1
+ * WC requires at least: 8.6.1
+ * WC tested up to: 8.6.1
  *
  * License: GNU General Public License v3.0 or later
  * License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $jal_db_version;
 $jal_db_version = '1.0';
-define( 'EASYPARCEL_VERSION', '1.0.3' );
+define( 'EASYPARCEL_VERSION', '1.0.5' );
 define( 'EASYPARCEL__FILE__', __FILE__ );
 define( 'EASYPARCEL_PLUGIN_BASE', plugin_basename( EASYPARCEL__FILE__ ) );
 define( 'EASYPARCEL_PATH', plugin_dir_path( EASYPARCEL__FILE__ ) );
@@ -320,16 +320,13 @@ function easyparcel_shipping_zones_save_changes() {
 	if ( ! class_exists( 'Easyparcel_Shipping_Zones' ) ) {
 		include_once 'include/easyparcel_shipping_zones.php';
 	}
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
-
-	if ( ! isset( $_POST['wc_shipping_zones_nonce'], $_POST['changes'] ) ) {
+	$nonce             = isset( $_POST['wc_shipping_zones_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['wc_shipping_zones_nonce'] ) ) : '';
+	$changes_sanitized = isset( $_POST['changes'] ) ? wp_slash( $_POST['changes'] ) : '';
+	if ( empty( $nonce ) || empty( $changes_sanitized ) ) {
 		wp_send_json_error( 'missing_fields' );
 		wp_die();
 	}
-
-	if ( ! wp_verify_nonce( wp_unslash( $_POST['wc_shipping_zones_nonce'] ), 'wc_shipping_zones_nonce' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	if ( ! wp_verify_nonce( $nonce, 'wc_shipping_zones_nonce' ) ) {
 		wp_send_json_error( 'bad_nonce' );
 		wp_die();
 	}
@@ -340,7 +337,6 @@ function easyparcel_shipping_zones_save_changes() {
 		wp_die();
 	}
 
-	$changes_sanitized = wp_unslash( $_POST['changes'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	foreach ( $changes_sanitized as $zone_id => $data ) {
 		$data = wp_unslash( $data ); // perform sanitize as requested
 		if ( isset( $data['deleted'] ) ) {
@@ -389,16 +385,14 @@ function easyparcel_shipping_zones_save_changes() {
  */
 
 function easyparcel_shipping_zone_methods_save_changes() {
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
-
-	if ( ! isset( $_POST['wc_shipping_zones_nonce'], $_POST['zone_id'], $_POST['changes'] ) ) {
+	$nonce   = isset( $_POST['wc_shipping_zones_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['wc_shipping_zones_nonce'] ) ) : '';
+	$zone_id = isset( $_POST['zone_id'] ) ? absint( wp_slash( $_POST['zone_id'] ) ) : 0;
+	$changes = isset( $_POST['changes'] ) ? wp_slash( $_POST['changes'] ) : '';
+	if ( empty( $nonce ) || empty( $zone_id ) || empty( $changes ) ) {
 		wp_send_json_error( 'missing_fields' );
 		wp_die();
 	}
-
-	if ( ! wp_verify_nonce( wp_unslash( $_POST['wc_shipping_zones_nonce'] ), 'wc_shipping_zones_nonce' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	if ( ! wp_verify_nonce( $nonce, 'wc_shipping_zones_nonce' ) ) {
 		wp_send_json_error( 'bad_nonce' );
 		wp_die();
 	}
@@ -410,12 +404,10 @@ function easyparcel_shipping_zone_methods_save_changes() {
 
 	global $wpdb;
 
-	$zone_id = wc_clean( wp_unslash( $_POST['zone_id'] ) );
 	if ( ! class_exists( 'Easyparcel_Shipping_Zone' ) ) {
 		include_once 'include/easyparcel_shipping_zone.php';
 	}
-	$zone    = new Easyparcel_Shipping_Zone( $zone_id );
-	$changes = wp_unslash( $_POST['changes'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$zone = new Easyparcel_Shipping_Zone( $zone_id );
 
 	if ( isset( $changes['zone_name'] ) ) {
 		$zone->set_zone_name( wc_clean( $changes['zone_name'] ) );
@@ -451,11 +443,11 @@ function easyparcel_shipping_zone_methods_save_changes() {
 
 	if ( isset( $changes['methods'] ) ) {
 		foreach ( $changes['methods'] as $instance_id => $data ) {
-			$method_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = %d", $instance_id ) );
+			$method_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id =%d", absint( $instance_id ) ) );
 
 			if ( isset( $data['deleted'] ) ) {
 				$option_key = 'woocommerce_easyparcel_settings';
-				if ( $wpdb->delete( "{$wpdb->prefix}easyparcel_zones_courier", array( 'id' => $instance_id ) ) ) {
+				if ( $wpdb->delete( "{$wpdb->prefix}easyparcel_zones_courier", array( 'id' => absint( $instance_id ) ) ) ) {
 					delete_option( $option_key );
 					// do_action( 'woocommerce_shipping_zone_method_deleted', $instance_id, $method_id, $zone_id );
 				}
@@ -487,13 +479,13 @@ function easyparcel_shipping_zone_methods_save_changes() {
 	if ( ! class_exists( 'Easyparcel_Shipping_Zones' ) ) {
 		include_once 'include/easyparcel_shipping_zones.php';
 	}
-	$hehe = Easyparcel_Shipping_Zones::get_zone( absint( $zone->get_id() ) );
+	$easyparcel_shipping_zones = Easyparcel_Shipping_Zones::get_zone( absint( $zone->get_id() ) );
 
 	wp_send_json_success(
 		array(
 			'zone_id'   => $zone->get_id(),
 			'zone_name' => $zone->get_zone_name(),
-			'methods'   => $hehe->get_couriers( false, 'json' )
+			'methods'   => $easyparcel_shipping_zones->get_couriers( false, 'json' )
 		)
 	);
 }
@@ -505,14 +497,15 @@ function easyparcel_shipping_zone_methods_save_changes() {
  *
  */
 function easyparcel_courier_setting_save_changes() {
-	if ( isset( $_POST ) ) {
-		$_POST = easyparcel_sanitize_everything( 'sanitize_text_field', $_POST );
-	}
-	if ( ! wp_verify_nonce( wp_unslash( $_POST['ep_courier_setup_nonce'] ), 'ep_courier_setup_nonce' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$nonce = isset( $_POST['easyparcel_courier_setup_nonce'] ) ? sanitize_text_field( wp_slash( $_POST['easyparcel_courier_setup_nonce'] ) ) : '';
+	if ( empty( $nonce ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		wp_send_json_error( 'bad_nonce' );
 		wp_die();
 	}
-
+	if ( ! wp_verify_nonce( $nonce, 'easyparcel_courier_setup_nonce' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		wp_send_json_error( 'bad_nonce' );
+		wp_die();
+	}
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
 		wp_send_json_error( 'missing_capabilities' );
 		wp_die();
@@ -522,7 +515,7 @@ function easyparcel_courier_setting_save_changes() {
 
 	switch ( $_POST['method'] ) {
 		case 'update':
-			if ( ! isset( $_POST['ep_courier_setup_nonce'], $_POST['courier_id'], $_POST['data'], $_POST['method'] ) ) {
+			if ( ! isset( $_POST['easyparcel_courier_setup_nonce'], $_POST['courier_id'], $_POST['data'], $_POST['method'] ) ) {
 				wp_send_json_error( 'missing_fields' );
 				wp_die();
 			}
@@ -532,7 +525,7 @@ function easyparcel_courier_setting_save_changes() {
 				}
 			}
 			$courier_id = wc_clean( wp_unslash( $_POST['courier_id'] ) );
-			$result     = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id = $courier_id" ) );
+			$result     = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE id =%s", $courier_id ) );
 			if ( empty( $result ) ) {
 				wp_send_json_error( 'courier not found' );
 				wp_die();
@@ -568,7 +561,7 @@ function easyparcel_courier_setting_save_changes() {
 
 			break;
 		case 'insert':
-			if ( ! isset( $_POST['ep_courier_setup_nonce'], $_POST['zone_id'], $_POST['data'], $_POST['method'] ) ) {
+			if ( ! isset( $_POST['easyparcel_courier_setup_nonce'], $_POST['zone_id'], $_POST['data'], $_POST['method'] ) ) {
 				wp_send_json_error( 'missing_fields' );
 				wp_die();
 			}
@@ -579,39 +572,48 @@ function easyparcel_courier_setting_save_changes() {
 			}
 			$zone_id = wc_clean( wp_unslash( $_POST['zone_id'] ) );
 			// check if courier display name exist
-			$col                   = $wpdb->get_results( $wpdb->prepare( "SELECT max(courier_order)+1 as courier_order FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id = $zone_id" ) );
+			$col                   = $wpdb->get_results( $wpdb->prepare( "SELECT max(courier_order)+1 as courier_order FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id = %s", $zone_id ) );
 			$col[0]->courier_order = ( empty( $col[0]->courier_order ) ) ? 0 : $col[0]->courier_order;
 			$table                 = $wpdb->prefix . 'easyparcel_zones_courier';
-			$res                   = $wpdb->query(
-				$wpdb->prepare(
-					"
-                INSERT INTO $table
-                ( zone_id, service_id, service_name, service_type, courier_id, courier_name, courier_logo, courier_info, courier_display_name, courier_dropoff_point, courier_dropoff_name, sample_cost, charges, charges_value, free_shipping, free_shipping_by, free_shipping_value, courier_order, status )
-                VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %d, %d )
-                ",
-					array(
-						$_POST['data']['zone_id'],
-						$_POST['data']['courier_service'],
-						$_POST['data']['service_name'],
-						'parcel',
-						$_POST['data']['courier_id'],
-						$_POST['data']['courier_name'],
-						$_POST['data']['courier_logo'],
-						$_POST['data']['courier_info'],
-						$_POST['data']['courier_display_name'],
-						$_POST['data']['courier_dropoff_point'],
-						$_POST['data']['courier_dropoff_name'],
-						$_POST['data']['sample_cost'],
-						$_POST['data']['charges_option'],
-						$_POST['data']['charges_value'],
-						$_POST['data']['free_shipping'],
-						$_POST['data']['free_shipping_by'],
-						$_POST['data']['free_shipping_value'],
-						$col[0]->courier_order,
-						1,
-					)
-				)
-			);
+			$zone_id               = isset( $_POST['data']['zone_id'] ) ? intval( wp_unslash( $_POST['data']['zone_id'] ) ) : 0;
+			$courier_service       = isset( $_POST['data']['courier_service'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_service'] ) ) : '';
+			$service_name          = isset( $_POST['data']['service_name'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['service_name'] ) ) : '';
+			$courier_id            = isset( $_POST['data']['courier_id'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_id'] ) ) : '';
+			$courier_name          = isset( $_POST['data']['courier_name'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_name'] ) ) : '';
+			$courier_logo          = isset( $_POST['data']['courier_logo'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_logo'] ) ) : '';
+			$courier_info          = isset( $_POST['data']['courier_info'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_info'] ) ) : '';
+			$courier_display_name  = isset( $_POST['data']['courier_display_name'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_display_name'] ) ) : '';
+			$courier_dropoff_point = isset( $_POST['data']['courier_dropoff_point'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_dropoff_point'] ) ) : '';
+			$courier_dropoff_name  = isset( $_POST['data']['courier_dropoff_name'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['courier_dropoff_name'] ) ) : '';
+			$sample_cost           = isset( $_POST['data']['sample_cost'] ) ? floatval( wp_unslash( $_POST['data']['sample_cost'] ) ) : 0.00;
+			$charges_option        = isset( $_POST['data']['charges_option'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['charges_option'] ) ) : '';
+			$charges_value         = isset( $_POST['data']['charges_value'] ) ? floatval( wp_unslash( $_POST['data']['charges_value'] ) ) : 0.00;
+			$free_shipping         = isset( $_POST['data']['free_shipping'] ) ? intval( wp_unslash( $_POST['data']['free_shipping'] ) ) : 0;
+			$free_shipping_by      = isset( $_POST['data']['free_shipping_by'] ) ? sanitize_text_field( wp_unslash( $_POST['data']['free_shipping_by'] ) ) : '';
+			$free_shipping_value   = isset( $_POST['data']['free_shipping_value'] ) ? floatval( wp_unslash( $_POST['data']['free_shipping_value'] ) ) : 0.00;
+			$wpdb->query( $wpdb->prepare(
+				"INSERT INTO {$table} ( zone_id, service_id, service_name, service_type, courier_id, courier_name, courier_logo, courier_info, courier_display_name, courier_dropoff_point, courier_dropoff_name, sample_cost, charges, charges_value, free_shipping, free_shipping_by, free_shipping_value, courier_order, status )
+    VALUES ( %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d )",
+				$zone_id,
+				$courier_service,
+				$service_name,
+				'parcel',
+				$courier_id,
+				$courier_name,
+				$courier_logo,
+				$courier_info,
+				$courier_display_name,
+				$courier_dropoff_point,
+				$courier_dropoff_name,
+				$sample_cost,
+				$charges_option,
+				$charges_value,
+				$free_shipping,
+				$free_shipping_by,
+				$free_shipping_value,
+				$col[0]->courier_order,
+				1
+			) );
 			break;
 	}
 }
@@ -647,7 +649,7 @@ function easyparcel_check_courier_name( $courierName, $courier_id = '' ) {
                         FROM {$wpdb->prefix}easyparcel_zones_courier
                         WHERE courier_display_name = %s
                         AND courier_display_name NOT IN ('All Couriers','Cheapest Courier')
-                        AND id = %s
+                        AND id =%s
                     ",
 					$courierName, $courier_id
 				)
@@ -687,42 +689,11 @@ function easyparcel_sanitize_everything( $func, $arr ) {
 }
 
 /**
- * Easyparcel add a new shipping method is not present
- *
- * @param $zone_id
- *
- * @return void
- *
- */
-function easyparcel_add_auto_shipping_method( $zone_id ) {
-	global $wpdb;
-	$shipping_table = $wpdb->prefix . 'woocommerce_shipping_zone_methods';
-	$section        = isset( $_GET['section'] ) ? esc_attr( $_GET['section'] ) : '';
-	if ( $section == 'easyparcel_shipping' ) {
-		$shipping_method = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $shipping_table WHERE zone_id=$zone_id" ), ARRAY_A );
-		if ( ! empty( $shipping_method_order ) && ! in_array( 'easyparcel', array_column( $shipping_method, 'method_id' ) ) ) {
-			$max_method_order = $wpdb->get_var( $wpdb->prepare( "SELECT MAX(method_order) FROM $shipping_table WHERE zone_id=$zone_id" ) ) + 1;
-			$wpdb->insert( $shipping_table, array(
-				'zone_id'      => $zone_id,
-				'method_id'    => 'easyparcel',
-				'method_order' => $max_method_order
-			) );
-		} else if ( empty( $shipping_method ) ) {
-			$wpdb->insert( $shipping_table, array(
-				'zone_id'      => $zone_id,
-				'method_id'    => 'easyparcel',
-				'method_order' => 1
-			) );
-		}
-	}
-}
-
-/**
  * Activate the plugin.
  */
 function easyparcel_plugin_activate() {
 	require_once EASYPARCEL_PATH . 'database/create.php';
-	create_easyparcel_zones_courier_table();
+	easyparcel_create_zones_courier_table();
 	flush_rewrite_rules();
 }
 

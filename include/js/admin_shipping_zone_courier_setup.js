@@ -79,7 +79,7 @@
             if (result) {
                 $.post(
                     ajaxurl + (ajaxurl.indexOf("?") > 0 ? "&" : "?") + "action=easyparcel_courier_setting_save_changes", {
-                        ep_courier_setup_nonce: data.ep_courier_setup_nonce,
+                        easyparcel_courier_setup_nonce: data.easyparcel_courier_setup_nonce,
                         data: result,
                         zone_id: data.zone_id,
                         method: "insert",
@@ -122,7 +122,7 @@
             if (result) {
                 $.post(
                     ajaxurl + (ajaxurl.indexOf("?") > 0 ? "&" : "?") + "action=easyparcel_courier_setting_save_changes", {
-                        ep_courier_setup_nonce: data.ep_courier_setup_nonce,
+                        easyparcel_courier_setup_nonce: data.easyparcel_courier_setup_nonce,
                         data: result,
                         courier_id: data.courier_id,
                         method: "update",
