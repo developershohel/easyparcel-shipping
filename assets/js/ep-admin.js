@@ -173,6 +173,7 @@ function add_shipping_courier(element) {
     const parentInstanceID = instance_id(parentElement.attr('href'))
     parentElement.closest('td').siblings('.wc-shipping-zone-method-description').attr('data-instance_id', parentInstanceID)
     const zone_name = jQuery('#zone_name')
+    const nonce = obj.easyparcel_nonce
     const zone_regions = jQuery('.select2-selection__rendered')
     const zone = zone_regions.find('.select2-selection__choice')
     let courierModel = jQuery('#wc-backbone-modal-dialog')
@@ -183,9 +184,6 @@ function add_shipping_courier(element) {
             clearInterval(courierModelInterval)
             let courierModelForm = courierModel.find('form')
             const instance_id = courierModelForm.find('[name=instance_id]').val()
-            const easyparcel_check_setting_nonce = courierModel.find('[name="woocommerce_easyparcel_easyparcel_check_setting"]').val()
-            const easyparcel_courier_list_nonce = courierModel.find('[name="woocommerce_easyparcel_easyparcel_courier_list"]').val()
-            const easyparcel_ajax_save_courier_services_nonce = courierModel.find('[name="woocommerce_easyparcel_easyparcel_ajax_save_courier_services"]').val()
             const cloneForm = courierModelForm.clone()
             courierModelForm.css({display: 'none'})
             courierModelForm.empty()
@@ -201,10 +199,9 @@ function add_shipping_courier(element) {
             }
             const saveCourierButton = jQuery('#wc-backbone-modal-dialog').find('footer').find('#btn-ok')
             const zoneId = zone_id()
-
             jQuery.ajax({
                 url: ajax_object.ajax_url, method: 'post', data: {
-                    action: 'easyparcel_check_setting', zone_id: zoneId, nonce: easyparcel_check_setting_nonce
+                    action: 'easyparcel_check_setting', zone_id: zoneId, nonce: nonce
                 }, beforeSend: function () {
                     jQuery('#spinner').css('display', 'block');
                     saveCourierButton.attr('disabled', 'disabled');
@@ -226,13 +223,13 @@ function add_shipping_courier(element) {
                                 action: 'easyparcel_courier_list',
                                 zone_id: zoneId,
                                 instance_id: instance_id,
-                                nonce: easyparcel_courier_list_nonce
+                                nonce: nonce
                             }, beforeSend: function () {
                                 jQuery('#spinner').css('display', 'block');
                                 saveCourierButton.attr('disabled', 'disabled');
                             }, success: function (data) {
                                 console.log(data)
-                                courierModelForm.html(`<table class="form-table">${data}</table><input type="hidden" name="instance_id" value="${instance_id}"> <input type="hidden" id="easyparcel_ajax_save_courier_services" name="easyparcel_ajax_save_courier_services" value="${easyparcel_ajax_save_courier_services_nonce}">`);
+                                courierModelForm.html(`<table class="form-table">${data}</table><input type="hidden" name="instance_id" value="${instance_id}">`);
                             }, complete: function () {
                                 console.log('completed');
                                 jQuery('#spinner').css('display', 'none');
@@ -245,6 +242,7 @@ function add_shipping_courier(element) {
                     }
                 }, error: function (xhr, status, error) {
                     console.log(error);
+                    courierModelForm.parent().html(cloneForm)
                     return false;
                 }
             })
@@ -462,8 +460,8 @@ function save_courier() {
     })
     saveCourierButton.on('click', function (e) {
         //e.preventDefault()
-        const easyparcel_ajax_save_courier_services_nonce = modalDialog.find('#easyparcel_ajax_save_courier_services').val()
-        console.log(easyparcel_ajax_save_courier_services_nonce)
+        const nonce = obj.easyparcel_nonce
+        console.log(nonce)
         const zoneId = zone_id()
         if (zoneId === "") {
             return false;
@@ -505,7 +503,7 @@ function save_courier() {
                 action: 'easyparcel_ajax_save_courier_services',
                 courier_data: ajaxCourierData,
                 courier_setting: 'popup',
-                nonce: easyparcel_ajax_save_courier_services_nonce
+                nonce: nonce
             }, beforeSend: function () {
                 saveCourierButton.attr('disabled', 'disabled')
                 article.css({cursor: 'progress', opacity: .7})
@@ -564,8 +562,8 @@ function save_courier() {
         const zoneId = jQuery('#zone_id').val()
         const instance_id = jQuery('#instance_id').val()
         const courier_id = jQuery('#courier_id').val()
-        const easyparcel_ajax_save_courier_services_nonce = jQuery('#easyparcel_ajax_save_courier_services').val()
-        console.log(easyparcel_ajax_save_courier_services_nonce)
+        const nonce = obj.easyparcel_nonce
+        console.log(nonce)
         if (zoneId === "") {
             return false;
         }
@@ -607,7 +605,7 @@ function save_courier() {
                 courier_data: ajaxCourierData,
                 courier_setting: 'edit_courier',
                 id: courier_id,
-                nonce: easyparcel_ajax_save_courier_services_nonce
+                nonce: nonce
             }, beforeSend: () => {
                 jQuery(this).attr('disabled', 'disabled')
                 courierTable.css({cursor: 'progress', opacity: .7})
@@ -639,8 +637,8 @@ function save_courier() {
         const courierTable = jQuery('#courier-setting-table')
         const formError = jQuery('.form-error')
         const zoneId = jQuery('#zone_id').val()
-        const easyparcel_ajax_save_courier_services_nonce = jQuery('#easyparcel_ajax_save_courier_services').val()
-        console.log(easyparcel_ajax_save_courier_services_nonce)
+        const nonce = obj.easyparcel_nonce
+        console.log(nonce)
         if (zoneId === "") {
             return false;
         }
@@ -681,7 +679,7 @@ function save_courier() {
                 action: 'easyparcel_ajax_save_courier_services',
                 courier_data: ajaxCourierData,
                 courier_setting: 'setup_courier',
-                nonce: easyparcel_ajax_save_courier_services_nonce
+                nonce: nonce
             }, beforeSend: () => {
                 jQuery(this).attr('disabled', 'disabled')
                 courierTable.css({cursor: 'progress', opacity: .7})

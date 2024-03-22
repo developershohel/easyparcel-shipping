@@ -355,11 +355,9 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 		$db_criteria = implode( ' ', $criteria );
 
 		// Get matching zones.
-		return $wpdb->get_var(
-			"SELECT zones.zone_id FROM {$wpdb->prefix}woocommerce_shipping_zones as zones
+		return $wpdb->get_var( $wpdb->prepare( "SELECT zones.zone_id FROM {$wpdb->prefix}woocommerce_shipping_zones as zones
 			LEFT OUTER JOIN {$wpdb->prefix}woocommerce_shipping_zone_locations as locations ON zones.zone_id = locations.zone_id AND location_type != 'postcode'
-			WHERE '$db_criteria' ORDER BY zone_order ASC, zones.zone_id ASC LIMIT 1"
-		);
+			WHERE %s ORDER BY zone_order ASC, zones.zone_id ASC LIMIT 1", $db_criteria ) );
 	}
 
 	/**

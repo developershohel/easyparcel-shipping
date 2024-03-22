@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <table class="wc-shipping-zones widefat">
     <thead>
     <tr style="width:100%;">
-        <th class="wc-shipping-zone-sort"><?php echo esc_html( wc_help_tip( __( 'Drag and drop to re-order your custom zones. This is the order in which they will be matched against the customer address.', 'woocommerce' ) ) ); ?></th>
+        <th class="wc-shipping-zone-sort"><?php echo wc_help_tip( __( 'Drag and drop to re-order your custom zones. This is the order in which they will be matched against the customer address.', 'easyparcel-shipping' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
         <th class="wc-shipping-zone-name"
             style="width:25%;"><?php esc_html_e( 'Zone Name', 'easyparcel-shipping' ); ?></th>
         <th class="wc-shipping-zone-courier"

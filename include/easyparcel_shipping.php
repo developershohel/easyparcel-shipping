@@ -250,7 +250,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					'required'    => true,
 				),
 
-				'integration_id'                        => array(
+				'integration_id'              => array(
 					'title'       => __( '<font color="red">*</font>Integration ID', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'description' => __( 'Here’s how to get your integration ID: <br/>
@@ -262,59 +262,59 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					'desc_tip'    => true,
 					'required'    => true,
 				),
-				'sender_name'                           => array(
+				'sender_name'                 => array(
 					'title'    => __( '<font color="red">*</font>Name', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => '',
 					'required' => true,
 				),
-				'sender_contact_number'                 => array(
+				'sender_contact_number'       => array(
 					'title'       => __( '<font color="red">*</font>Contact Number', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'default'     => '',
 					'placeholder' => 'key in with countrycode (MY)60 / (SG)65',
 					'required'    => true,
 				),
-				'sender_alt_contact_number'             => array(
+				'sender_alt_contact_number'   => array(
 					'title'       => __( 'Alt. Contact Number', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'default'     => '',
 					'placeholder' => 'key in with countrycode (MY)60 / (SG)65',
 				),
-				'sender_company_name'                   => array(
+				'sender_company_name'         => array(
 					'title'   => __( 'Company Name', 'easyparcel-shipping' ),
 					'type'    => 'text',
 					'default' => '',
 					// 'placeholder' => 'company name',
 				),
-				'sender_address_1'                      => array(
+				'sender_address_1'            => array(
 					'title'    => __( '<font color="red">*</font>Address Line 1', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $address,
 					// 'placeholder' => 'Address line 1',
 					'required' => true,
 				),
-				'sender_address_2'                      => array(
+				'sender_address_2'            => array(
 					'title'    => __( 'Address Line 2', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $address2,
 					// 'placeholder' => 'Address line 2',
 					'required' => true,
 				),
-				'sender_city'                           => array(
+				'sender_city'                 => array(
 					'title'    => __( '<font color="red">*</font>City', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $city,
 					// 'placeholder' => 'city',
 					'required' => true,
 				),
-				'sender_postcode'                       => array(
+				'sender_postcode'             => array(
 					'title'    => __( '<font color="red">*</font>Postcode', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $postcode,
 					'required' => true,
 				),
-				'sender_state'                          => array(
+				'sender_state'                => array(
 					'title'       => __( '<font color="red">*</font>State', 'easyparcel-shipping' ),
 					'type'        => 'select',
 					'description' => __( 'state', 'easyparcel-shipping' ),
@@ -343,12 +343,12 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				),
 
 				// additional option
-				'addon_service_setting'                 => array(
+				'addon_service_setting'       => array(
 					'title' => __( 'Add On Service Settings', 'easyparcel-shipping' ),
 					'type'  => 'title',
 					'desc'  => '',
 				),
-				'addon_email_option'                    => array(
+				'addon_email_option'          => array(
 					'title'       => __( 'Tracking Email', 'easyparcel-shipping' ),
 					'type'        => 'checkbox',
 					'description' => __( 'EasyParcel will automatically send tracking details to receiver via email when your fulfillment is made for RM0.05.', 'easyparcel-shipping' ),
@@ -356,7 +356,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					'desc_tip'    => true,
 					'default'     => 'no',
 				),
-				'addon_sms_option'                      => array(
+				'addon_sms_option'            => array(
 					'title'       => __( 'Tracking SMS', 'easyparcel-shipping' ),
 					'type'        => 'checkbox',
 					'description' => __( 'EasyParcel will automatically send tracking details to receiver via SMS when your  fulfillment is made for RM0.20.', 'easyparcel-shipping' ),
@@ -366,33 +366,18 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				),
 
 				// order status update setting
-				'order_status_update_setting'           => array(
+				'order_status_update_setting' => array(
 					'title' => __( 'Order Status Update Settings', 'easyparcel-shipping' ),
 					'type'  => 'title',
 					'desc'  => '',
 				),
-				'order_status_update_option'            => array(
+				'order_status_update_option'  => array(
 					'title'       => __( 'Order Status Auto Update', 'easyparcel-shipping' ),
 					'type'        => 'checkbox',
 					'description' => __( 'Order status will be updated as "completed" automatically once fulfillment done.', 'easyparcel-shipping' ),
 					'label'       => __( 'Enable order status auto update.', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
 					'default'     => 'no',
-				),
-				'easyparcel_courier_list'               => array(
-					'type'    => 'hidden',
-					'default' => wp_create_nonce( 'easyparcel_courier_list' ),
-					'class'   => 'easyparcel-nonce'
-				),
-				'easyparcel_check_setting'              => array(
-					'type'    => 'hidden',
-					'default' => wp_create_nonce( 'easyparcel_check_setting' ),
-					'class'   => 'easyparcel-nonce',
-				),
-				'easyparcel_ajax_save_courier_services' => array(
-					'type'    => 'hidden',
-					'default' => wp_create_nonce( 'easyparcel_ajax_save_courier_services' ),
-					'class'   => 'easyparcel-nonce'
 				),
 			);
 			$this->admin_shipping_init();
@@ -403,10 +388,11 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 		function admin_shipping_init() {
 			wp_register_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/admin_shipping.js', array( 'jquery' ), EASYPARCEL_VERSION, true );
 			wp_localize_script( 'ajax-script', 'obj', array(
-				'ajax_url'        => admin_url( 'admin-ajax.php' ),
-				'nextNonce'       => wp_create_nonce( 'ajax-nonce' ),
-				'courier_service' => null !== $this->get_option( 'courier_service' ) ? $this->get_option( 'courier_service' ) : '',
-				'sender_state'    => null !== $this->get_option( 'sender_state' ) ? $this->get_option( 'sender_state' ) : ''
+				'ajax_url'         => admin_url( 'admin-ajax.php' ),
+				'nextNonce'        => wp_create_nonce( 'ajax-nonce' ),
+				'easyparcel_nonce' => wp_create_nonce( 'easyparcel_nonce' ),
+				'courier_service'  => null !== $this->get_option( 'courier_service' ) ? $this->get_option( 'courier_service' ) : '',
+				'sender_state'     => null !== $this->get_option( 'sender_state' ) ? $this->get_option( 'sender_state' ) : ''
 			) );
 			wp_enqueue_script( 'ajax-script' );
 		}

@@ -4,15 +4,17 @@ function easyparcel_courier_list() {
 	$nonce       = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 	$zone_id     = isset( $_POST['zone_id'] ) ? absint( $_POST['zone_id'] ) : 0;
 	$instance_id = isset( $_POST['instance_id'] ) ? absint( $_POST['instance_id'] ) : 0;
-	if ( empty( $nonce ) || empty( $zone_id ) || empty( $instance_id ) ) {
-		echo 'No Zone ID or Instance ID Found';
+	if ( empty( $zone_id ) || empty( $instance_id ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'No Zone ID or Instance ID Found' ] );
 		wp_die();
 	}
-	if ( ! wp_verify_nonce( $nonce, 'easyparcel_courier_list' ) ) {
-		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing or invalid nonce' ] );
+	if ( empty( $nonce ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing', 'nonce' => $nonce ] );
+		wp_die();
+	} else if ( ! wp_verify_nonce( $nonce, 'easyparcel_nonce' ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is invalid', 'nonce' => $nonce ] );
 		wp_die();
 	}
-
 	if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 		include_once 'wc_easyparcel_shipping_zone.php';
 	}
@@ -31,13 +33,12 @@ add_action( 'wp_ajax_easyparcel_courier_list', 'easyparcel_courier_list' );
 add_action( 'wp_ajax_nopriv_easyparcel_courier_list', 'easyparcel_courier_list' );
 
 function easyparcel_check_setting() {
-	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : '';
 	if ( empty( $nonce ) ) {
-		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing' ] );
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing', 'nonce' => $nonce ] );
 		wp_die();
-	}
-	if ( ! wp_verify_nonce( $nonce, 'easyparcel_courier_list' ) ) {
-		wp_send_json( [ 'status' => false, 'message' => 'Nonce is invalid' ] );
+	} else if ( ! wp_verify_nonce( $nonce, 'easyparcel_nonce' ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is invalid', 'nonce' => $nonce ] );
 		wp_die();
 	}
 	$value = get_option( 'woocommerce_easyparcel_settings' );
@@ -56,11 +57,10 @@ function easyparcel_ajax_save_courier_services() {
 	global $wpdb;
 	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 	if ( empty( $nonce ) ) {
-		echo wp_json_encode( array( 'status' => false, 'message' => "Nonce is empty" ) );
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing', 'nonce' => $nonce ] );
 		wp_die();
-	}
-	if ( ! wp_verify_nonce( $nonce, 'easyparcel_courier_list' ) ) {
-		wp_send_json( [ 'status' => false, 'message' => 'Nonce is missing or invalid nonce' ] );
+	} else if ( ! wp_verify_nonce( $nonce, 'easyparcel_nonce' ) ) {
+		wp_send_json( [ 'status' => false, 'message' => 'Nonce is invalid', 'nonce' => $nonce ] );
 		wp_die();
 	}
 	if ( ! isset( $_POST['courier_data'] ) ) {

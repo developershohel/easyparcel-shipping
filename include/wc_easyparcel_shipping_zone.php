@@ -86,7 +86,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Zone' ) ) {
 				'jquery-ui-sortable',
 				'wc-enhanced-select',
 				'wc-backbone-modal'
-			), '1.0' );
+			), '1.0', true );
 			wp_localize_script(
 				'easyparcel_admin_shipping_zone',
 				'shippingZonesLocalizeScript',

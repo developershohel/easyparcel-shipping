@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 add_action( 'admin_enqueue_scripts', 'ep_enqueue_scripts' );
 function ep_enqueue_scripts() {
 	wp_enqueue_style( 'ep-admin', EASYPARCEL_ASSETS_URL . 'css/ep-admin.css', array(), EASYPARCEL_VERSION );

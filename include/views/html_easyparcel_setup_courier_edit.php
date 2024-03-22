@@ -199,7 +199,7 @@ $instance_id = $wpdb->get_var(
                         data-placeholder="<?php esc_attr_e( 'Select your charges', 'easyparcel-shipping' ); ?>"
                         class="wc-shipping-zone-region-select chosen_select">
 					<?php
-					if ( $couriers[0]['charges_value'] !== false ) {
+					if ( $couriers[0]['charges_value'] != false ) {
 						$charges_value = explode( ':', $couriers[0]['charges_value'] );
 						if ( $charges_value[0] == 1 ) {
 							?>
@@ -239,7 +239,7 @@ $instance_id = $wpdb->get_var(
             </th>
             <td class="charges-value">
 				<?php
-				if ( $couriers[0]['charges_value'] !== false ) {
+				if ( $couriers[0]['charges_value'] != false ) {
 					$charges_value = explode( ':', $couriers[0]['charges_value'] );
 					echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="' . esc_attr( $charges_value[1] ) . '">';
 				} else {
@@ -252,13 +252,13 @@ $instance_id = $wpdb->get_var(
             <th scope="row" class="titledesc">Free Shipping Options</th>
             <th scope="row" class="titledesc">
                 <label><input class="form-check-input" type="checkbox"
-                              id="free_shipping" <?php if ( $couriers[0]['free_shipping'] === true )
-						echo esc_html( 'checked="checked"' ) ?>> <?php esc_html_e( 'Enable free shipping rule to apply', 'easyparcel-shipping' ); ?>
+                              id="free_shipping" <?php if ( $couriers[0]['free_shipping'] == true )
+						echo esc_attr( 'checked="checked"' ) ?>> <?php esc_html_e( 'Enable free shipping rule to apply', 'easyparcel-shipping' ); ?>
                 </label>
             </th>
         </tr>
         <tr class="free_shipping_tab"
-            id="free_shipping_tab" <?php if ( $couriers[0]['free_shipping'] === false ) {
+            id="free_shipping_tab" <?php if ( $couriers[0]['free_shipping'] == false ) {
 			echo 'style="display:none"';
 		} ?>>
             <th scope="row" class="titledesc">
@@ -287,7 +287,7 @@ $instance_id = $wpdb->get_var(
             </td>
         </tr>
         <tr class="free_shipping_tab_value_panel"
-            id="free_shipping_tab_value_panel" <?php if ( $couriers[0]['free_shipping'] === false ) {
+            id="free_shipping_tab_value_panel" <?php if ( $couriers[0]['free_shipping'] == false ) {
 			echo 'style="display:none"';
 		} ?>>
             <th scope="row" class="free_shipping_by_desc">
@@ -299,7 +299,7 @@ $instance_id = $wpdb->get_var(
             </th>
             <td class="forminp">
                 <label><input type="text" data-attribute="free_shipping_value" name="free_shipping_value"
-                              id="free_shipping_value" value="<?php if ( $couriers[0]['free_shipping_value'] !== false )
+                              id="free_shipping_value" value="<?php if ( $couriers[0]['free_shipping_value'] != false )
 						echo esc_attr( $couriers[0]['free_shipping_value'] ) ?>"></label>
             </td>
         </tr>

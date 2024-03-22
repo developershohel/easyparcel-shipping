@@ -169,7 +169,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="free_shipping_by_desc">
             <label for="free_shipping_by">
                 <span id="free_shipping_text">Minimum Order Amount</span>
-				<?php echo esc_html( wc_help_tip( __( 'Provide free shipping if the order amount is same as or higher than the amount set.', 'easyparcel-shipping' ) ) ); // @codingStandardsIgnoreLine
+				<?php echo __( wc_help_tip( __( 'Provide free shipping if the order amount is same as or higher than the amount set.', 'easyparcel-shipping' ) ) ); // @codingStandardsIgnoreLine
 				?>
             </label>
         </th>
