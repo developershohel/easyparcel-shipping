@@ -206,7 +206,6 @@ function add_shipping_courier(element) {
                     jQuery('#spinner').css('display', 'block');
                     saveCourierButton.attr('disabled', 'disabled');
                 }, success: function (data) {
-                    console.log(data)
                     const jsonData = JSON.parse(data)
                     if (jsonData.status === false) {
                         courierModelForm.parent().html(cloneForm)
@@ -228,7 +227,6 @@ function add_shipping_courier(element) {
                                 jQuery('#spinner').css('display', 'block');
                                 saveCourierButton.attr('disabled', 'disabled');
                             }, success: function (data) {
-                                console.log(data)
                                 courierModelForm.html(`<table class="form-table">${data}</table><input type="hidden" name="instance_id" value="${instance_id}">`);
                             }, complete: function () {
                                 console.log('completed');
@@ -255,7 +253,7 @@ function add_shipping_courier(element) {
     }, 10000)
 }
 
-function ep_validate_courier_data() {
+function easyparcel_validate_courier_data() {
     const modalDialog = jQuery('#wc-backbone-modal-dialog, #mainform ')
     const courier_services = modalDialog.find('#courier_services')
     const delivery_day = jQuery('#courier_delivery_days')
@@ -461,7 +459,6 @@ function save_courier() {
     saveCourierButton.on('click', function (e) {
         //e.preventDefault()
         const nonce = obj.easyparcel_nonce
-        console.log(nonce)
         const zoneId = zone_id()
         if (zoneId === "") {
             return false;
@@ -495,7 +492,7 @@ function save_courier() {
                 return false
             }
         }
-        const ajaxCourierData = ep_validate_courier_data()
+        const ajaxCourierData = easyparcel_validate_courier_data()
         jQuery.ajax({
             url: ajax_object.ajax_url,
             method: 'post',
@@ -508,7 +505,6 @@ function save_courier() {
                 saveCourierButton.attr('disabled', 'disabled')
                 article.css({cursor: 'progress', opacity: .7})
             }, success: function (data) {
-                console.log(data)
                 const jsonData = JSON.parse(data)
                 if (jsonData.status === true) {
                     saveCourierButton.css({backgroundColor: '#2271b1', borderColor: '#2271b1'})
@@ -563,7 +559,6 @@ function save_courier() {
         const instance_id = jQuery('#instance_id').val()
         const courier_id = jQuery('#courier_id').val()
         const nonce = obj.easyparcel_nonce
-        console.log(nonce)
         if (zoneId === "") {
             return false;
         }
@@ -596,7 +591,7 @@ function save_courier() {
                 return false
             }
         }
-        const ajaxCourierData = ep_validate_courier_data()
+        const ajaxCourierData = easyparcel_validate_courier_data()
         jQuery.ajax({
             url: ajax_object.ajax_url,
             method: 'post',
@@ -610,7 +605,6 @@ function save_courier() {
                 jQuery(this).attr('disabled', 'disabled')
                 courierTable.css({cursor: 'progress', opacity: .7})
             }, success: (data) => {
-                console.log(data)
                 const jsonData = JSON.parse(data)
                 if (jsonData.status === true) {
                     console.log('completed')
@@ -638,7 +632,6 @@ function save_courier() {
         const formError = jQuery('.form-error')
         const zoneId = jQuery('#zone_id').val()
         const nonce = obj.easyparcel_nonce
-        console.log(nonce)
         if (zoneId === "") {
             return false;
         }
@@ -671,7 +664,7 @@ function save_courier() {
                 return false
             }
         }
-        const ajaxCourierData = ep_validate_courier_data()
+        const ajaxCourierData = easyparcel_validate_courier_data()
         jQuery.ajax({
             url: ajax_object.ajax_url,
             method: 'post',
@@ -684,7 +677,6 @@ function save_courier() {
                 jQuery(this).attr('disabled', 'disabled')
                 courierTable.css({cursor: 'progress', opacity: .7})
             }, success: (data) => {
-                console.log(data)
                 const jsonData = JSON.parse(data)
                 if (jsonData.status === true) {
                     console.log('completed')
@@ -693,6 +685,7 @@ function save_courier() {
                     button.css({backgroundColor: '#2271b1', borderColor: '#2271b1'})
                     window.location.href = jQuery('#redirect_url').val()
                 } else {
+                    button.removeAttr('disabled')
                     button.css({backgroundColor: 'red', borderColor: 'red'})
                     formError.html(jsonData.message)
                     courierTable.css({cursor: 'progress', opacity: 1})

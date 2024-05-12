@@ -6,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Check if WooCommerce is active
  */
 
-if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
-	class WC_Easyparcel_Shipping_Method extends WC_Shipping_Method {
+if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
+	class Easyparcel_Woocommerce_Shipping_Method extends WC_Shipping_Method {
 		/**
 		 * Easyparcel Plugin url
 		 * @var string|null
@@ -23,7 +23,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 		public function __construct( $instance_id = 0 ) {
 			parent::__construct( $instance_id );
 			$this->id           = 'easyparcel';
-			$this->method_title = __( 'EasyParcel Shipping ' );
+			$this->method_title = 'EasyParcel Shipping';
 			$this->instance_id  = empty( $instance_id ) ? 0 : absint( $instance_id );
 			$this->title        = "EasyParcel Shipping";
 			$plugin_url         = admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel' );
@@ -32,7 +32,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				'shipping-zones',
 				'settings',
 				'instance-settings',
-				'instance-settings-modal', // this is popout, don't do it
+				'instance-settings-modal'
 			);
 			$this->init();
 			$this->settings['cust_rate'] = 'cust_rate';
@@ -59,7 +59,6 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			$this->init_settings();
 			$post_data = $this->get_post_data();
 			if ( ! empty( $post_data ) ) {
-				$_POST = array();
 				foreach ( $this->get_form_fields() as $key => $field ) {
 					if ( 'title' !== $this->get_field_type( $field ) ) {
 						try {
@@ -166,17 +165,20 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					}
 				}
 			}
+			if (empty($err)){
+				update_option('easyparcel_settings', $this->settings);
+			}
 		}
 
 		public function show_setup_zone_notice() {
 			add_action( 'admin_notices', function () {
-				echo '<div id="message" class="notice notice-success is-dismissible">' . esc_html( 'Please proceed to setup your preferred shipping courier and zone' ) . '<p><a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) ) . '">' . esc_html( 'HERE' ) . '</a></p></div>';
+				echo '<div id="message" class="notice notice-success is-dismissible">' . esc_html( 'Please proceed to setup your preferred shipping courier and zone' ) . '<p><a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) ) . '">' . esc_html( ' HERE' ) . '</a></p></div>';
 			} );
 		}
 
 		public function show_setup_fail_notice( $auth ) {
 			add_action( 'admin_notices', function ( $auth ) {
-				echo '<div id="message" class="notice notice-error is-dismissible"><p>' . esc_attr( $auth ) . esc_html( "You have inserted invalid login email OR integration_id" ) . '</p></div>';
+				echo '<div id="message" class="notice notice-error is-dismissible"><p>' . esc_html( $auth.  ' You have inserted invalid login email OR integration_id').'</p></div>';
 			} );
 		}
 
@@ -241,8 +243,8 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					'type'  => 'title',
 					'desc'  => '',
 				),
-				'easyparcel_email' => array(
-					'title'       => __( '<font color="red">*</font>EasyParcel Login Email', 'easyparcel-shipping' ),
+				'email' => array(
+					'title'       => __( '<span style="color:red">*</span>EasyParcel Login Email', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'description' => __( 'Enter your registered EasyParcel login email here. If you do not have an EasyParcel account, sign up for free at <a href="https://easyparcel.com" target="_blank">easyparcel.com</a>', 'easyparcel-shipping' ),
 					'desc_tip'    => true,
@@ -251,7 +253,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				),
 
 				'integration_id'              => array(
-					'title'       => __( '<font color="red">*</font>Integration ID', 'easyparcel-shipping' ),
+					'title'       => __( '<span style="color:red">*</span>Integration ID', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'description' => __( 'Here’s how to get your integration ID: <br/>
                                         1. Login to your EasyParcel Account<br/>
@@ -263,13 +265,13 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					'required'    => true,
 				),
 				'sender_name'                 => array(
-					'title'    => __( '<font color="red">*</font>Name', 'easyparcel-shipping' ),
+					'title'    => __( '<span style="color:red">*</span>Name', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => '',
 					'required' => true,
 				),
 				'sender_contact_number'       => array(
-					'title'       => __( '<font color="red">*</font>Contact Number', 'easyparcel-shipping' ),
+					'title'       => __( '<span style="color:red">*</span>Contact Number', 'easyparcel-shipping' ),
 					'type'        => 'text',
 					'default'     => '',
 					'placeholder' => 'key in with countrycode (MY)60 / (SG)65',
@@ -288,7 +290,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					// 'placeholder' => 'company name',
 				),
 				'sender_address_1'            => array(
-					'title'    => __( '<font color="red">*</font>Address Line 1', 'easyparcel-shipping' ),
+					'title'    => __( '<span style="color:red">*</span>Address Line 1', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $address,
 					// 'placeholder' => 'Address line 1',
@@ -302,20 +304,20 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					'required' => true,
 				),
 				'sender_city'                 => array(
-					'title'    => __( '<font color="red">*</font>City', 'easyparcel-shipping' ),
+					'title'    => __( '<span style="color:red">*</span>City', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $city,
 					// 'placeholder' => 'city',
 					'required' => true,
 				),
 				'sender_postcode'             => array(
-					'title'    => __( '<font color="red">*</font>Postcode', 'easyparcel-shipping' ),
+					'title'    => __( '<span style="color:red">*</span>Postcode', 'easyparcel-shipping' ),
 					'type'     => 'text',
 					'default'  => $postcode,
 					'required' => true,
 				),
 				'sender_state'                => array(
-					'title'       => __( '<font color="red">*</font>State', 'easyparcel-shipping' ),
+					'title'       => __( '<span style="color:red">*</span>State', 'easyparcel-shipping' ),
 					'type'        => 'select',
 					'description' => __( 'state', 'easyparcel-shipping' ),
 					'default'     => '',
@@ -421,9 +423,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			$EP_Shipping_Zones = new Easyparcel_Shipping_Zones();
 			$zone              = $EP_Shipping_Zones->get_zone_matching_package( $package );
 			$zone_courier      = $zone->get_couriers();
-
 			$product_factory = new WC_Product_Factory();
-
 			foreach ( $package["contents"] as $key => $item ) {
 				// default product - assume it is simple product
 				$product        = $product_factory->get_product( $item["product_id"] );
@@ -499,7 +499,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 							$courier_service_label = $rate['service_name'];
 
 							$courier_logo                    = array();
-							$courier_logo['ep_courier_logo'] = $rate['courier_logo']; ### save ep courier logo ###
+							$courier_logo['easyparcel_courier_logo'] = $rate['courier_logo']; ### save ep courier logo ###
 
 							$pickup_point = array();
 							if ( strtoupper( $this->settings['sender_country'] ) == 'MY' ) {
@@ -625,7 +625,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					$courier_service_label = $rate['service_name'];
 
 					$courier_logo                    = array();
-					$courier_logo['ep_courier_logo'] = $rate['courier_logo']; ### save ep courier logo ###
+					$courier_logo['easyparcel_courier_logo'] = $rate['courier_logo']; ### save ep courier logo ###
 
 					$dropoff_point = array();
 					if ( strtoupper( $this->settings['sender_country'] ) == 'MY' ) {
@@ -789,7 +789,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 
 		/**** Price Display*************************/
 		/**
-		 * This function is found the cheapeast Courier from EasyParcel , modified to fit version 1.0.0
+		 * This function is found the cheapeast Courier from EasyParcel , modified to fit version 2.0.0
 		 *
 		 * @access protected
 		 *
@@ -822,6 +822,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 		 * process easyparcel order function
 		 */
 		public function process_booking_order( $obj ) {
+			global $wpdb;
 			$woo_order      = wc_get_order( $obj->order_id );
 			$data           = (object) array();
 			$data->order_id = $obj->order_id;
@@ -837,7 +838,8 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			$product_factory = new WC_Product_Factory();
 
 			foreach ( $data->order->get_items() as $item ) {
-				$data->product = $product_factory->get_product( $item["product_id"] );
+				$product_id = absint($item["product_id"]);
+				$data->product = $product_factory->get_product($product_id);
 				$item_value    += $item->get_subtotal();
 
 				for ( $i = 0; $i < $item["quantity"]; $i ++ ) {
@@ -868,7 +870,6 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				// Include Easyparcel API
 				include_once 'easyparcel_api.php';
 			}
-
 			Easyparcel_Shipping_API::init();
 			### call EP Submit Order API ###
 			$order_result = Easyparcel_Shipping_API::submitOrder( $data );
@@ -876,12 +877,11 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			$return_result = '';
 
 			if ( ! empty( $order_result ) ) {
-
 				if ( ! empty( $order_result->order_number ) ) {
 					### add woo order meta ###
-					$data->ep_order_number = $order_result->order_number;
-					$data->order->update_meta_data( '_ep_order_number', $data->ep_order_number );
-					$data->order->update_meta_data( '_ep_selected_courier', $obj->courier_name );
+					$data->easyparcel_order_number = $order_result->order_number;
+					$data->order->update_meta_data( '_easyparcel_order_number', $data->easyparcel_order_number );
+					$data->order->update_meta_data( '_easyparcel_selected_courier', $obj->courier_name );
 					$data->order->save(); // save meta
 
 					### call EP Pay Order API ###
@@ -889,10 +889,9 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					if ( ! empty( $payment_result ) ) {
 						if ( $payment_result->error_code == 0 ) { ### EP Pay Order API Success ###
 							if ( isset( $payment_result->result ) ) {
-
 								$obj_awb = $this->process_woo_payment_awb( $payment_result->result[0] );
 
-								if ( empty( $obj_awb->ep_awb ) ) {
+								if ( empty( $obj_awb->easyparcel_awb ) ) {
 									#### RECALL AWB ####
 									sleep( 15 ); //sleep 15 sec to recall pay order api
 
@@ -904,13 +903,13 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 									}
 								}
 
-								$data->order->update_meta_data( '_ep_payment_status', "Paid" );
-								$data->order->update_meta_data( '_ep_awb', $obj_awb->ep_awb );
-								$data->order->update_meta_data( '_ep_awb_id_link', $obj_awb->ep_awb_id_link );
-								$data->order->update_meta_data( '_ep_tracking_url', $obj_awb->ep_tracking_url );
+								$data->order->update_meta_data( '_easyparcel_payment_status', "Paid" );
+								$data->order->update_meta_data( '_easyparcel_awb', $obj_awb->easyparcel_awb );
+								$data->order->update_meta_data( '_easyparcel_awb_id_link', $obj_awb->easyparcel_awb_id_link );
+								$data->order->update_meta_data( '_easyparcel_tracking_url', $obj_awb->easyparcel_tracking_url );
 								$data->order->save(); // save meta
 
-								if ( $obj_awb->ep_awb ) {
+								if ( $obj_awb->easyparcel_awb ) {
 									// need to put after save meta
 									$this->process_woo_order_status_update_after_payment( $data );
 								}
@@ -1018,7 +1017,7 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			$return_result = '';
 
 			$paid_bulk_order_id        = array();
-			$paid_bulk_ep_order_number = array();
+			$paid_bulk_easyparcel_order_number = array();
 
 			if ( ! empty( $order_result ) ) {
 				if ( ! empty( $order_result->result ) ) {
@@ -1026,10 +1025,10 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 						if ( isset( $order_result->result[ $i ] ) && ! empty( $order_result->result[ $i ]->order_number ) ) {
 
 							$paid_bulk_order_id[]        = $bulk_order[ $i ]->order_id;
-							$paid_bulk_ep_order_number[] = $order_result->result[ $i ]->order_number;
+							$paid_bulk_easyparcel_order_number[] = $order_result->result[ $i ]->order_number;
 							### add woo order meta ###
-							$bulk_order[ $i ]->order->update_meta_data( '_ep_order_number', $order_result->result[ $i ]->order_number );
-							$bulk_order[ $i ]->order->update_meta_data( '_ep_selected_courier', $obj->courier_name );
+							$bulk_order[ $i ]->order->update_meta_data( '_easyparcel_order_number', $order_result->result[ $i ]->order_number );
+							$bulk_order[ $i ]->order->update_meta_data( '_easyparcel_selected_courier', $obj->courier_name );
 							$bulk_order[ $i ]->order->save(); // save meta
 
 						} else {
@@ -1042,9 +1041,9 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				}
 			}
 
-			if ( ! empty( $paid_bulk_ep_order_number ) && ! empty( $paid_bulk_order_id ) ) {
+			if ( ! empty( $paid_bulk_easyparcel_order_number ) && ! empty( $paid_bulk_order_id ) ) {
 				### call EP Bulk Pay Order API ###
-				$payment_result = Easyparcel_Shipping_API::payBulkOrder( $paid_bulk_ep_order_number );
+				$payment_result = Easyparcel_Shipping_API::payBulkOrder( $paid_bulk_easyparcel_order_number );
 
 				if ( ! empty( $payment_result ) ) {
 					if ( $payment_result->error_code == 0 ) { ### EP Pay Order API Success ###
@@ -1056,13 +1055,13 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 
 									$woo_order = wc_get_order( $paid_bulk_order_id[ $i ] );
 
-									$woo_order->update_meta_data( '_ep_payment_status', "Paid" );
-									$woo_order->update_meta_data( '_ep_awb', $obj_awb->ep_awb );
-									$woo_order->update_meta_data( '_ep_awb_id_link', $obj_awb->ep_awb_id_link );
-									$woo_order->update_meta_data( '_ep_tracking_url', $obj_awb->ep_tracking_url );
+									$woo_order->update_meta_data( '_easyparcel_payment_status', "Paid" );
+									$woo_order->update_meta_data( '_easyparcel_awb', $obj_awb->easyparcel_awb );
+									$woo_order->update_meta_data( '_easyparcel_awb_id_link', $obj_awb->easyparcel_awb_id_link );
+									$woo_order->update_meta_data( '_easyparcel_tracking_url', $obj_awb->easyparcel_tracking_url );
 									$woo_order->save(); // save meta
 
-									if ( $obj_awb->ep_awb ) {
+									if ( $obj_awb->easyparcel_awb ) {
 										// bulk need declare $data - need to put after save meta
 										$data        = (object) array();
 										$data->order = $woo_order;
@@ -1088,19 +1087,19 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 
 		private function process_woo_payment_awb( $result ) {
 			$data                  = (object) array();
-			$data->ep_awb          = '';
-			$data->ep_awb_id_link  = '';
-			$data->ep_tracking_url = '';
+			$data->easyparcel_awb          = '';
+			$data->easyparcel_awb_id_link  = '';
+			$data->easyparcel_tracking_url = '';
 
 			if ( isset( $result->parcel ) ) {
 				if ( is_object( $result->parcel ) ) {
-					$data->ep_awb          = $result->parcel->awb;
-					$data->ep_awb_id_link  = $result->parcel->awb_id_link;
-					$data->ep_tracking_url = $result->parcel->tracking_url;
+					$data->easyparcel_awb          = $result->parcel->awb;
+					$data->easyparcel_awb_id_link  = $result->parcel->awb_id_link;
+					$data->easyparcel_tracking_url = $result->parcel->tracking_url;
 				} else if ( is_array( $result->parcel ) ) {
-					$data->ep_awb          = $result->parcel[0]->awb;
-					$data->ep_awb_id_link  = $result->parcel[0]->awb_id_link;
-					$data->ep_tracking_url = $result->parcel[0]->tracking_url;
+					$data->easyparcel_awb          = $result->parcel[0]->awb;
+					$data->easyparcel_awb_id_link  = $result->parcel[0]->awb_id_link;
+					$data->easyparcel_tracking_url = $result->parcel[0]->tracking_url;
 				}
 			}
 
@@ -1216,8 +1215,8 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 			$method_table = $wpdb->prefix . 'woocommerce_shipping_zone_methods';
 			$instance_id  = $this->instance_id;
 			if ( ! empty( $instance_id ) ) {
-				$zone_id     = $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$method_table} WHERE instance_id=%s", $instance_id ) );
-				$value       = get_option( 'woocommerce_easyparcel_settings' );
+				$zone_id     = $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$wpdb->prefix}woocommerce_shipping_zone_methods WHERE instance_id=%d", $instance_id ) );
+				$value       = get_option( 'easyparcel_settings' );
 				$table       = $wpdb->prefix . 'easyparcel_zones_courier';
 				$new_courier = ! empty( $zone_id ) ? admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=' . absint( $zone_id ) . '&perform=add_courier' ) : admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' );
 
@@ -1229,27 +1228,24 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 					);
 				} else {
 					if ( ! empty( $zone_id ) ) {
-						$get_courier = $wpdb->get_var( $wpdb->prepare( "SELECT courier_display_name FROM {$table} WHERE zone_id=%s AND instance_id=%s", $zone_id, $instance_id ) ) ?? $wpdb->get_var( $wpdb->prepare( "SELECT courier_name FROM {$table} WHERE zone_id=%s AND instance_id=%s", $zone_id, $instance_id ) );
+						$get_courier = $wpdb->get_var( $wpdb->prepare( "SELECT courier_display_name FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id=%d AND instance_id=%d", $zone_id, $instance_id ) ) ?? $wpdb->get_var( $wpdb->prepare( "SELECT courier_name FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id=%d AND instance_id=%d", $zone_id, $instance_id ) );
 
 						if ( ! empty( $get_courier ) ) {
-							$courier_id   = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE zone_id=%s AND instance_id=%s", $zone_id, $instance_id ) );
+							$courier_id   = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id=%d AND instance_id=%d", $zone_id, $instance_id ) );
 							$edit_courier = admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&courier_id=$courier_id" );
 							$message      = sprintf(
-							// translators: %1$s is a placeholder for the courier name, %2$s is a placeholder for the link to edit the courier
 								esc_html__( 'Courier Name: %1$s. Edit your courier to %2$s', 'easyparcel-shipping' ),
 								'<strong>' . esc_html( $get_courier ) . '</strong>',
 								'<a class="edit-courier-url" href="' . esc_url( $edit_courier ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
 							);
 						} else {
 							$message = sprintf(
-							// translators: %s is a placeholder for the link to add a new courier
 								esc_html__( 'Add your courier to %s', 'easyparcel-shipping' ),
 								'<a class="new-courier-url" href="' . esc_url( $new_courier ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
 							);
 						}
 					} else {
 						$message = sprintf(
-						// translators: %s is a placeholder for the link to add a new courier
 							esc_html__( 'Add your courier to %s', 'easyparcel-shipping' ),
 							'<a class="new-courier-url" href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
 						);
@@ -1257,7 +1253,6 @@ if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
 				}
 			} else {
 				$message = sprintf(
-				// translators: %s is a placeholder for the link to add a new courier
 					esc_html__( 'Add your courier to %s', 'easyparcel-shipping' ),
 					'<a class="new-courier-url" href="' . admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping' ) . '">' . esc_html__( 'Click Here', 'easyparcel-shipping' ) . '</a>'
 				);

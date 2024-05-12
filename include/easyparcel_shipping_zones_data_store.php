@@ -53,12 +53,11 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 	 *
 	 */
 	private function save_locations( &$zone ) {
+		global $wpdb;
 		$changed_props = array_keys( $zone->get_changes() );
 		if ( ! in_array( 'zone_locations', $changed_props, true ) ) {
 			return false;
 		}
-
-		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'woocommerce_shipping_zone_locations', array( 'zone_id' => $zone->get_id() ) );
 
 		foreach ( $zone->get_zone_locations( 'edit' ) as $location ) {
@@ -122,12 +121,10 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 		global $wpdb;
 
 		if ( $enabled_only ) {
-			$raw_methods_sql = "SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%s AND is_enabled = 1";
+			return $wpdb->get_results($wpdb->prepare("SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%d AND is_enabled = 1", $zone_id));
 		} else {
-			$raw_methods_sql = "SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%s";
+			return $wpdb->get_results($wpdb->prepare("SELECT id, courier_order, zone_id, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%d", $zone_id));
 		}
-
-		return $wpdb->get_results( $wpdb->prepare( $raw_methods_sql, $zone_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -163,7 +160,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 	public function get_method( $zone_id ) {
 		global $wpdb;
 
-		return $wpdb->get_row( $wpdb->prepare( "SELECT zone_id, id, courier_order, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%s LIMIT 1;", $zone_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT zone_id, id, courier_order, status FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%d LIMIT 1;", $zone_id ) );
 	}
 
 	/**
@@ -206,7 +203,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 		// Zone 0 is used as a default if no other zones fit.
 		if ( 0 === $zone->get_id() || '0' === $zone->get_id() ) {
 			$this->read_zone_locations( $zone );
-			$zone->set_zone_name( __( 'Locations not covered by your other zones', 'woocommerce' ) );
+			$zone->set_zone_name( __( 'Locations not covered by your other zones', 'easyparcel-shipping' ) );
 			$zone->read_meta_data();
 			$zone->set_object_read( true );
 
@@ -222,7 +219,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 
 		$zone_data = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT zone_name, zone_order FROM {$wpdb->prefix}woocommerce_shipping_zones WHERE zone_id =%s LIMIT 1",
+				"SELECT zone_name, zone_order FROM {$wpdb->prefix}woocommerce_shipping_zones WHERE zone_id =%d LIMIT 1",
 				$zone->get_id()
 			)
 		);
@@ -251,7 +248,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 
 		$locations = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT location_code, location_type FROM {$wpdb->prefix}woocommerce_shipping_zone_locations WHERE zone_id =%s",
+				"SELECT location_code, location_type FROM {$wpdb->prefix}woocommerce_shipping_zone_locations WHERE zone_id =%d",
 				$zone->get_id()
 			)
 		);
@@ -274,7 +271,7 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 	public function get_method_count( $zone_id ) {
 		global $wpdb;
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}woocommerce_shipping_zone_methods WHERE zone_id =%s", $zone_id ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}woocommerce_shipping_zone_methods WHERE zone_id =%d", $zone_id ) );
 	}
 
 	/**
@@ -324,9 +321,9 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 
 		// Work out criteria for our zone search.
 		$criteria   = array();
-		$criteria[] = $wpdb->prepare( "( ( location_type = 'country' AND location_code = %s )", $country );
-		$criteria[] = $wpdb->prepare( "OR ( location_type = 'state' AND location_code = %s )", $country . ':' . $state );
-		$criteria[] = $wpdb->prepare( "OR ( location_type = 'continent' AND location_code = %s )", $continent );
+        $criteria[] = "( ( location_type = 'country' AND location_code = %s )";
+        $criteria[] = "OR ( location_type = 'state' AND location_code = %s )";
+        $criteria[] = "OR ( location_type = 'continent' AND location_code = %s )";
 		$criteria[] = 'OR ( location_type IS NULL ) )';
 
 		// Postcode range and wildcard matching.
@@ -336,7 +333,6 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 			$zone_ids_with_postcode_rules = array_map( 'absint', wp_list_pluck( $postcode_locations, 'zone_id' ) );
 			$matches                      = wc_postcode_location_matcher( $postcode, $postcode_locations, 'zone_id', 'location_code', $country );
 			$do_not_match                 = array_unique( array_diff( $zone_ids_with_postcode_rules, array_keys( $matches ) ) );
-
 			if ( ! empty( $do_not_match ) ) {
 				$criteria[] = 'AND zones.zone_id NOT IN (' . implode( ',', $do_not_match ) . ')';
 			}
@@ -352,12 +348,9 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 		 * @since 3.6.6
 		 */
 		$criteria    = apply_filters( 'woocommerce_get_zone_criteria', $criteria, $package, $postcode_locations );
-		$db_criteria = implode( ' ', $criteria );
-
-		// Get matching zones.
-		return $wpdb->get_var( $wpdb->prepare( "SELECT zones.zone_id FROM {$wpdb->prefix}woocommerce_shipping_zones as zones
-			LEFT OUTER JOIN {$wpdb->prefix}woocommerce_shipping_zone_locations as locations ON zones.zone_id = locations.zone_id AND location_type != 'postcode'
-			WHERE %s ORDER BY zone_order ASC, zones.zone_id ASC LIMIT 1", $db_criteria ) );
+		return $wpdb->get_var($wpdb->prepare( "SELECT zones.zone_id FROM {$wpdb->prefix}woocommerce_shipping_zones as zones
+    LEFT OUTER JOIN {$wpdb->prefix}woocommerce_shipping_zone_locations as locations ON zones.zone_id = locations.zone_id AND location_type != 'postcode'
+    WHERE (( location_type = 'country' AND location_code = %s ) OR ( location_type = 'state' AND location_code = %s ) OR ( location_type = 'continent' AND location_code = %s ) OR ( location_type IS NULL )) ORDER BY zone_order ASC, zones.zone_id ASC LIMIT 1", $country, $country . ':' . $state, $continent ));
 	}
 
 	/**
@@ -383,6 +376,6 @@ class Easyparcel_Shipping_Zone_Data_Store extends WC_Data_Store_WP implements Ea
 	public function get_zone_id_by_instance_id( $id ) {
 		global $wpdb;
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$wpdb->prefix}woocommerce_shipping_zone_methods as methods WHERE methods.instance_id =%s LIMIT 1;", $id ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT zone_id FROM {$wpdb->prefix}woocommerce_shipping_zone_methods as methods WHERE methods.instance_id =%d LIMIT 1;", $id ) );
 	}
 }

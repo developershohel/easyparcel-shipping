@@ -19,7 +19,7 @@ add_action( 'wp_ajax_wc_shipment_tracking_save_form_bulk', 'easyparcel_save_bulk
  * @return mixed
  */
 function easyparcel_bulk_actions_order_fulfillment( $actions ) {
-	$actions['order_fulfillment'] = __( 'Order Fulfillment', 'woocommerce' );
+	$actions['order_fulfillment'] = __( 'Order Fulfillment', 'easyparcel-shipping' );
 
 	return $actions;
 }
@@ -35,7 +35,7 @@ function easyparcel_bulk_actions_order_fulfillment( $actions ) {
  *
  */
 function easyparcel_handle_bulk_actions_order_fulfillment( $redirect_to, $action, $post_ids ) {
-	if ( $action !== 'order_fulfillment' ) {
+    if ( $action !== 'order_fulfillment' ) {
 		return $redirect_to;
 	}
 
@@ -58,10 +58,11 @@ function easyparcel_handle_bulk_actions_order_fulfillment( $redirect_to, $action
  */
 
 function easyparcel_bulk_actions_order_fulfillment_admin_notice() {
-	if ( empty( $_REQUEST['order_fulfillment'] ) ) {
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    if ( empty( $_REQUEST['order_fulfillment'] ) ) {
 		return;
 	}
-	$count   = intval( $_REQUEST['processed_count'] );
+	$count   = intval( wp_unslash($_REQUEST['processed_count']) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	$message = $count === 1 ? 'Processed 1 Order for fulfillment.' : "Processed $count Orders for fulfillment.";
 	printf(
 		'<div id="message" class="updated fade"><p>%s</p></div>',
@@ -81,7 +82,6 @@ function easyparcel_bulk_fulfillment_popup() {
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
 		exit( 'You are not allowed' );
 	}
-
 	check_ajax_referer( 'easyparcel_bulk_fulfillment_popup', 'security' );
 	$order_ids        = isset( $_POST['order_ids'] ) ? wc_clean( $_POST['order_ids'] ) : '';
 	$paid_order_ids   = array();
@@ -89,7 +89,7 @@ function easyparcel_bulk_fulfillment_popup() {
 
 	foreach ( $order_ids as $order_id ) {
 		$order                  = wc_get_order( $order_id );
-		$easyparcel_paid_status = ( $order->meta_exists( '_ep_payment_status' ) ) ? 1 : 0; # 1 = Paid / 0 = Pending
+		$easyparcel_paid_status = ( $order->meta_exists( '_easyparcel_payment_status' ) ) ? 1 : 0; # 1 = Paid / 0 = Pending
 		if ( $easyparcel_paid_status ) {
 			$paid_order_ids[] = $order_id;
 		} else {
@@ -113,20 +113,18 @@ function easyparcel_bulk_fulfillment_popup() {
         <div id="easyparcel_fulfillment_popout" class="fulfillment_popup_wrapper add_fulfillment_popup">
             <div class="fulfillment_popup_row">
                 <div class="popup_header">
-                    <h3 class="popup_title"><?php esc_html( 'Shipment Fulfillment' ); ?> -
-                        #<?php esc_html( $order_number ); ?></h3>
+                    <h3 class="popup_title"><?php echo esc_html( 'Shipment Fulfillment -# '.$order_number ); ?></h3>
                     <span class="dashicons dashicons-no-alt popup_close_icon"></span>
                 </div>
                 <div class="popup_body">
                     <form id="add_fulfillment_form" method="POST" class="add_fulfillment_form">
                         <p class="form-field form-50">
-                            <label for="shipping_provider"><?php esc_html( 'Courier Services:' ); ?></label>
+                            <label for="shipping_provider"><?php echo esc_html( 'Courier Services:' ); ?></label>
                             <select class="chosen_select shipping_provider_dropdown" id="shipping_provider"
                                     name="shipping_provider">
-                                <option value=""><?php esc_html( 'Select Preferred Courier Service' ); ?></option>
+                                <option value=""><?php echo esc_html( 'Select Preferred Courier Service' ); ?></option>
 								<?php
 								foreach ( $shipment_providers_by_country as $providers ) {
-									$providers->ts_slug;
 									$selected = ( $providers->provider_name == $default_provider ) ? 'selected' : '';
 									echo '<option value="' . esc_attr( $providers->ts_slug ) . '" ' . esc_html( $selected ) . '>' . esc_html( $providers->provider_name ) . '</option>';
 								}
@@ -143,18 +141,15 @@ function easyparcel_bulk_fulfillment_popup() {
 						#### drop off - E ####
 						?>
                         <p class="form-field date_shipped_field form-50">
-                            <label for="date_shipped"><?php esc_html_e( 'Drop Off / Pick Up Date' ); ?></label>
-                            <input type="text" class="ast-date-picker-field" name="date_shipped" id="date_shipped"
-                                   value="<?php echo esc_html( date_i18n( __( 'Y-m-d' ), current_time( 'timestamp' ) ) ); ?>"
-                                   placeholder="<?php echo esc_html( date_i18n( esc_html( 'Y-m-d' ), time() ) ); ?>">
+                            <label for="date_shipped"><?php echo esc_html( 'Drop Off / Pick Up Date' ); ?></label>
+                            <input type="text" class="ast-date-picker-field" name="date_shipped" id="date_shipped" value="<?php echo esc_html( date_i18n('Y-m-d', current_time( 'timestamp' ) ) ); ?>"
+                                   placeholder="<?php echo esc_html( date_i18n('Y-m-d', time() ) ); ?>">
                         </p>
                         <hr>
                         <p>
                             <input type="hidden" name="action" value="add_shipment_fulfillment">
-                            <input type="hidden" name="order_id" id="order_id"
-                                   value="<?php esc_attr( $order_id ); ?>">
-                            <input type="button" name="Submit" value="<?php esc_html_e( 'Fulfill Order' ); ?>"
-                                   class="button-primary btn_green button-save-form">
+                            <input type="hidden" name="order_id" id="order_id" value="<?php echo esc_attr( $order_id ); ?>">
+                            <input type="button" name="Submit" value="Fulfill Order" class="button-primary btn_green button-save-form">
                         </p>
                     </form>
                 </div>
@@ -185,10 +180,10 @@ function easyparcel_save_bulk_order_ajax() {
 	$order_id          = isset( $_POST['order_id'] ) ? wc_clean( $_POST['order_id'] ) : '';
 
 	### Bulk Order Part ###
-	if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
-	$WC_Easyparcel_Shipping_Method = new WC_Easyparcel_Shipping_Method();
+	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
 
 	if ( $pick_up_date != '' && $shipping_provider != '' ) {
 		$obj                    = (object) array();
@@ -197,9 +192,9 @@ function easyparcel_save_bulk_order_ajax() {
 		$obj->shipping_provider = $shipping_provider;
 		$obj->courier_name      = $courier_name;
 		$obj->drop_off_point    = $drop_off_point;
-		$ep_order               = $WC_Easyparcel_Shipping_Method->process_bulk_booking_order( $obj );
-		if ( ! empty( $ep_order ) ) {
-			print_r( $ep_order );
+		$easyparcel_order               = $Easyparcel_Woocommerce_Shipping_Method->process_bulk_booking_order( $obj );
+		if ( ! empty( $easyparcel_order ) ) {
+			print_r( $easyparcel_order );
 		} else {
 			echo 'success';
 		}
@@ -221,12 +216,12 @@ function easyparcel_save_bulk_order_ajax() {
  */
 function easyparcel_get_api_detail_bulk( $post ) {
 
-	if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
 
-	$WC_Easyparcel_Shipping_Method = new WC_Easyparcel_Shipping_Method();
-	$rates                         = $WC_Easyparcel_Shipping_Method->get_admin_shipping( $post );
+	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
+	$rates                         = $Easyparcel_Woocommerce_Shipping_Method->get_admin_shipping( $post );
 
 	$obj                          = (object) array();
 	$obj->shipment_providers_list = array();
@@ -334,12 +329,12 @@ function easyparcel_get_shipment_tracking_column( $order_id ) {
 	ob_start();
 
 	$order                  = wc_get_order( $order_id );
-	$easyparcel_paid_status = ( $order->meta_exists( '_ep_payment_status' ) ) ? 1 : 0;
+	$easyparcel_paid_status = ( $order->meta_exists( '_easyparcel_payment_status' ) ) ? 1 : 0;
 	if ( $easyparcel_paid_status == 1 ) {
-		$selected_courier = ( ! empty( $order->get_meta( '_ep_selected_courier' ) ) ) ? $order->get_meta( '_ep_selected_courier' ) : '-';
-		$awb              = ( ! empty( $order->get_meta( '_ep_awb' ) ) ) ? $order->get_meta( '_ep_awb' ) : '-';
-		$tracking_url     = ( ! empty( $order->get_meta( '_ep_tracking_url' ) ) ) ? $order->get_meta( '_ep_tracking_url' ) : '-';
-		$awb_link         = ( ! empty( $order->get_meta( '_ep_awb_id_link' ) ) ) ? $order->get_meta( '_ep_awb_id_link' ) : '-';
+		$selected_courier = ( ! empty( $order->get_meta( '_easyparcel_selected_courier' ) ) ) ? $order->get_meta( '_easyparcel_selected_courier' ) : '-';
+		$awb              = ( ! empty( $order->get_meta( '_easyparcel_awb' ) ) ) ? $order->get_meta( '_easyparcel_awb' ) : '-';
+		$tracking_url     = ( ! empty( $order->get_meta( '_easyparcel_tracking_url' ) ) ) ? $order->get_meta( '_easyparcel_tracking_url' ) : '-';
+		$awb_link         = ( ! empty( $order->get_meta( '_easyparcel_awb_id_link' ) ) ) ? $order->get_meta( '_easyparcel_awb_id_link' ) : '-';
 		echo '<ul class="easyparcel_order_list_shipment_tracking">';
 		printf(
 			'<li>
@@ -349,9 +344,9 @@ function easyparcel_get_shipment_tracking_column( $order_id ) {
                         <a href="%s" target="_blank">[Download AWB]</a>
                     </li>',
 			esc_html( $selected_courier ),
-			esc_html( $tracking_url ),
+			esc_url( $tracking_url ),
 			esc_html( $awb ),
-			esc_html( $awb_link )
+			esc_url( $awb_link )
 		);
 		echo '</ul>';
 	} else {
@@ -385,7 +380,9 @@ function easyparcel_destination_columns_sortable( $columns ) {
  */
 function easyparcel_shop_order_column_destination_sortable_orderby( $query ) {
 	global $pagenow;
-	if ( 'edit.php' === $pagenow && isset( $_GET['post_type'] ) && 'shop_order' === sanitize_text_field( $_GET['post_type'] ) ) {
+    $post_type = filter_input(INPUT_GET, 'post_type') ?? '';
+    $post_type = sanitize_text_field($post_type);
+	if ( 'edit.php' === $pagenow && !empty($post_type) && 'shop_order' === $post_type ) {
 		$orderby  = $query->get( 'orderby' );
 		$meta_key = '_shipping_country';
 		if ( '_shipping_country' === $orderby ) {
@@ -394,3 +391,4 @@ function easyparcel_shop_order_column_destination_sortable_orderby( $query ) {
 		}
 	}
 }
+//add_action('woocommerce_order_details_after_order_table')

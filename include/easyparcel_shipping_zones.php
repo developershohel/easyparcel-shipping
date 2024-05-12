@@ -29,7 +29,7 @@ class Easyparcel_Shipping_Zones {
 	 */
 	public static function get_zones( $context = 'admin' ) {
 		include_once 'easyparcel_shipping_zone.php';
-		$raw_zones = self::ep_get_zones();
+		$raw_zones = self::easyparcel_get_zones();
 		$zones     = array();
 
 		foreach ( $raw_zones as $raw_zone ) {
@@ -44,18 +44,14 @@ class Easyparcel_Shipping_Zones {
 		return $zones;
 	}
 
-	public static function ep_get_zones() {
+	public static function easyparcel_get_zones() {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'woocommerce_shipping_zones';
-
-		return $wpdb->get_results( "SELECT * FROM {$table_name}" );
+		return $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}woocommerce_shipping_zones" );
 	}
 
 	public static function get_zone_courier( $zone_id = 0 ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'easyparcel_zones_courier';
-
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_name} WHERE zone_id=%s ORDER BY courier_order ASC", $zone_id ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id=%d ORDER BY courier_order ASC", $zone_id ) );
 	}
 
 	/**
@@ -167,7 +163,7 @@ class Easyparcel_Shipping_Zones {
 		$country          = strtoupper( wc_clean( $package['destination']['country'] ) );
 		$state            = strtoupper( wc_clean( $package['destination']['state'] ) );
 		$postcode         = wc_normalize_postcode( wc_clean( $package['destination']['postcode'] ) );
-		$cache_key        = WC_Cache_Helper::get_cache_prefix( 'shipping_zones' ) . 'ep_shipping_zone_' . md5( sprintf( '%s+%s+%s', $country, $state, $postcode ) );
+		$cache_key        = WC_Cache_Helper::get_cache_prefix( 'shipping_zones' ) . 'easyparcel_shipping_zone_' . md5( sprintf( '%s+%s+%s', $country, $state, $postcode ) );
 		$matching_zone_id = wp_cache_get( $cache_key, 'shipping_zones' );
 
 		if ( false === $matching_zone_id ) {
@@ -179,17 +175,6 @@ class Easyparcel_Shipping_Zones {
 			wp_cache_set( $cache_key, $matching_zone_id, 'shipping_zones' );
 		}
 
-		return new Easyparcel_Shipping_Zone( $matching_zone_id ? $matching_zone_id : 0 );
-	}
-
-	public static function ep_get_valid_zone_courier( $destination ) {
-		global $wpdb;
-		$table_name  = $wpdb->prefix . 'woocommerce_shipping_zones';
-		$table_name2 = $wpdb->prefix . 'easyparcel_zones_courier';
-//		$raw_zones   = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$table_name} join {$table_name2}  ON  {$table_name}.zone_id = {$table_name2}.zone_id" ) );
-		$destination['country'];
-		$destination['state'];
-
-		return true;
+		return new Easyparcel_Shipping_Zone( $matching_zone_id ?? 0 );
 	}
 }

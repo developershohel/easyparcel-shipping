@@ -15,14 +15,13 @@ function easyparcel_add_meta_box() {
 
 function easyparcel_order_page_custom_meta_box() {
 	global $post, $wpdb;
-
 	#### DYNAMIC VALUE - S ####
 	$order                  = wc_get_order( $post->ID );
-	$selected_courier       = ( ! empty( $order->get_meta( '_ep_selected_courier' ) ) ) ? $order->get_meta( '_ep_selected_courier' ) : '';
-	$awb                    = ( ! empty( $order->get_meta( '_ep_awb' ) ) ) ? $order->get_meta( '_ep_awb' ) : '';
-	$tracking_url           = ( ! empty( $order->get_meta( '_ep_tracking_url' ) ) ) ? $order->get_meta( '_ep_tracking_url' ) : '';
-	$awb_link               = ( ! empty( $order->get_meta( '_ep_awb_id_link' ) ) ) ? $order->get_meta( '_ep_awb_id_link' ) : '';
-	$easyparcel_paid_status = ( $order->meta_exists( '_ep_payment_status' ) ) ? 1 : 0; # 1 = Paid / 0 = Pending
+	$selected_courier       = ( ! empty( $order->get_meta( '_easyparcel_selected_courier' ) ) ) ? $order->get_meta( '_easyparcel_selected_courier' ) : '';
+	$awb                    = ( ! empty( $order->get_meta( '_easyparcel_awb' ) ) ) ? $order->get_meta( '_easyparcel_awb' ) : '';
+	$tracking_url           = ( ! empty( $order->get_meta( '_easyparcel_tracking_url' ) ) ) ? $order->get_meta( '_easyparcel_tracking_url' ) : '';
+	$awb_link               = ( ! empty( $order->get_meta( '_easyparcel_awb_id_link' ) ) ) ? $order->get_meta( '_easyparcel_awb_id_link' ) : '';
+	$easyparcel_paid_status = ( $order->meta_exists( '_easyparcel_payment_status' ) ) ? 1 : 0; # 1 = Paid / 0 = Pending
 
 	$default_provider = $order->get_shipping_method();
 	if ( ! empty( $selected_courier ) ) {
@@ -38,9 +37,8 @@ function easyparcel_order_page_custom_meta_box() {
 	echo '<p class="form-field shipping_provider_field"><label for="shipping_provider">' . esc_html__( 'Courier Services:', 'easyparcel-shipping' ) . '</label><br/><select id="shipping_provider" name="shipping_provider" class="chosen_select shipping_provider_dropdown" style="width:100%;">';
 	echo '<option value="">' . esc_html__( 'Select Preferred Courier Service', 'easyparcel-shipping' ) . '</option>';
 	foreach ( $shipment_providers_by_country as $providers ) {
-		$providers->ts_slug;
 		$selected = ( $providers->provider_name == $default_provider ) ? 'selected' : '';
-		echo '<option value="' . esc_attr( $providers->ts_slug ) . '" ' . esc_html( $selected ) . '>' . esc_html( $providers->provider_name ) . '</option>';
+		echo '<option value="' . esc_attr( $providers->ts_slug ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $providers->provider_name ) . '</option>';
 	}
 	echo '</select></p>';
 	#### drop off - S ####
@@ -83,8 +81,8 @@ function easyparcel_order_page_custom_meta_box() {
 	}
 	if ( $easyparcel_paid_status ) {
 		echo '<p class="fulfillment_details">' . esc_attr( $selected_courier ) . '<br>
-			<a href="' . esc_attr( $tracking_url ) . '" target="_blank">' . esc_attr( $awb ) . '</a><br>
-			<a href="' . esc_attr( $awb_link ) . '" target="_blank">' . esc_html( '[Download AWB]' ) . '</a></p>';
+			<a href="' . esc_url( $tracking_url ) . '" target="_blank">' . esc_html( $awb ) . '</a><br>
+			<a href="' . esc_url( $awb_link ) . '" target="_blank">' . esc_html( '[Download AWB]' ) . '</a></p>';
 	}
 	echo '</div>';
 	wp_enqueue_script( 'easyparcel-shipping-integration-order-fulfillment-js', plugin_dir_url( __FILE__ ) . 'js/easyparcel_meta_box.js', array( 'jquery' ), EASYPARCEL_VERSION, true );
@@ -104,12 +102,12 @@ function easyparcel_save_meta_box_ajax() {
 	$pick_up_date           = isset( $_POST['pick_up_date'] ) ? wc_clean( $_POST['pick_up_date'] ) : '';
 	$order_id               = isset( $_POST['order_id'] ) ? wc_clean( $_POST['order_id'] ) : '';
 	$order                  = wc_get_order( $order_id );
-	$easyparcel_paid_status = ( $order->meta_exists( '_ep_payment_status' ) ) ? 1 : 0; # 1 = Paid / 0 = Pending
+	$easyparcel_paid_status = ( $order->meta_exists( '_easyparcel_payment_status' ) ) ? 1 : 0; # 1 = Paid / 0 = Pending
 
-	if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
-	$WC_Easyparcel_Shipping_Method = new WC_Easyparcel_Shipping_Method();
+	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
 
 	if ( ! $easyparcel_paid_status ) {
 		### Add Fulfillment Part ###
@@ -120,9 +118,9 @@ function easyparcel_save_meta_box_ajax() {
 			$obj->shipping_provider = $shipping_provider;
 			$obj->courier_name      = $courier_name;
 			$obj->drop_off_point    = $drop_off_point;
-			$ep_order               = $WC_Easyparcel_Shipping_Method->process_booking_order( $obj );
-			if ( ! empty( $ep_order ) ) {
-				print_r( $ep_order );
+			$easyparcel_order               = $Easyparcel_Woocommerce_Shipping_Method->process_booking_order( $obj );
+			if ( ! empty( $easyparcel_order ) ) {
+				print_r( $easyparcel_order );
 			} else {
 				echo 'success';
 			}
@@ -134,10 +132,10 @@ function easyparcel_save_meta_box_ajax() {
 	} else {
 		### Edit Fulfillment Part ###
 		if ( strlen( $tracking_number ) > 0 && strlen( $tracking_url ) > 0 && $shipping_provider != '' ) {
-			$order->update_meta_data( '_ep_awb', $tracking_number );
-			$order->update_meta_data( '_ep_selected_courier', $courier_name );
-			$order->update_meta_data( '_ep_awb_id_link', '' );
-			$order->update_meta_data( '_ep_tracking_url', $tracking_url );
+			$order->update_meta_data( '_easyparcel_awb', $tracking_number );
+			$order->update_meta_data( '_easyparcel_selected_courier', $courier_name );
+			$order->update_meta_data( '_easyparcel_awb_id_link', '' );
+			$order->update_meta_data( '_easyparcel_tracking_url', $tracking_url );
 			$order->save();
 			echo 'success';
 		} else {
@@ -150,12 +148,12 @@ function easyparcel_save_meta_box_ajax() {
 
 function get_api_detail( $post ) {
 
-	if ( ! class_exists( 'WC_Easyparcel_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
 
-	$WC_Easyparcel_Shipping_Method = new WC_Easyparcel_Shipping_Method();
-	$rates                         = $WC_Easyparcel_Shipping_Method->get_admin_shipping( $post );
+	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
+	$rates                         = $Easyparcel_Woocommerce_Shipping_Method->get_admin_shipping( $post );
 
 	$obj                          = (object) array();
 	$obj->shipment_providers_list = array();

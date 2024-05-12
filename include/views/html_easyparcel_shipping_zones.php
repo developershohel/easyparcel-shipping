@@ -6,14 +6,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <h2 class="wc-shipping-zones-heading">
 	<?php esc_html_e( 'EasyParcel Courier Setting', 'easyparcel-shipping' ); ?>
-    <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=new' ) ); ?>"
-       class="page-title-action"><?php esc_html_e( 'Add Courier Setting', 'easyparcel-shipping' ); ?></a>
+    <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping&zone_id=new' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New Zone', 'easyparcel-shipping' ); ?></a>
 </h2>
 <p><?php echo esc_html( 'You can have different courier settings for different areas/zones according to your preference. Customers whose shipping address is in a specific area/zone will see the courier options and shipping rates offered to them.' ); ?></p>
 <table class="wc-shipping-zones widefat">
     <thead>
     <tr style="width:100%;">
-        <th class="wc-shipping-zone-sort"><?php echo wc_help_tip( __( 'Drag and drop to re-order your custom zones. This is the order in which they will be matched against the customer address.', 'easyparcel-shipping' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></th>
+        <th class="wc-shipping-zone-sort"><?php echo wc_help_tip(__('Drag and drop to re-order your custom zones. This is the order in which they will be matched against the customer address.', 'easyparcel-shipping')); ?></th>
         <th class="wc-shipping-zone-name"
             style="width:25%;"><?php esc_html_e( 'Zone Name', 'easyparcel-shipping' ); ?></th>
         <th class="wc-shipping-zone-courier"

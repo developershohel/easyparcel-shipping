@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label for="courier_services">
 				<?php esc_html_e( 'Courier Service', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Choose your preferred couriers to be displayed on the checkout page.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
+				<?php echo wc_help_tip( __( 'Choose your preferred couriers to be displayed on the checkout page.', 'easyparcel-shipping' ) ); 
 				?>
             </label>
         </th>
@@ -71,7 +71,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label for="dropoff_point">
 				<?php esc_html_e( 'Courier Dropoff Point', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Choose the dropoff point you wish to dropoff your parcel. [optional]', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
+				<?php echo wc_help_tip( __( 'Choose the dropoff point you wish to dropoff your parcel. [optional]', 'easyparcel-shipping' ) ); 
 				?>
             </label>
         </th>
@@ -88,7 +88,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label for="courier_display_name">
 				<?php esc_html_e( 'Courier Display Name', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Customise the courier display name shown to buyer in cart/payment page', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
+				<?php echo wc_help_tip( __( 'Customise the courier display name shown to buyer in cart/payment page', 'easyparcel-shipping' ) ); 
 				?>
             </label>
         </th>
@@ -118,7 +118,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label for="charges">
 				<?php esc_html_e( 'Shipping Rate Setting', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Choose your preferred shipping rate setting to be shown to your buyers on the checkout page.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
+				<?php echo wc_help_tip( __( 'Choose your preferred shipping rate setting to be shown to your buyers on the checkout page.', 'easyparcel-shipping' ) ); 
 				?>
             </label>
         </th>
@@ -148,7 +148,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label for="shipping_rate_option">
 				<?php esc_html_e( 'Add On Options', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Choose your preferred type for add on option.<br>For add on by amount, key in any amount.<br>For add on by percentage, key in a number between 1 and 100.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
+				<?php echo wc_help_tip( __( 'Choose your preferred type for add on option.<br>For add on by amount, key in any amount.<br>For add on by percentage, key in a number between 1 and 100.', 'easyparcel-shipping' ) ); 
 				?>
             </label>
         </th>
@@ -253,7 +253,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="free_shipping_by_desc">
             <label for="free_shipping_by">
                 <span id="free_shipping_text">Minimum Order Amount</span>
-				<?php echo wc_help_tip( __( 'Provide free shipping if the order amount is same as or higher than the amount set.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine
+				<?php echo wc_help_tip( __( 'Provide free shipping if the order amount is same as or higher than the amount set.', 'easyparcel-shipping' ) ); 
 				?>
             </label>
         </th>

@@ -406,7 +406,7 @@ class Easyparcel_Shipping_Zone extends Easyparcel_Legacy_Shipping_Zone {
 		$zone_name = $this->get_formatted_location();
 
 		if ( empty( $zone_name ) ) {
-			$zone_name = __( 'Zone', 'woocommerce' );
+			$zone_name = __( 'Zone', 'easyparcel-shipping' );
 		}
 
 		return $zone_name;
@@ -455,12 +455,12 @@ class Easyparcel_Shipping_Zone extends Easyparcel_Legacy_Shipping_Zone {
 			$remaining = count( $location_parts ) - $max;
 
 			// @codingStandardsIgnoreStart
-			return sprintf( _n( '%s and %d other region', '%s and %d other regions', $remaining, 'woocommerce' ), implode( ', ', array_splice( $location_parts, 0, $max ) ), $remaining );
+			return sprintf( _n( '%s and %d other region', '%s and %d other regions', $remaining, 'easyparcel-shipping' ), implode( ', ', array_splice( $location_parts, 0, $max ) ), $remaining );
 			// @codingStandardsIgnoreEnd
 		} elseif ( ! empty( $location_parts ) ) {
 			return implode( ', ', $location_parts );
 		} else {
-			return __( 'Everywhere', 'woocommerce' );
+			return __( 'Everywhere', 'easyparcel-shipping' );
 		}
 	}
 

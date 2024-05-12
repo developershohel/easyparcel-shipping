@@ -494,7 +494,7 @@ abstract class Easyparcel_Data {
 			return false;
 		}
 		/* translators: %s: $key Key to check */
-		wc_doing_it_wrong( __FUNCTION__, sprintf( __( 'Generic add/update/get meta methods should not be used for internal meta data, including "%s". Use getters and setters.', 'woocommerce' ), $key ), '3.2.0' );
+		wc_doing_it_wrong( __FUNCTION__, sprintf( __( 'Generic add/update/get meta methods should not be used for internal meta data, including "%s". Use getters and setters.', 'easyparcel-shipping' ), $key ), '3.2.0' );
 
 		return true;
 	}
@@ -681,7 +681,7 @@ abstract class Easyparcel_Data {
 	 * @since 3.0.0
 	 */
 	public function apply_changes() {
-		$this->data    = array_replace_recursive( $this->data, $this->changes ); // @codingStandardsIgnoreLine
+		$this->data    = array_replace_recursive( $this->data, $this->changes ); 
 		$this->changes = array();
 	}
 
@@ -844,7 +844,7 @@ abstract class Easyparcel_Data {
 
 			$this->set_prop( $prop, $datetime );
 		} catch ( Exception $e ) {
-		} // @codingStandardsIgnoreLine.
+		}
 	}
 
 	/**

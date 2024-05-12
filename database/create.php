@@ -4,11 +4,8 @@
  */
 function easyparcel_create_zones_courier_table() {
 	global $wpdb;
-	global $jal_db_version;
-	$jal_db_version  = '1.0';
 	$charset_collate = $wpdb->get_charset_collate();
-	$table_name      = $wpdb->prefix . 'easyparcel_zones_courier';
-	$sql             = "CREATE TABLE IF NOT EXISTS {$table_name} (
+	$sql             = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}easyparcel_zones_courier (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             zone_id BIGINT UNSIGNED NOT NULL,
             instance_id INT NULL,
@@ -37,16 +34,5 @@ function easyparcel_create_zones_courier_table() {
         ) $charset_collate;";
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
-	$column_exists = $wpdb->get_var(
-		$wpdb->prepare(
-			"SELECT COUNT(*) FROM information_schema.columns WHERE table_name = %s AND column_name = %s", $table_name, 'price'
-		)
-	);
-	if ( empty( $column_exists ) ) {
-		$query = $wpdb->prepare( "ALTER TABLE %s ADD COLUMN instance_id INT NULL AFTER zone_id, ADD COLUMN courier_dropoff_name varchar(100) NULL AFTER courier_dropoff_point, ADD COLUMN price FLOAT NULL DEFAULT 0.00 AFTER courier_dropoff_point, ADD COLUMN addon_price FLOAT NULL DEFAULT 0.00 AFTER price, ADD COLUMN shipment_price FLOAT NULL DEFAULT 0.00 AFTER addon_price", $table_name );
-		$wpdb->query( $query );
-//		$wpdb->query( $wpdb->prepare( "ALTER TABLE {$table_name} ADD COLUMN instance_id INT NULL AFTER zone_id, ADD COLUMN courier_dropoff_name varchar(100) NULL AFTER courier_dropoff_point, ADD COLUMN price FLOAT NULL DEFAULT 0.00 AFTER courier_dropoff_point, ADD COLUMN addon_price FLOAT NULL DEFAULT 0.00 AFTER price, ADD COLUMN shipment_price FLOAT NULL DEFAULT 0.00 AFTER addon_price" ) );
-	}
-
-	add_option( 'jal_db_version', $jal_db_version );
+	add_option( 'easyparcel_db_version', ESAYPARCEL_DB_VERSION );
 }

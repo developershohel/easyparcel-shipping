@@ -72,7 +72,7 @@ function hidedetails(country) {
 	jQuery("#woocommerce_easyparcel_sender_contact_number").closest("tr").hide();
 	jQuery("#woocommerce_easyparcel_sender_alt_contact_number").closest("tr").hide();
 	jQuery("#woocommerce_easyparcel_sender_company_name").closest("tr").hide();
-	jQuery("#woocommerce_easyparcel_easyparcel_email").closest("tr").hide();
+	jQuery("#woocommerce_easyparcel_email").closest("tr").hide();
 	jQuery("#woocommerce_easyparcel_sender_address_1").closest("tr").hide();
 	jQuery("#woocommerce_easyparcel_sender_address_2").closest("tr").hide();
 	jQuery("#woocommerce_easyparcel_sender_city").closest("tr").hide();
@@ -96,7 +96,7 @@ function showdetails(country) {
 	jQuery("#woocommerce_easyparcel_sender_contact_number").closest("tr").show();
 	jQuery("#woocommerce_easyparcel_sender_alt_contact_number").closest("tr").show();
 	jQuery("#woocommerce_easyparcel_sender_company_name").closest("tr").show();
-	jQuery("#woocommerce_easyparcel_easyparcel_email").closest("tr").show();
+	jQuery("#woocommerce_easyparcel_email").closest("tr").show();
 	jQuery("#woocommerce_easyparcel_sender_address_1").closest("tr").show();
 	jQuery("#woocommerce_easyparcel_sender_address_2").closest("tr").show();
 	jQuery("#woocommerce_easyparcel_sender_city").closest("tr").show();
@@ -125,7 +125,7 @@ function showdetails(country) {
 function clearField() {
 	jQuery("#woocommerce_easyparcel_sender_contact_number").val("");
 	jQuery("#woocommerce_easyparcel_sender_alt_contact_number").val("");
-	jQuery("#woocommerce_easyparcel_easyparcel_email").val("");
+	jQuery("#woocommerce_easyparcel_email").val("");
 	jQuery("#woocommerce_easyparcel_sender_address_1").val("");
 	jQuery("#woocommerce_easyparcel_sender_address_2").val("");
 	jQuery("#woocommerce_easyparcel_sender_city").val("");

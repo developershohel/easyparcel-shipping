@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label for="zone_name">
 				<?php esc_html_e( 'Zone Name', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Set your zone name', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine ?>
+				<?php echo wc_help_tip( __( 'Set your zone name', 'easyparcel-shipping' ) );  ?>
             </label>
         </th>
         <td class="forminp">
@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label for="zone_locations">
 				<?php esc_html_e( 'Destination', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Select the destination for this zone. For eg: Penang, Selangor etc', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine ?>
+				<?php echo wc_help_tip( __( 'Select the destination for this zone. For eg: Penang, Selangor etc', 'easyparcel-shipping' ) );  ?>
             </label>
         </th>
         <td class="forminp">
@@ -72,7 +72,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <th scope="row" class="titledesc">
             <label>
 				<?php esc_html_e( 'Courier Services', 'easyparcel-shipping' ); ?>
-				<?php echo wc_help_tip( __( 'Select the courier options for this destination. The courier options will apply to orders with a shipping address in this destination.', 'easyparcel-shipping' ) ); // @codingStandardsIgnoreLine ?>
+				<?php echo wc_help_tip( __( 'Select the courier options for this destination. The courier options will apply to orders with a shipping address in this destination.', 'easyparcel-shipping' ) );  ?>
             </label>
         </th>
         <td class="">
@@ -145,15 +145,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         <div class="wc-backbone-modal-content">
             <section class="wc-backbone-modal-main" role="main">
                 <header class="wc-backbone-modal-header">
-                    <h1>
-						<?php
-						printf(
-						/* translators: %s: shipping method title */
-							esc_html__( '%s Settings', 'easyparcel-shipping' ),
-							'{{{ data.method.method_title }}}'
-						);
-						?>
-                    </h1>
+                    <h1><?php echo esc_html( '{{{ data.method.method_title }}} Settings'); ?></h1>
                     <button class="modal-close modal-close-link dashicons dashicons-no-alt">
                         <span class="screen-reader-text"><?php esc_html_e( 'Close modal panel', 'easyparcel-shipping' ); ?></span>
                     </button>

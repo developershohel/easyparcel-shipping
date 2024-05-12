@@ -315,7 +315,7 @@
 
                         // Save method settings via ajax call
                         $.post(
-                            ajaxurl + (ajaxurl.indexOf('?') > 0 ? '&' : '?') + 'action=ep_shipping_zone_methods_save_settings',
+                            ajaxurl + (ajaxurl.indexOf('?') > 0 ? '&' : '?') + 'action=easyparcel_shipping_zone_methods_save_settings',
                             {
                                 wc_shipping_zones_nonce: data.wc_shipping_zones_nonce,
                                 instance_id: posted_data.instance_id,
