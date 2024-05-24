@@ -2,7 +2,7 @@
 function easyparcel_courier_list()
 {
     global $wpdb;
-    $nonce = filter_input(INPUT_POST, 'nonce');
+    $nonce = filter_input(INPUT_POST, 'nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $nonce = sanitize_text_field(wp_unslash($nonce)) ?? '';
     if (empty($nonce)) {
         wp_send_json(['status' => false, 'message' => 'Nonce is missing']);
@@ -11,20 +11,20 @@ function easyparcel_courier_list()
         wp_send_json(['status' => false, 'message' => 'Nonce is invalid']);
         wp_die();
     }
-    $zone_id = filter_input(INPUT_POST, 'zone_id');
+    $zone_id = filter_input(INPUT_POST, 'zone_id', FILTER_SANITIZE_NUMBER_INT);
     $zone_id = absint($zone_id) ?? 0;
-    $instance_id = filter_input(INPUT_POST, 'instance_id');
+    $instance_id = filter_input(INPUT_POST, 'instance_id', FILTER_SANITIZE_NUMBER_INT);
     $instance_id = absint($instance_id) ?? 0;
     if (empty($zone_id) || empty($instance_id)) {
         wp_send_json(['status' => false, 'message' => 'No Zone ID or Instance ID Found']);
         wp_die();
     }
 
-    if (!class_exists('Easyparcel_Woocommerce_Shipping_Zone')) {
-        include_once 'easyparcel_woocommerce_shipping_zone.php';
+    if (!class_exists('Easyparcel_Extend_Shipping_Zone')) {
+        include_once 'easyparcel_extend_shipping_zone.php';
     }
     $courier = $wpdb->get_var($wpdb->prepare("SELECT instance_id FROM {$wpdb->prefix}easyparcel_zones_courier WHERE zone_id =%d AND instance_id =%d", $zone_id, $instance_id));
-    $shipping_zone = new Easyparcel_Woocommerce_Shipping_Zone();
+    $shipping_zone = new Easyparcel_Extend_Shipping_Zone();
     if (empty($courier)) {
         $shipping_zone->add_new_courier($zone_id);
     } else {
@@ -38,7 +38,7 @@ add_action('wp_ajax_nopriv_easyparcel_courier_list', 'easyparcel_courier_list');
 
 function easyparcel_check_setting()
 {
-    $nonce = filter_input(INPUT_POST, 'nonce');
+    $nonce = filter_input(INPUT_POST, 'nonce',  FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $nonce = sanitize_text_field(wp_unslash($nonce)) ?? '';
     if (empty($nonce)) {
         wp_send_json(['status' => false, 'message' => 'Nonce is missing']);
@@ -62,7 +62,7 @@ add_action('wp_ajax_nopriv_easyparcel_check_setting', 'easyparcel_check_setting'
 function easyparcel_ajax_save_courier_services()
 {
     global $wpdb;
-    $nonce = filter_input(INPUT_POST, 'nonce');
+    $nonce = filter_input(INPUT_POST, 'nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $nonce = sanitize_text_field(wp_unslash($nonce)) ?? '';
     if (empty($nonce)) {
         wp_send_json(['status' => false, 'message' => 'Nonce is missing']);
@@ -90,7 +90,7 @@ function easyparcel_ajax_save_courier_services()
     }
 
     $instance_id = absint($courier_data['instance_id']) ?? 0;
-    $method = filter_input(INPUT_POST, 'courier_setting');
+    $method = filter_input(INPUT_POST, 'courier_setting', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $method = sanitize_text_field($method) ?? '';
 	if (empty($method)) {
 		echo wp_json_encode(array('status' => false, 'message' => "We don't find any method"));
@@ -140,7 +140,7 @@ function easyparcel_ajax_save_courier_services()
                 }
             }
         } else if ($method == 'edit_courier') {
-            $id = filter_input(INPUT_POST, 'id');
+            $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
             $id = absint($id) ?? 0;
             if (empty($id)) {
                 echo wp_json_encode(array('status' => false, 'message' => "Courier Don't find the courier ID"));

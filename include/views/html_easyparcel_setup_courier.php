@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 global $wpdb;
-$zone_id = filter_input(INPUT_GET, 'zone_id');
+$zone_id = filter_input(INPUT_GET, 'zone_id', FILTER_SANITIZE_NUMBER_INT);
 $zone_id = absint( $zone_id) ?? 0;
 ?>
 

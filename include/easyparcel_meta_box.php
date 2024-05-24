@@ -28,7 +28,7 @@ function easyparcel_order_page_custom_meta_box() {
 		$default_provider = $selected_courier;
 	}
 
-	$api_detail                    = get_api_detail( $post );
+	$api_detail                    = easyparcel_get_api_detail( $post );
 	$shipment_providers_by_country = $api_detail->shipment_providers_list;
 	$dropoff_point_list            = wp_json_encode( $api_detail->dropoff_point_list );
 	#### DYNAMIC VALUE - E ####
@@ -104,10 +104,10 @@ function easyparcel_save_meta_box_ajax() {
 	$order                  = wc_get_order( $order_id );
 	$easyparcel_paid_status = ( $order->meta_exists( '_easyparcel_payment_status' ) ) ? 1 : 0; # 1 = Paid / 0 = Pending
 
-	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
-	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
+	$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
 
 	if ( ! $easyparcel_paid_status ) {
 		### Add Fulfillment Part ###
@@ -118,7 +118,7 @@ function easyparcel_save_meta_box_ajax() {
 			$obj->shipping_provider = $shipping_provider;
 			$obj->courier_name      = $courier_name;
 			$obj->drop_off_point    = $drop_off_point;
-			$easyparcel_order               = $Easyparcel_Woocommerce_Shipping_Method->process_booking_order( $obj );
+			$easyparcel_order               = $Easyparcel_Extend_Shipping_Method->process_booking_order( $obj );
 			if ( ! empty( $easyparcel_order ) ) {
 				print_r( $easyparcel_order );
 			} else {
@@ -146,14 +146,14 @@ function easyparcel_save_meta_box_ajax() {
 	die();
 }
 
-function get_api_detail( $post ) {
+function easyparcel_get_api_detail( $post ) {
 
-	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
 
-	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
-	$rates                         = $Easyparcel_Woocommerce_Shipping_Method->get_admin_shipping( $post );
+	$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
+	$rates                         = $Easyparcel_Extend_Shipping_Method->get_admin_shipping( $post );
 
 	$obj                          = (object) array();
 	$obj->shipment_providers_list = array();

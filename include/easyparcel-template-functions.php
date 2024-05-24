@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 // Hook to run a function after deleting a shipping zone
 add_action( 'woocommerce_delete_shipping_zone', 'easyparcel_delete_all_courier_by_zone_id' );
 

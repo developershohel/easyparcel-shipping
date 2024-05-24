@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 add_filter( 'bulk_actions-edit-shop_order', 'easyparcel_bulk_actions_order_fulfillment', 20, 1 );
 add_filter( 'handle_bulk_actions-edit-shop_order', 'easyparcel_handle_bulk_actions_order_fulfillment', 10, 3 );
 add_action( 'admin_notices', 'easyparcel_bulk_actions_order_fulfillment_admin_notice' );
@@ -180,10 +183,10 @@ function easyparcel_save_bulk_order_ajax() {
 	$order_id          = isset( $_POST['order_id'] ) ? wc_clean( $_POST['order_id'] ) : '';
 
 	### Bulk Order Part ###
-	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
-	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
+	$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
 
 	if ( $pick_up_date != '' && $shipping_provider != '' ) {
 		$obj                    = (object) array();
@@ -192,7 +195,7 @@ function easyparcel_save_bulk_order_ajax() {
 		$obj->shipping_provider = $shipping_provider;
 		$obj->courier_name      = $courier_name;
 		$obj->drop_off_point    = $drop_off_point;
-		$easyparcel_order               = $Easyparcel_Woocommerce_Shipping_Method->process_bulk_booking_order( $obj );
+		$easyparcel_order               = $Easyparcel_Extend_Shipping_Method->process_bulk_booking_order( $obj );
 		if ( ! empty( $easyparcel_order ) ) {
 			print_r( $easyparcel_order );
 		} else {
@@ -216,12 +219,12 @@ function easyparcel_save_bulk_order_ajax() {
  */
 function easyparcel_get_api_detail_bulk( $post ) {
 
-	if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
+	if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
 		include_once 'easyparcel_shipping.php';
 	}
 
-	$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
-	$rates                         = $Easyparcel_Woocommerce_Shipping_Method->get_admin_shipping( $post );
+	$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
+	$rates                         = $Easyparcel_Extend_Shipping_Method->get_admin_shipping( $post );
 
 	$obj                          = (object) array();
 	$obj->shipment_providers_list = array();
@@ -380,7 +383,7 @@ function easyparcel_destination_columns_sortable( $columns ) {
  */
 function easyparcel_shop_order_column_destination_sortable_orderby( $query ) {
 	global $pagenow;
-    $post_type = filter_input(INPUT_GET, 'post_type') ?? '';
+    $post_type = filter_input(INPUT_GET, 'post_type', FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? '';
     $post_type = sanitize_text_field($post_type);
 	if ( 'edit.php' === $pagenow && !empty($post_type) && 'shop_order' === $post_type ) {
 		$orderby  = $query->get( 'orderby' );

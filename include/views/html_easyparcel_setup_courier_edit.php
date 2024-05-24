@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 global $wpdb;
-$courier_id = filter_input(INPUT_GET, 'courier_id');
+$courier_id = filter_input(INPUT_GET, 'courier_id', FILTER_SANITIZE_NUMBER_INT);
 $courier_id = absint( $courier_id) ?? 0;
 $zone_id = $wpdb->get_var(
 	$wpdb->prepare(

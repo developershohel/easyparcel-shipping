@@ -39,13 +39,13 @@ if ( ! class_exists( 'Easyparcel_Shipping_API' ) ) {
 		 * @return void
 		 */
 		public static function init() {
-			if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
+			if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
 				include_once 'easyparcel_shipping.php';
 			}
 
-			$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
+			$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
 
-			self::$sender_country = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_country'];
+			self::$sender_country = $Easyparcel_Extend_Shipping_Method->settings['sender_country'];
 			$host                 = 'http://connect.easyparcel.' . strtolower( self::$sender_country );
 
 			// self::$getrate_api_url = $host . '/?ac=EPRateChecking'; // Hide it cause didn't use bulk api
@@ -58,21 +58,21 @@ if ( ! class_exists( 'Easyparcel_Shipping_API' ) ) {
 
 			self::$auth_url = $host . '?ac=EPCheckCreditBalance';
 
-			self::$easyparcel_email = $Easyparcel_Woocommerce_Shipping_Method->settings['easyparcel_email'];
-			self::$integration_id   = $Easyparcel_Woocommerce_Shipping_Method->settings['integration_id'];
+			self::$easyparcel_email = $Easyparcel_Extend_Shipping_Method->settings['easyparcel_email'];
+			self::$integration_id   = $Easyparcel_Extend_Shipping_Method->settings['integration_id'];
 
-			self::$sender_name               = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_name'];
-			self::$sender_contact_number     = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_contact_number'];
-			self::$sender_alt_contact_number = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_alt_contact_number'];
-			self::$sender_company_name       = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_company_name'];
-			self::$sender_address_1          = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_address_1'];
-			self::$sender_address_2          = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_address_2'];
-			self::$sender_postcode           = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_postcode'];
-			self::$sender_city               = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_city'];
-			self::$sender_state              = $Easyparcel_Woocommerce_Shipping_Method->settings['sender_state'];
+			self::$sender_name               = $Easyparcel_Extend_Shipping_Method->settings['sender_name'];
+			self::$sender_contact_number     = $Easyparcel_Extend_Shipping_Method->settings['sender_contact_number'];
+			self::$sender_alt_contact_number = $Easyparcel_Extend_Shipping_Method->settings['sender_alt_contact_number'];
+			self::$sender_company_name       = $Easyparcel_Extend_Shipping_Method->settings['sender_company_name'];
+			self::$sender_address_1          = $Easyparcel_Extend_Shipping_Method->settings['sender_address_1'];
+			self::$sender_address_2          = $Easyparcel_Extend_Shipping_Method->settings['sender_address_2'];
+			self::$sender_postcode           = $Easyparcel_Extend_Shipping_Method->settings['sender_postcode'];
+			self::$sender_city               = $Easyparcel_Extend_Shipping_Method->settings['sender_city'];
+			self::$sender_state              = $Easyparcel_Extend_Shipping_Method->settings['sender_state'];
 
-			self::$addon_email_option = $Easyparcel_Woocommerce_Shipping_Method->settings['addon_email_option'];
-			self::$addon_sms_option   = $Easyparcel_Woocommerce_Shipping_Method->settings['addon_sms_option'];
+			self::$addon_email_option = $Easyparcel_Extend_Shipping_Method->settings['addon_email_option'];
+			self::$addon_sms_option   = $Easyparcel_Extend_Shipping_Method->settings['addon_sms_option'];
 
 		}
 
@@ -120,7 +120,7 @@ if ( ! class_exists( 'Easyparcel_Shipping_API' ) ) {
 		}
 
 		public static function getShippingRate( $destination, $items, $weight ) {
-			if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
+			if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
 				include_once 'easyparcel_shipping.php';
 			}
 			if ( self::countryValidate() ) {
@@ -148,15 +148,15 @@ if ( ! class_exists( 'Easyparcel_Shipping_API' ) ) {
 					$i ++;
 				}
 
-				$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
+				$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
 
-				if ( $Easyparcel_Woocommerce_Shipping_Method->settings['cust_rate'] == 'normal_rate' ) {
+				if ( $Easyparcel_Extend_Shipping_Method->settings['cust_rate'] == 'normal_rate' ) {
 					self::$easyparcel_email = '';
 					self::$integration_id   = '';
 				}
 
 				//prevent user select fix Rate but didnt put postcode no result
-				if ( $Easyparcel_Woocommerce_Shipping_Method->settings['cust_rate'] == 'fix_rate' && self::$sender_postcode == '' ) {
+				if ( $Easyparcel_Extend_Shipping_Method->settings['cust_rate'] == 'fix_rate' && self::$sender_postcode == '' ) {
 					self::$sender_postcode = '11950';
 				}
 

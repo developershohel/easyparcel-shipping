@@ -6,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Check if WooCommerce is active
  */
 
-if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Method' ) ) {
-	class Easyparcel_Woocommerce_Shipping_Method extends WC_Shipping_Method {
+if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
+	class Easyparcel_Extend_Shipping_Method extends WC_Shipping_Method {
 		/**
 		 * Easyparcel Plugin url
 		 * @var string|null

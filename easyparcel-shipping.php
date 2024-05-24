@@ -3,7 +3,7 @@
  * Plugin Name: EasyParcel Shipping
  * Plugin URI: https://easyparcel.com/
  * Description: EasyParcel Shipping plugin allows you to enable order fulfillment without leaving your store and allow your customer to pick their preferable courier during check out. To get started, activate EasyParcel Shipping plugin and proceed to Woocommerce > Settings > Shipping > EasyParcel Shipping to set up your Integration ID.
- * Version: 2.0.0
+ * Version: 2.0.5
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: EasyParcel
@@ -33,8 +33,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-define( 'EASYPARCEL_VERSION', '2.0.0' );
-define('ESAYPARCEL_DB_VERSION', '2.0.0');
+define( 'EASYPARCEL_VERSION', '2.0.5' );
+define('EASYPARCEL_DB_VERSION', '2.0.5');
 define( 'EASYPARCEL__FILE__', __FILE__ );
 define( 'EASYPARCEL_PLUGIN_BASE', plugin_basename( EASYPARCEL__FILE__ ) );
 define( 'EASYPARCEL_PATH', plugin_dir_path( EASYPARCEL__FILE__ ) );
@@ -49,8 +49,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	require_once EASYPARCEL_INCLUDE_PATH . 'easyparcel-enqueue-scripts.php';
 	require_once EASYPARCEL_INCLUDE_PATH . 'easyparcel-ajax.php';
 	require_once EASYPARCEL_INCLUDE_PATH . 'easyparcel-template-functions.php';
-	if ( ! class_exists( 'Easyparcel_Woocommerce_Integration' ) ):
-		class Easyparcel_Woocommerce_Integration {
+	if ( ! class_exists( 'Easyparcel_Integration' ) ):
+		class Easyparcel_Integration {
 			/**
 			 * Construct the plugin.
 			 */
@@ -78,7 +78,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				if ( class_exists( 'WC_Integration' ) ) {
 					// Include our integration class.
 					include_once 'include/easyparcel_shipping.php';
-					include_once 'include/easyparcel_woocommerce_shipping_zone.php'; //shipping zone
+					include_once 'include/easyparcel_extend_shipping_zone.php'; //shipping zone
 
 					$value = get_option( 'easyparcel_settings' );
 					if ( isset( $value['enabled'] ) && $value['enabled'] == 'yes' ) {
@@ -102,7 +102,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				// add the filter - Custom shipping method label
 				add_filter( 'woocommerce_cart_shipping_method_full_label', array(
 					$this,
-					'filter_woocommerce_cart_shipping_method_full_label'
+					'filter_cart_shipping_method_full_label'
 				), 10, 2 );
 
 
@@ -120,7 +120,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 *
 			 */
 
-			public function filter_woocommerce_cart_shipping_method_full_label( $label, $method ) {
+			public function filter_cart_shipping_method_full_label( $label, $method ) {
 				$new_label = '';
 
 				switch ( $method->get_method_id() ) {
@@ -192,8 +192,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$data           = (object) array();
 				$data->order_id = $order_id;
 				try {
-					$Easyparcel_Woocommerce_Shipping_Method = new Easyparcel_Woocommerce_Shipping_Method();
-					$Easyparcel_Woocommerce_Shipping_Method->process_booking_order( $data );
+					$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
+					$Easyparcel_Extend_Shipping_Method->process_booking_order( $data );
 
 				} catch ( Exception $e ) {
 					$message = sprintf( __( 'Easyparcel status changed! Error: %s', 'easyparcel-shipping' ), $e->getMessage() );
@@ -223,7 +223,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 */
 			public function add_shipping_method( $methods ) {
 				if ( is_array( $methods ) ) {
-					$methods['easyparcel'] = 'Easyparcel_Woocommerce_Shipping_Method';
+					$methods['easyparcel'] = 'Easyparcel_Extend_Shipping_Method';
 				}
 
 				return $methods;
@@ -240,7 +240,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function add_shipping_zone_method( $methods ) {
 				if ( is_array( $methods ) ) {
-					$methods['easyparcel_zone'] = 'Easyparcel_Woocommerce_Shipping_Zone';
+					$methods['easyparcel_zone'] = 'Easyparcel_Extend_Shipping_Zone';
 				}
 
 				return $methods;
@@ -256,7 +256,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 		}
 
-		$Easyparcel_Woocommerce_Integration = new Easyparcel_Woocommerce_Integration( __FILE__ );
+		$Easyparcel_Integration = new Easyparcel_Integration( __FILE__ );
 	endif;
 
 }

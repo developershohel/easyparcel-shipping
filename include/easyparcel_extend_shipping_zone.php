@@ -7,8 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Check if WooCommerce is active
  */
 
-if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Zone' ) ) {
-	class Easyparcel_Woocommerce_Shipping_Zone extends WC_Shipping_Method {
+if ( ! class_exists( 'Easyparcel_Extend_Shipping_Zone' ) ) {
+	class Easyparcel_Extend_Shipping_Zone extends WC_Shipping_Method {
 		/**
 		 * Constructor for your shipping class
 		 *
@@ -47,12 +47,12 @@ if ( ! class_exists( 'Easyparcel_Woocommerce_Shipping_Zone' ) ) {
 				return;
 			}
 			if ( 'easyparcel_shipping' === $current_section ) {
-				$zone_id = filter_input(INPUT_GET, 'zone_id');
-                $zone_id = wp_unslash($zone_id)?? 0;
-                $courier_id = filter_input(INPUT_GET, 'courier_id');
-                $courier_id = wp_unslash($courier_id) ?? 0;
-                $perform = filter_input(INPUT_GET, 'perform');
-                $perform = wp_unslash($perform) ?? '';
+				$zone_id = filter_input(INPUT_GET, 'zone_id', FILTER_SANITIZE_NUMBER_INT);
+                $zone_id = absint($zone_id)?? 0;
+                $courier_id = filter_input(INPUT_GET, 'courier_id', FILTER_SANITIZE_NUMBER_INT);
+                $courier_id = absint($courier_id) ?? 0;
+                $perform = filter_input(INPUT_GET, 'perform', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                $perform = sanitize_text_field(wp_unslash($perform)) ?? '';
 				if ( empty($zone_id) && empty($courier_id)) {
 					$this->load_zone_list();
 					$hide_save_button = true;
