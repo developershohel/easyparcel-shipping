@@ -321,12 +321,3 @@ $instance_id = $wpdb->get_var(
        value="<?php echo esc_url( admin_url( "admin.php?page=wc-settings&tab=shipping&section=easyparcel_shipping&zone_id=$zone_id" ) ) ?>">
 <input type="hidden" id="easyparcel_ajax_save_courier_services" name="easyparcel_ajax_save_courier_services"
        value="<?php echo esc_attr( wp_create_nonce( 'easyparcel_ajax_save_courier_services' ) ); ?>">
-<style>
-    table#courier-setting-table th {
-        width: 30%;
-    }
-
-    table#courier-setting-table td {
-        width: 70%;
-    }
-</style>

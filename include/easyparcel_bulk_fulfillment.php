@@ -162,8 +162,7 @@ function easyparcel_bulk_fulfillment_popup() {
 		<?php
 		ob_end_flush();
 	} else {
-		$selected_paid_order_id = implode( ',', $paid_order_ids );
-		echo '<script>alert("your selected shipment have been fulfill.")</script>';
+		echo "your selected shipment have been fulfill.";
 	}
 	exit;
 }

@@ -71,13 +71,12 @@ function easyparcel_ajax_save_courier_services()
         wp_send_json(['status' => false, 'message' => 'Nonce is invalid']);
         wp_die();
     }
-    $courier_data = wp_unslash($_POST['courier_data']) ?? '';
-    if (empty($courier_data)) {
+    if (!isset($_POST['courier_data']) || empty($_POST['courier_data'])) {
         echo wp_json_encode(array('status' => false, 'message' => "We don't find any data"));
         wp_die();
     }
-	if (is_array($courier_data)){
-		$courier_data = array_map('sanitize_text_field', $courier_data);
+	if (is_array($_POST['courier_data'])){
+		$courier_data = array_map('sanitize_text_field', $_POST['courier_data']);
 	}else{
 		wp_send_json(['status' => false, 'message' => 'Courier data is invalid']);
 		wp_die();

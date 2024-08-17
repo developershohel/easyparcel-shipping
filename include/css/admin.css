@@ -124,3 +124,13 @@ p.form-field.form-50 {
 .ui-datepicker{
 	z-index: 1000000 !important;
 }
+table#courier-setting-table th {
+	width: 30%;
+}
+
+table#courier-setting-table td {
+	width: 70%;
+}
+table.wc-shipping-zones td.wc-shipping-zone-methods ul li::before {
+	content: '';
+}

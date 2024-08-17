@@ -88,9 +88,3 @@ if ( ! defined( 'ABSPATH' ) ) {
     </div>
     <div class="wc-backbone-modal-backdrop modal-close"></div>
 </script>
-
-<style>
-    table.wc-shipping-zones td.wc-shipping-zone-methods ul li::before {
-        content: '';
-    }
-</style>

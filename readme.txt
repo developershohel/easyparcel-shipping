@@ -1,9 +1,9 @@
 === EasyParcel Shipping ===
-Contributors: developershohel
+Contributors: developershohel (https://developershohel.com)
 Tags: EasyParcel, EasyParcel Shipping, shipping, woocommerce shipping, WordPress shipping
 Requires at least: 6.3
-Tested up to: 6.5.3
-Stable tag: 2.0.5
+Tested up to: 6.6.1
+Stable tag: 2.8.13
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
@@ -67,6 +67,16 @@ A: You can install the EasyParcel Shipping plugin by following these simple step
 A: Yes, EasyParcel Shipping supports international shipping. You can choose from a range of international courier services to ship your products globally.
 
 == Changelog ==
+**Version 2.8.13 (August 13, 2024)**
+- Fix Use wp_enqueue commands
+- Fix Undocumented use of a 3rd Party or external service
+- Fix Data Must be Sanitized, Escaped, and Validated
+- Fix Generic function/class/define/namespace/option names
+
+**Version 2.0.6 (July 24, 2024)**
+- Fix sanitize issues
+- Fix escaping issues
+
 **Version 2.0.5 (May 24, 2024)**
 - Fix sanitize issues
 - Fix escaping issues
@@ -98,6 +108,14 @@ A: Yes, EasyParcel Shipping supports international shipping. You can choose from
 
 
 == Upgrade Notice ==
+**Important Notice for Version 2.8.13 Users**
+- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.6 to prevent compatibility issues.
+- Please make sure your Woocommerce Plugin version 8.6.1 or higher to use plugin properly
+
+**Important Notice for Version 2.0.6 Users**
+- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.6 to prevent compatibility issues.
+- Please make sure your Woocommerce Plugin version 8.6.1 or higher to use plugin properly
+
 **Important Notice for Version 2.0.5 Users**
 - Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.5 to prevent compatibility issues.
 - Please make sure your Woocommerce Plugin version 8.6.1 or higher to use plugin properly
@@ -119,7 +137,7 @@ For support inquiries, contact our team at [support@easyparcel.com](mailto:suppo
 == License ==
 This plugin is released under the GNU General Public License, version 3 or later.
 You can read our [Privacy Policy](https://easyparcel.com/my/privacy/) roles for the proper use of our plugin
-We are using our own api http://connect.easyparcel.my or http://connect.easyparcel.sg to connect woocommerce and our shipping. So please read your [Terms and Conditions](https://easyparcel.com/my/tnc/) to use properly our plugin
+We are using our own api http://connect.easyparcel.sender country like http://connect.easyparcel.my or http://connect.easyparcel.sg to connect woocommerce and our shipping. So please read your [Terms and Conditions](https://easyparcel.com/my/tnc/) to use properly our plugin
 We are using https://app.easyparcel.com/my/en/track/details/?courier=DHLECOMMERCE&awb=MYAIAEPAOYLQE this link to truck the order or parcel
 
 == Acknowledgments ==
