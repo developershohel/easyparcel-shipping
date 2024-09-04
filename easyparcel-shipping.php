@@ -3,7 +3,7 @@
  * Plugin Name: EasyParcel Shipping
  * Plugin URI: https://easyparcel.com/
  * Description: EasyParcel Shipping plugin allows you to enable order fulfillment without leaving your store and allow your customer to pick their preferable courier during check out. To get started, activate EasyParcel Shipping plugin and proceed to Woocommerce > Settings > Shipping > EasyParcel Shipping to set up your Integration ID.
- * Version: 2.0.6
+ * Version: 2.9.4
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: EasyParcel
@@ -33,8 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-define( 'EASYPARCEL_VERSION', '2.8.13' );
-define('EASYPARCEL_DB_VERSION', '2.8.13');
+define( 'EASYPARCEL_VERSION', '2.9.4' );
 define( 'EASYPARCEL__FILE__', __FILE__ );
 define( 'EASYPARCEL_PLUGIN_BASE', plugin_basename( EASYPARCEL__FILE__ ) );
 define( 'EASYPARCEL_PATH', plugin_dir_path( EASYPARCEL__FILE__ ) );

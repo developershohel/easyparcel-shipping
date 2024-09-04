@@ -17,7 +17,7 @@ function easyparcel_pickup_point_settings() {
 		'field_id'         => 'easyparcel_pickup_point', // Field Id
 		'field_type'       => 'select', // Field type
 		'field_label'      => '', // Leave empty value if the first option has a text (see below).
-		'label_name'       => __( "Pick Up Point", "easyparcel" ), // for validation and as meta key for orders
+		'label_name'       => __( "Pick Up Point", "easyparcel-shipping" ), // for validation and as meta key for orders
 	);
 }
 

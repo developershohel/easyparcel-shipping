@@ -1096,7 +1096,7 @@ if ( ! class_exists( 'Easyparcel_Extend_Shipping_Method' ) ) {
 					$data->easyparcel_awb          = $result->parcel->awb;
 					$data->easyparcel_awb_id_link  = $result->parcel->awb_id_link;
 					$data->easyparcel_tracking_url = $result->parcel->tracking_url;
-				} else if ( is_array( $result->parcel ) ) {
+				} else if ( is_array( $result->parcel ) && !empty($result->parcel[0]->awb) ) {
 					$data->easyparcel_awb          = $result->parcel[0]->awb;
 					$data->easyparcel_awb_id_link  = $result->parcel[0]->awb_id_link;
 					$data->easyparcel_tracking_url = $result->parcel[0]->tracking_url;

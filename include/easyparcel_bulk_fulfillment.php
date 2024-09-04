@@ -100,7 +100,6 @@ function easyparcel_bulk_fulfillment_popup() {
 		}
 	}
 
-	ob_start();
 	if ( $unpaid_order_ids ) {
 		$order_id = $order_number = implode( ',', $unpaid_order_ids );
 		$post     = (object) array();
@@ -111,7 +110,8 @@ function easyparcel_bulk_fulfillment_popup() {
 		$api_detail                    = easyparcel_get_api_detail_bulk( $post );
 		$shipment_providers_by_country = $api_detail->shipment_providers_list;
 		$dropoff_point_list            = wp_json_encode( $api_detail->dropoff_point_list );
-		ob_start();
+
+        ob_start();
 		?>
         <div id="easyparcel_fulfillment_popout" class="fulfillment_popup_wrapper add_fulfillment_popup">
             <div class="fulfillment_popup_row">
@@ -186,7 +186,7 @@ function easyparcel_save_bulk_order_ajax() {
 		include_once 'easyparcel_shipping.php';
 	}
 	$Easyparcel_Extend_Shipping_Method = new Easyparcel_Extend_Shipping_Method();
-
+    error_log(wp_json_encode($_POST));
 	if ( $pick_up_date != '' && $shipping_provider != '' ) {
 		$obj                    = (object) array();
 		$obj->order_id          = $order_id;
@@ -202,7 +202,7 @@ function easyparcel_save_bulk_order_ajax() {
 		}
 
 	} else {
-		echo 'Please fill all the required data.';
+		echo 'Please fill all the required data. come form here';
 	}
 
 	die();
@@ -252,7 +252,7 @@ function easyparcel_get_api_detail_bulk( $post ) {
  *
  */
 function easyparcel_shop_order_columns( $columns ) {
-	$columns['easyparcel_order_list_shipment_tracking'] = __( 'Shipment Tracking', 'easyparcel-shipping-integration' );
+	$columns['easyparcel_order_list_shipment_tracking'] = __( 'Shipment Tracking', 'easyparcel-shipping');
 
 	return $columns;
 }
@@ -328,7 +328,8 @@ function easyparcel_get_shipment_tracking_column( $order_id ) {
 			'order_nonce' => wp_create_nonce( 'easyparcel_bulk_fulfillment_popup' ),
 		)
 	);
-	ob_start();
+
+    ob_start();
 
 	$order                  = wc_get_order( $order_id );
 	$easyparcel_paid_status = ( $order->meta_exists( '_easyparcel_payment_status' ) ) ? 1 : 0;

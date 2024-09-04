@@ -101,11 +101,11 @@ if ( ! class_exists( 'Easyparcel_Extend_Shipping_Zone' ) ) {
 					),
 					'wc_shipping_zones_nonce' => wp_create_nonce( 'wc_shipping_zones_nonce' ),
 					'strings'                 => array(
-						'unload_confirmation_msg'     => __( 'Your changed data will be lost if you leave this page without saving.', 'easyparcel_zone' ),
-						'delete_confirmation_msg'     => __( 'Are you sure you want to delete this zone? This action cannot be undone.', 'easyparcel_zone' ),
-						'save_failed'                 => __( 'Your changes were not saved. Please retry.', 'easyparcel_zone' ),
-						'no_shipping_methods_offered' => __( 'No shipping methods offered to this zone.', 'easyparcel_zone' ),
-						'no_courier_applied'          => __( 'No courier applied to this zone.', 'easyparcel_zone' ),
+						'unload_confirmation_msg'     => __( 'Your changed data will be lost if you leave this page without saving.', 'easyparcel-shipping' ),
+						'delete_confirmation_msg'     => __( 'Are you sure you want to delete this zone? This action cannot be undone.', 'easyparcel-shipping' ),
+						'save_failed'                 => __( 'Your changes were not saved. Please retry.', 'easyparcel-shipping' ),
+						'no_shipping_methods_offered' => __( 'No shipping methods offered to this zone.', 'easyparcel-shipping' ),
+						'no_courier_applied'          => __( 'No courier applied to this zone.', 'easyparcel-shipping' ),
 					),
 				)
 			);

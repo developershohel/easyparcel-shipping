@@ -126,7 +126,7 @@ function easyparcel_save_meta_box_ajax() {
 			}
 
 		} else {
-			echo 'Please fill all the required data.';
+			echo 'Please fill all the required data. easyparcel_save_meta_box_ajax';
 		}
 
 	} else {
@@ -139,7 +139,7 @@ function easyparcel_save_meta_box_ajax() {
 			$order->save();
 			echo 'success';
 		} else {
-			echo 'Please fill all the required data.';
+			echo 'Please fill all the required data. easyparcel_save_meta_box_ajax';
 		}
 	}
 

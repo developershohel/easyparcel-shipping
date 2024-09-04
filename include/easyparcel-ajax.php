@@ -88,7 +88,7 @@ function easyparcel_ajax_save_courier_services()
         wp_die();
     }
 
-    $instance_id = absint($courier_data['instance_id']) ?? 0;
+    $instance_id = isset($courier_data['instance_id']) ? absint($courier_data['instance_id']) : 0;
     $method = filter_input(INPUT_POST, 'courier_setting', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $method = sanitize_text_field($method) ?? '';
 	if (empty($method)) {

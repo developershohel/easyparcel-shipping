@@ -34,5 +34,4 @@ function easyparcel_create_zones_courier_table() {
         ) $charset_collate;";
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
-	add_option( 'easyparcel_db_version', ESAYPARCEL_DB_VERSION );
 }

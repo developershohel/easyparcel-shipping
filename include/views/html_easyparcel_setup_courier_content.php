@@ -201,7 +201,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php
 			if ( $couriers[0]['charges_value'] !== false ) {
 				$charges_value = explode( ':', $couriers[0]['charges_value'] );
-				echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="' . esc_attr( $charges_value[1] ) . '">';
+                if (isset($charges_value[1])){
+	                echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="' . esc_attr( $charges_value[1] ). '">';
+                }else{
+	                echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="">';
+                }
 			} else {
 				echo '<input type="text" data-attribute="charges-value" name="charges_value" id="charges_value" value="">';
 			}
