@@ -1,0 +1,31 @@
+.easyparcel {
+    padding-top: 20px;
+}
+
+.easyparcel .card {
+    background-color: #ffffff;
+    color: rgb(30, 30, 30);
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 0px 1px;
+    outline: none;
+    border-radius: calc(1px);
+    max-width: 90%;
+}
+
+.easyparcel .hide_field {
+    display: none !important;
+}
+
+.easyparcel .card .form-field {
+    display: flex;
+    padding: 10px 0px;
+}
+
+.easyparcel .card .form-field label {
+    flex: 0 0 25%;
+}
+
+.easyparcel .card .form-field input,select,p,small {
+    flex: auto;
+    max-width: none;
+}

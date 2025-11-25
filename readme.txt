@@ -1,148 +1,117 @@
-=== EasyParcel Shipping ===
-Contributors: Developer Shohel (https://developershohel.com)
-Tags: EasyParcel, EasyParcel Shipping, shipping, woocommerce shipping, WordPress shipping
-Requires at least: 6.3
-Tested up to: 6.6.1
-Stable tag: 2.9.5
-Requires PHP: 7.4
-License: GPLv3 or later
-License URI: https://www.gnu.org/licenses/gpl-3.0-standalone.html
+=== EasyParcel Shipping– All-in-one Shipping Solution, Real-Time Shipping Rates ===
+Contributors: easyparcel
+Tags: EasyParcel, woocommerce, woocommerce shipping, shipping solution, bulk shipping, instant rate comparison, real-time shipping rates, malaysia shipping, singapore shipping
+Requires at least: 4.7
+Tested up to: 6.8
+Stable tag: 1.0.32
+Requires PHP: 7.0
+License: GNU General Public License v3.0
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Streamline WooCommerce shipping with EasyParcel. Effortlessly integrate courier services, real-time rates, label generation, and more!
+Seamless WooCommerce shipping solution, cheapeast courier options, real-time shipping rates for Malaysia and Singapore.
 
 == Description ==
-[Watch Demo on YouTube](https://www.youtube.com/c/EasyParcelBayanLepas)
-EasyParcel Shipping is packed with an array of powerful features to optimize your e-commerce shipping process:
 
-1. **Seamless WooCommerce Integration**: Say goodbye to the hassles of exporting and importing shipping data. EasyParcel Shipping seamlessly integrates with your WooCommerce store, making order fulfillment a breeze.
+= THE #1 ALL-IN-ONE WOOCOMMERCE SHIPPING SOLUTION WITH CHEAPEST COURIER OPTIONS & REAL-TIME SHIPPING RATES FOR MALAYSIA AND SINGAPORE =
 
-2. **Choose Your Courier**: Empower your customers with the freedom to select their preferred courier service during checkout. No more rigid shipping options; EasyParcel Shipping provides a variety of choices to meet their unique needs.
+EasyParcel, the leading courier service booking platform in Malaysia and Singapore, makes your delivery easy — Delivery Made Easy!
 
-3. **Real-Time Shipping Rates**: Ensure accurate shipping costs for your customers with real-time shipping rate calculations. EasyParcel Shipping automatically fetches the latest rates from your selected couriers.
+== Privacy & Data Collection ==
 
-4. **Automated Label Generation**: Say farewell to manual label creation. EasyParcel Shipping automates the label generation process, saving you time and reducing errors.
+To provide our shipping services, EasyParcel collects and processes the following information:
 
-5. **Bulk Shipping**: Handle bulk shipments effortlessly. EasyParcel Shipping lets you process multiple orders in one go, ensuring efficiency and reducing your workload.
+* **Email address:** Used for account management, order notifications, and customer support
+* **Phone number:** Required for delivery coordination and shipping updates
+* **Store name:** Used to identify your business account
+* **Store URL:** Connects your WooCommerce store with EasyParcel services
+* **Country:** Determines available shipping options and courier services
 
-6. **Tracking and Notifications**: Keep both you and your customers informed. EasyParcel Shipping provides tracking information and automated notifications, so everyone stays in the loop.
+This information is necessary to facilitate shipping services, generate shipping labels, and provide tracking updates. For more details on how we handle your data, please refer to our [Privacy Policy](https://easyparcel.com/my/privacy/).
 
-7. **Shipping Rules and Conditions**: Tailor your shipping options with custom rules and conditions, giving you full control over how orders are fulfilled.
+== Notice: Plugin enhancement in Version 1.0.22 ==
 
-8. **International Shipping**: Expand your customer base globally with support for international shipping. EasyParcel Shipping offers a range of international courier services to choose from.
+✅ If you're experiencing this issue, please update to the latest version, 1.0.22, which includes a fix and other improvements.
+🚫 We strongly advise against using versions 1.0.18 to 1.0.21 to avoid potential disruptions.
 
-9. **Custom Shipping Boxes**: Define your own shipping box sizes to ensure that your products are packaged optimally, minimizing shipping costs.
+To update, go to your WordPress Dashboard → Plugins → EasyParcel Shipping → Update, or download the latest version from the official repository.
 
-10. **Easy Configuration**: Setting up EasyParcel Shipping is a breeze. Our intuitive configuration panel makes it simple to get started quickly.
-11. **For more information, detailed setup instructions, and FAQs, please visit our [Documentation](https://blog.easyparcel.com/my/tutorial-easyparcel-integration-with-woocommerce-platform-plugin-version/).
-12. **For support inquiries, contact our team at [support@easyparcel.com](mailto:support@easyparcel.com).
-13. **This plugin is released under the GNU General Public License, version 3 or later.
-14. **You can read our [Privacy Policy](https://easyparcel.com/my/privacy/) roles for the proper use of our plugin
-15. **We are using our own api http://connect.easyparcel.sender country like http://connect.easyparcel.my or http://connect.easyparcel.sg to connect woocommerce and our shipping. So please read your [Terms and Conditions](https://easyparcel.com/my/tnc/) to use properly our plugin
-16. **We are using https://app.easyparcel.com/my/en/track/details/?courier=DHLECOMMERCE&awb=MYAIAEPAOYLQE this link to truck the order or parcel
-17. **EasyParcel Shipping extends its appreciation to the vibrant WordPress and WooCommerce communities for their continued support.
+== 🗝 Key Features ==
 
-Thank you for choosing EasyParcel Shipping - Your WooCommerce Shipping Solution. We look forward to enhancing your shipping experience!
+* <strong>Cheapest Courier Option:</strong> Showcase affordable courier option at checkout to reduce shipping costs and enhance customer satisfaction.
 
-== Why EasyParcel Shipping? ==
+* <strong>Real-time Shipping Rates:</strong> Provide live shipping rates from EasyParcel, ensuring accurate pricing at checkout without manual updates.
 
-EasyParcel Shipping takes the complexity out of WooCommerce shipping, making it a valuable asset for your e-commerce business. Whether you're a small business owner or a large-scale retailer, EasyParcel Shipping offers a user-friendly solution that will revolutionize your shipping process.
+* <strong>Custom Shipping Rates:</strong> Empower tailored shipping rates for buyers, ensuring flexibility and control over costs.
 
-By allowing your customers to pick their preferred courier and providing real-time shipping rates, EasyParcel Shipping enhances the shopping experience on your site, leading to higher customer satisfaction and more sales.
+* <strong>Auto Bulk Order Fulfillment:</strong> Streamline bulk order fulfillment with preferred couriers, saving time and effort.
 
-Join thousands of e-commerce businesses that rely on EasyParcel Shipping for efficient, cost-effective shipping solutions. Make shipping easy, and start using EasyParcel Shipping today!
+* <strong>Custom Shipping Zone Setting:</strong> Configure unique shipping settings for different zones to optimize strategies based on location.
 
-== Get Started ==
-Download EasyParcel Shipping now and experience the future of WooCommerce shipping. Visit our [website](https://easyparcel.com) for additional resources, documentation, and support.
-Follow the Tutorial : [EasyParcel Integration With WooCommerce Platform](https://blog.easyparcel.com/my/tutorial-easyparcel-integration-with-woocommerce-platform-plugin-version/)
-For any questions, feedback, or assistance, please contact our dedicated support team at [support@easyparcel.com](mailto:support@easyparcel.com).
+* <strong>Free Shipping Conditions:</strong> Enable specific conditions for free shipping, encouraging larger purchases and boosting loyalty.
 
-Make shipping a breeze with EasyParcel Shipping - Your Ultimate WooCommerce Shipping Solution!
+== 🌟 Extra Exclusive Features ==
 
-== Installation ==
-1. Upload the `easyparcel-shipping` folder to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Go to WooCommerce > Settings > Shipping > EasyParcel Shipping to configure the plugin settings.
+* <strong>[24/7 Quote and Book](https://easyparcel.com/my/):</strong> Quote and book deliveries anytime, day or night.
 
-== Frequently Asked Questions ==
-**Q: How do I install the EasyParcel Shipping plugin?**
-A: You can install the EasyParcel Shipping plugin by following these simple steps:
-1. Log in to your WordPress admin dashboard.
-2. Go to Plugins > Add New.
-3. Search for "EasyParcel Shipping" in the search bar.
-4. Click on the "Install Now" button next to the EasyParcel Shipping plugin.
-5. Once installed, click on the "Activate" button to activate the plugin.
+* <strong>[60+ Instant Rate Comparison](https://easyparcel.com/my/quote/):</strong> Compare 60+ courier rates instantly for the best deal.
 
-**Q: Can I use EasyParcel Shipping for international shipping?**
-A: Yes, EasyParcel Shipping supports international shipping. You can choose from a range of international courier services to ship your products globally.
+* <strong>[End-to-end Tracking](https://easyparcel.com/my/easytrack/):</strong> Track your parcels from start to finish for peace of mind.
 
-== Changelog ==
-**Version 2.9.5 (September 5, 2024)**
-- Fix WP_DEBUG Issues
-- Fix Forcing PHP Sessions on all pages
-- Fix Internationalization: Text domain does not match plugin slug
+* <strong>[Custom Branding](https://app.easyparcel.com/my/en/marketing-tools/branding/awb/):</strong> Boost brand awareness with personalized shipping labels, tracking page, SMS, and email notifications.
 
-**Version 2.8.13 (August 13, 2024)**
-- Fix Use wp_enqueue commands
-- Fix Undocumented use of a 3rd Party or external service
-- Fix Data Must be Sanitized, Escaped, and Validated
-- Fix Generic function/class/define/namespace/option names
+* <strong>[Seamless Integration](https://easyparcel.com/my/integration-list/):</strong> Effortlessly integrates with 40+ platforms for quick setup and easy use.
 
-**Version 2.0.6 (July 24, 2024)**
-- Fix sanitize issues
-- Fix escaping issues
+* <strong>[Auto Topup](https://app.easyparcel.com/my/en/account/auto-topup):</strong> Automatically replenishes shipping credits to ensure uninterrupted service.
 
-**Version 2.0.5 (May 24, 2024)**
-- Fix sanitize issues
-- Fix escaping issues
-- Added support for PHP 7.4.
-- Improved performance for bulk shipping processing.
-- Add filter_input filter method to secure user data
+* <strong>[Pay As You Go](https://easyparcel.com/my/quote/):</strong> Start shipping with no minimum spend or subscription fees.
 
-**Version 2.0.0 (May 12, 2024)**
-- Fix sanitize issues
-- Fix escaping issues
-- Added support for PHP 7.4.
-- Improved performance for bulk shipping processing.
+* <strong>[Tracking Number Notification](https://easyparcel.com/my/tracking-whatsapp/):</strong> Sends automatic notifications to customers with tracking numbers for enhanced transparency.
 
-**Version 1.0.5 (March 5, 2024)**
-- Fix print issues and database issues
-- Fixed compatibility issues with WooCommerce version 8.6.1.
-- Added support for PHP 7.4.
-- Improved performance for bulk shipping processing.
+* <strong>[Extra Parcel Protection](https://easyparcel.com/my/easycover/):</strong> Offers additional coverage for shipments, minimizing the risk of loss.
 
-**Version 1.0.4 (March 4, 2024)**
-- Fixed compatibility issues with WooCommerce version 8.6.1.
-- Added support for PHP 7.4.
-- Improved performance for bulk shipping processing.
+* <strong>[Bulk Order Express](https://app.easyparcel.com/my/en/bulk-express/):</strong> Accelerates the fulfillment process for large orders, ensuring timely delivery.
 
-**Version 1.0.3 (March 4, 2024)**
-- Fixed compatibility issues with WooCommerce version 8.6.0.
-- Added support for PHP 7.4.
-- Improved performance for bulk shipping processing.
+* <strong>[Proof of Delivery (ePOD)](https://easyparcel.com/my/easytrack/):</strong> Provides verifiable confirmation of successful deliveries, enhancing accountability.
+
+* <strong>[Auto-generated Shipping Labels](https://easyparcel.com/my/quote/):</strong> Create shipping labels instantly with minimal effort.
+
+* <strong>[1-on-1 Premium Support](https://app.easyparcel.com/my/en/contact-us/):</strong> Get expert help whenever you need it.
 
 
-== Upgrade Notice ==
-**Important Notice for Version 2.9.5 Users**
-- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.6 to prevent compatibility issues.
-- Please make sure your Woocommerce Plugin version 8.6.1 or higher to use plugin properly
+== ❤️ Why EasyParcel? ==
 
-**Important Notice for Version 2.8.13 Users**
-- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.6 to prevent compatibility issues.
-- Please make sure your Woocommerce Plugin version 8.6.1 or higher to use plugin properly
+* <strong>Enhances Customer Satisfaction:</strong> Access to the cheapest courier options ensures affordable shipping choices at checkout.
 
-**Important Notice for Version 2.0.6 Users**
-- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.6 to prevent compatibility issues.
-- Please make sure your Woocommerce Plugin version 8.6.1 or higher to use plugin properly
+* <strong>Increases Flexibility:</strong> Set custom shipping rates to meet diverse customer needs and preferences.
 
-**Important Notice for Version 2.0.5 Users**
-- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.5 to prevent compatibility issues.
-- Please make sure your Woocommerce Plugin version 8.6.1 or higher to use plugin properly
+* <strong>Saves Time and Effort:</strong> Automate bulk order fulfillment, allowing focus on business growth instead of manual processing.
 
-**Important Notice for Version 2.0.0 Users**
-- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 2.0.0 to prevent compatibility issues.
-**Important Notice for Version 1.0.4 Users**
-- Please ensure that your server supports PHP version 7.4 or higher before upgrading to EasyParcel Shipping version 1.0.3 to prevent compatibility issues.
+* <strong>Optimizes Shipping Strategies:</strong> Customize shipping zone settings to offer competitive rates based on geographic locations.
+
+* <strong>Encourages Larger Purchases:</strong> Set conditions for free shipping to boost average order value and foster customer loyalty.
+
+* <strong>Provides Accurate Pricing:</strong> Real-time shipping rates eliminate manual updates, enhancing trust and reducing cart abandonment.
+
+* <strong>Enhances Customer Satisfaction:</strong> Tracking number notifications keep customers informed, improving transparency and satisfaction.
+
+* <strong>Expedites Order Processing:</strong> Bulk Order Express accelerates the fulfillment of large orders, ensuring timely delivery for high-volume sales.
+
+* <strong>Effortless Setup:</strong> Seamless integration with 40+ platforms allow for quick and easy implementation without technical hassles.
+
+* <strong>Simplifies Account Management:</strong> Auto top-up functionality ensures uninterrupted service by automatically replenishing your shipping credits.
+
+
+== ☎️ Support ==
+
+Visit our [website](https://easyparcel.com) for more information and promotion.
+
+For support inquiries, contact our team at [support@easyparcel.com](mailto:support@easyparcel.com).
+
 
 == Screenshots ==
-1. Add new plugin(easyparcel-shipping-1.jpg)
-2. Activate the plugin(easyparcel-shipping-2.jpg)
+
+1. Configuration Page
+2. Shipping Zone Configuration
+3. Cart Page
+4. Checkout Page
+5. Shipping fulfillment

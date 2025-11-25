@@ -1,0 +1,85 @@
+*** WooCommerce Extension Name Changelog ***
+
+2024-12-12 - version 1.0.0
+* Initial release
+
+2025-01-02 - version 1.0.2
+* Bug fix: database does not initialize on plugin activation
+
+2025-01-03 - version 1.0.3
+* Bug fix: add-on services does not apply for SG merchant orders
+
+2025-01-08 - version 1.0.4
+* Bug fix: add-on services options does not shows for SG merchant orders
+
+2025-04-07 - version 1.0.8
+* Bug fix: fix logo unable to show, fatal error during submit orders, fix admin shipping state unable to change to zone for SG merchant orders
+
+2025-04-10 - version 1.0.9
+* Bug fix: Fix unable to display courier when set as specific courier, Fix cheapest courier does not filter off drop off courier, Fix fatal error during fulfilment
+
+2025-04-21 - version 1.0.10
+* Added Feedback section in the plugin settings page,fix bulk fulfilment error
+
+2025-04-30 - version 1.0.11
+* Bug fix: Fix retry donwload airway bill button, fix everywhere redirect issue, handle and use fallback default weight and diamentions if product details unable to retrieve
+
+2025-05-05 - version 1.0.12
+* Bug fix: Fix fatal error during for certain order in order page , Fix Success message displaying text instead of html, Fix did not auto reload after fulfilment success pop up
+
+2025-05-06 - version 1.0.13
+* Bug fix : Fix php warning error
+
+2025-05-15 - version 1.0.14
+* Bug fix : Fix Airwaybill Bulkdonwnload error
+
+2025-05-15 - version 1.0.15
+* Bug fix : Fix preferred courier not showing
+
+2025-06-10 - version 1.0.16
+* Bug fix : Fix fatal error when bulk changing status when auto fulfilment is turned on
+
+2025-06-18 - version 1.0.17
+* Bug fix : Fix compatibility issue on latest woocommerce version 9.9.0 and above. in Bulk Fulfilment, AutoFulfilment, and standard Fulfilment
+
+2025-06-18 - version 1.0.18
+* Bug fix : Fix Auto fulfilment unable to retrieve default courier, Enhance error Handling in get_easyparcel_rate function, Add a backup init() to initialize window.easyparcel_shipping_fulfillment if the original init() fails to call it.
+
+2025-06-18 - version 1.0.19
+* Enhancement : Enhance coding to comply woocommecrec plugin compliance
+
+2025-07-24 - version 1.0.20
+* Enhancement : Enhance to show all courier avaible in merchant end, and fix tracking details unable to be retrieved at email and orders page
+
+2025-07-25 - - version 1.0.21
+* Enhancement : Enhance coding to comply woocommerce security and activation test
+
+2025-07-30 - - version 1.0.22
+* Bug fix : Fix double fulfilment error in manual fulfilment in orders page 
+* Enhancement : Enhance coding to comply woocommerce security and activation test
+
+2025-07-31 - - version 1.0.23
+* Annoucement : If you're experiencing any duplicate fulfilment issues, please update to the latest version, 1.0.22 and above, which includes enhancements addressing this issue along with other improvements.
+* Enhancement : Enhance manual fulfilment handling method, enhance SG address retrieving method
+
+2025-08-19 - - version 1.0.24
+* Enhancement : Display pricing during fulfilment in order page, Enhance singapore address submission, Enhance courier display in checkout and order page
+* Bugfix      : Fix courier services setting unable to save
+
+2025-08-20 - - version 1.0.25
+* Bugfix      : Fix fatal error during fulfilment submission
+
+2025-10-16 - - version 1.0.26
+* Bugfix      : Fix multisite support issue
+
+2025-10-29 - - version 1.0.27
+* Bugfix      : fix unable to autofulfill based cheapest courier settings
+
+2025-11-04 - - version 1.0.29
+* Enhancement : Parcel value and shipping fee currency conversion feature
+
+2025-11-04 - - version 1.0.31
+* Enhancement : Enhancement and minor bug fixes
+
+2025-11-18 - - version 1.0.32
+* Enhancement : Add the display of API version and information of the change version
